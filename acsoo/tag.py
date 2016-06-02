@@ -27,7 +27,8 @@ def do_tag(force):
                ['origin', 'tag', config().version])
 
 
-@click.command()
+@click.command(help='Tag the current project after ensuring '
+                    'everything has been commited to git.')
 @click.option('-f', '--force', is_flag=True,
               help='Replace an existing tag (instead of failing)')
 def tag(force):

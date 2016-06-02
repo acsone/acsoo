@@ -47,7 +47,9 @@ def do_tag_editable_requirements(force=False,
             check_call(['git', 'push'] + force_cmd + [url, tag])
 
 
-@click.command()
+@click.command(help='Tag all editable requirements found in '
+                    'requirements.txt, so the commits referenced in '
+                    'there are not lost in case of git garbage collection.')
 @click.option('-f', '--force', is_flag=True,
               help='Replace an existing tag (instead of failing)')
 @click.option('--src', default='src', envvar='PIP_SRC',

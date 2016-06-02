@@ -26,7 +26,9 @@ def do_bdist_wheel(src='src',
                 '--dist-dir', wheel_dir])
 
 
-@click.command()
+@click.command(help='Build wheels for all dependencies found in '
+                    'requirements.txt, plus the project in the current '
+                    'directory.')
 @click.option('--src', default='src', envvar='PIP_SRC',
               type=click.Path(),
               help='Directory where editable requirements are checked out')
