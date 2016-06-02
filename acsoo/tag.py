@@ -9,7 +9,10 @@ from .config import config
 from .tools import check_call, call, check_output
 
 
-def do_tag(force):
+def do_tag(force, yes):
+    tag = config().version
+    if not yes:
+        click.confirm('Tag project with {}?'.format(tag), abort=True)
     if force:
         force_cmd = ['-f']
     else:
@@ -21,18 +24,17 @@ def do_tag(force):
     if check_output(['git', 'ls-files', '--other', '--exclude-standard',
                      '--directory']):
         raise RuntimeError("please commit first")
-    check_call(['git', 'tag'] + force_cmd +
-               [config().version])
-    check_call(['git', 'push'] + force_cmd +
-               ['origin', 'tag', config().version])
+    check_call(['git', 'tag'] + force_cmd + [tag])
+    check_call(['git', 'push'] + force_cmd + ['origin', 'tag', tag])
 
 
 @click.command(help='Tag the current project after ensuring '
                     'everything has been commited to git.')
 @click.option('-f', '--force', is_flag=True,
               help='Replace an existing tag (instead of failing)')
-def tag(force):
-    do_tag(force)
+@click.option('-y', '--yes', is_flag=True, default=False)
+def tag(force, yes):
+    do_tag(force, yes)
 
 
 main.add_command(tag)

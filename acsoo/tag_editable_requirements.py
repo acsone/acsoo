@@ -19,15 +19,15 @@ RE = re.compile(r"^-e git\+(?P<url>ssh://.*?/.*?)@(?P<sha>[^?#&]+)"
                 r".*?[#?]egg=(?P<egg>[^?#&]+)")
 
 
-def do_tag_editable_requirements(force=False,
-                                 src='src',
-                                 requirement='requirements.txt'):
+def do_tag_editable_requirements(force, src, requirement, yes):
+    tag = '{}-{}_{}'.format(
+        config().series, config().trigram, config().version)
+    if not yes:
+        click.confirm('Tag dependencies with {}?'.format(tag), abort=True)
     if force:
         force_cmd = ['-f']
     else:
         force_cmd = []
-    tag = '{}-{}_{}'.format(
-        config().series, config().trigram, config().version)
     for req in requirement:
         req = req.strip()
         mo = RE.match(req)
@@ -57,8 +57,9 @@ def do_tag_editable_requirements(force=False,
               help='Directory where editable requirements are checked out')
 @click.option('-r', '--requirement', default='requirements.txt',
               type=click.File())
-def tag_editable_requirements(force, src, requirement):
-    do_tag_editable_requirements(force, src, requirement)
+@click.option('-y', '--yes', is_flag=True, default=False)
+def tag_editable_requirements(force, src, requirement, yes):
+    do_tag_editable_requirements(force, src, requirement, yes)
 
 
 main.add_command(tag_editable_requirements)
