@@ -7,6 +7,7 @@ import logging
 import os
 import subprocess
 
+import click
 
 _logger = logging.getLogger(__name__)
 
@@ -23,24 +24,36 @@ def _escape(s):
     return s
 
 
+def _cmd_string(cmd):
+    return " ".join([_escape(s) for s in cmd])
+
+
 def _log_cmd(cmd, cwd=None):
-    cmd_string = " ".join([_escape(s) for s in cmd])
-    _logger.debug('%s$ %s', cwd or '.', cmd_string)
+    _logger.debug('%s$ %s', cwd or '.', _cmd_string(cmd))
 
 
 def call(cmd, cwd=None):
     _log_cmd(cmd, cwd=cwd)
-    return subprocess.call(cmd, cwd=cwd)
+    try:
+        return subprocess.call(cmd, cwd=cwd)
+    except subprocess.CalledProcessError:
+        raise click.ClickException(_cmd_string(cmd))
 
 
 def check_call(cmd, cwd=None):
     _log_cmd(cmd, cwd=cwd)
-    return subprocess.check_call(cmd, cwd=cwd)
+    try:
+        return subprocess.check_call(cmd, cwd=cwd)
+    except subprocess.CalledProcessError:
+        raise click.ClickException(_cmd_string(cmd))
 
 
 def check_output(cmd, cwd=None):
     _log_cmd(cmd, cwd=cwd)
-    return subprocess.check_output(cmd, cwd=cwd)
+    try:
+        return subprocess.check_output(cmd, cwd=cwd)
+    except subprocess.CalledProcessError:
+        raise click.ClickException(_cmd_string(cmd))
 
 
 @contextlib.contextmanager

@@ -38,7 +38,8 @@ def do_tag_editable_requirements(force, src, requirement, yes):
         egg = mo.group('egg')
         repo = os.path.join(src, egg.replace('_', '-'))
         if not os.path.isdir(os.path.join(repo, '.git')):
-            raise ClickException("{} is not a git repository.".format(repo))
+            raise click.ClickException('{} is not a git repository.'.
+                                       format(repo))
 
         with working_directory(repo):
             _logger.info('placing tag %s on %s@%s', tag, url, sha)
