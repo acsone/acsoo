@@ -13,32 +13,40 @@ Criteria for tools to be included here:
 
 ## What we have here
 
-Try acsoo --help.
+Try `acsoo --help`.
 
 ### acsoo tag
 
-Tag the current project after ensuring everything has 
-been commited to git.
+Tag the current project after ensuring everything has been commited to git.
 
 ### acsoo tag_editable_requirements
 
-Tag all editable requirements found in requirements.txt, so
-the commits referenced in there are not lost in case of
-git garbage collection.
+Tag all editable requirements found in `requirements.txt`, so
+the referenced commits are not lost in case of git garbage collection.
 
 ### acsoo bdist_wheels
 
-Build wheels for all dependencies found in requirements.txt,
+Build wheels for all dependencies found in `requirements.txt`,
 plus the project in the current directory.
 
 This is actually almost trivial, but works around a pip quirk.
 
 ### acsoo release
 
-Perform acsoo tag, tag_editable_requirements and bdist_wheels.
+Perform `acsoo tag`, `tag_editable_requirements` and `bdist_wheels` at once.
 
 ## Ideas
 
-### acsoo init-module (to replace https://github.com/acsone/odoo-scaffold-templates)
+### acsoo init-module
 
-### acsoo init-project (if only to show the canonical project template) 
+To replace https://github.com/acsone/odoo-scaffold-templates
+
+### acsoo init-project
+
+If only to show the canonical project template.
+
+### acsoo freeze
+
+`pip freeze` (which works very well as is), but exluding some common dev tools 
+that are not required in production (pudb, ipdb, acsoo, git-aggregator, setuptools-odoo...) 
+and their dependencies unless such dependencies are required by the project (directly or indirectly).
