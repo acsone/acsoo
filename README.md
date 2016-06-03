@@ -52,3 +52,8 @@ If only to show the canonical project template.
 `pip freeze` (which works very well as is), but exluding some common dev tools
 that are not required in production (pudb, ipdb, acsoo, git-aggregator, setuptools-odoo...)
 and their dependencies unless such dependencies are required by the project (directly or indirectly).
+
+### acsoo version
+
+A helper to bump version in `acsoo.cfg` and also bump version in (some?) odoo addons, such
+as the main addon that pulls dependencies. Requires further thinking.
