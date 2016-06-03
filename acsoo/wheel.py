@@ -15,9 +15,7 @@ from .tools import check_call, working_directory
 _logger = logging.getLogger(__name__)
 
 
-def do_bdist_wheel(src='src',
-                   requirement='requirements.txt',
-                   wheel_dir='release'):
+def do_wheel(src, requirement, wheel_dir):
     check_call(['pip', 'wheel', '--src', src, '-r', 'requirements.txt',
                 '--wheel-dir', wheel_dir])
     # TODO 'pip wheel .' is slower and sometimes buggy because of
@@ -36,8 +34,8 @@ def do_bdist_wheel(src='src',
               type=click.File())
 @click.option('-w', '--wheel-dir', default='release',
               type=click.Path())
-def bdist_wheel(src, requirement, wheel_dir):
-    do_bdist_wheel(src, requirement, wheel_dir)
+def wheel(src, requirement, wheel_dir):
+    do_wheel(src, requirement, wheel_dir)
 
 
-main.add_command(bdist_wheel)
+main.add_command(wheel)

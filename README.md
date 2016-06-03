@@ -24,16 +24,18 @@ Tag the current project after ensuring everything has been commited to git.
 Tag all editable requirements found in `requirements.txt`, so
 the referenced commits are not lost in case of git garbage collection.
 
-### acsoo bdist_wheels
+### acsoo wheel
 
 Build wheels for all dependencies found in `requirements.txt`,
 plus the project in the current directory.
 
-This is actually almost trivial, but works around a pip quirk.
+This is actually almost trivial (ie `pip wheel -r requirements.txt`),
+but works around a pip quirk.
 
 ### acsoo release
 
-Perform `acsoo tag`, `tag_editable_requirements` and `bdist_wheels` at once.
+Perform `acsoo tag`, `acsoo tag_editable_requirements` and
+`acsoo wheel` in one command.
 
 ## Ideas
 
@@ -47,6 +49,6 @@ If only to show the canonical project template.
 
 ### acsoo freeze
 
-`pip freeze` (which works very well as is), but exluding some common dev tools 
-that are not required in production (pudb, ipdb, acsoo, git-aggregator, setuptools-odoo...) 
+`pip freeze` (which works very well as is), but exluding some common dev tools
+that are not required in production (pudb, ipdb, acsoo, git-aggregator, setuptools-odoo...)
 and their dependencies unless such dependencies are required by the project (directly or indirectly).
