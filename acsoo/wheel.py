@@ -16,6 +16,12 @@ _logger = logging.getLogger(__name__)
 
 
 def do_wheel(src, requirement, wheel_dir):
+    if os.path.exists(wheel_dir):
+        _logger.debug('Removing all wheels in %s.', wheel_dir)
+        with working_directory(wheel_dir):
+            for f in os.listdir('.'):
+                if f.endswith('.whl'):
+                    os.remove(f)
     check_call(['pip', 'wheel', '--src', src, '-r', 'requirements.txt',
                 '--wheel-dir', wheel_dir])
     # TODO 'pip wheel .' is slower and sometimes buggy because of
@@ -26,7 +32,8 @@ def do_wheel(src, requirement, wheel_dir):
 
 @click.command(help='Build wheels for all dependencies found in '
                     'requirements.txt, plus the project in the current '
-                    'directory.')
+                    'directory. CAUTION: all wheel files are removed from '
+                    'the target directory before building')
 @click.option('--src', default='src', envvar='PIP_SRC',
               type=click.Path(),
               help='Directory where editable requirements are checked out')
