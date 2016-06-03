@@ -31,9 +31,11 @@ def do_wheel(src, requirement, wheel_dir):
               type=click.Path(),
               help='Directory where editable requirements are checked out')
 @click.option('-r', '--requirement', default='requirements.txt',
-              type=click.File())
+              type=click.File(),
+              help='Requirements to build (default=requirements.txt)')
 @click.option('-w', '--wheel-dir', default='release',
-              type=click.Path())
+              type=click.Path(),
+              help='Path where the wheels will be created (default=release')
 def wheel(src, requirement, wheel_dir):
     do_wheel(src, requirement, wheel_dir)
 

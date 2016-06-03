@@ -57,7 +57,8 @@ def do_tag_editable_requirements(force, src, requirement, yes):
               type=click.Path(),
               help='Directory where editable requirements are checked out')
 @click.option('-r', '--requirement', default='requirements.txt',
-              type=click.File())
+              type=click.File(),
+              help='Requirements to build (default=requirements.txt)')
 @click.option('-y', '--yes', is_flag=True, default=False)
 def tag_editable_requirements(force, src, requirement, yes):
     do_tag_editable_requirements(force, src, requirement, yes)
