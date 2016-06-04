@@ -61,10 +61,11 @@ def working_directory(path):
     """A context manager which changes the working directory to the given
     path, and then changes it back to its previous value on exit.
     """
-    _logger.debug('.$ cd %s', _escape(path))
     prev_cwd = os.getcwd()
+    _logger.debug('.$ cd %s', _escape(path))
     os.chdir(path)
     try:
         yield
     finally:
+        _logger.debug('.$ cd %s', _escape(prev_cwd))
         os.chdir(prev_cwd)
