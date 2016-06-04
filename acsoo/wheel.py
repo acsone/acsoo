@@ -15,19 +15,24 @@ from .tools import check_call, working_directory
 _logger = logging.getLogger(__name__)
 
 
-def do_wheel(src, requirement, wheel_dir):
+def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index):
     if os.path.exists(wheel_dir):
         _logger.debug('Removing all wheels in %s.', wheel_dir)
         with working_directory(wheel_dir):
             for f in os.listdir('.'):
                 if f.endswith('.whl'):
                     os.remove(f)
+    opts = []
+    if no_cache_dir:
+        opts.append('--no-cache-dir')
+    if no_index:
+        opts.append('--no-index')
     check_call(['pip', 'wheel', '--src', src, '-r', 'requirements.txt',
-                '--wheel-dir', wheel_dir])
+                '--wheel-dir', wheel_dir] + opts)
     # TODO 'pip wheel .' is slower and sometimes buggy because of
     #      https://github.com/pypa/pip/issues/3499
     check_call(['python', 'setup.py', 'bdist_wheel',
-                '--dist-dir', wheel_dir])
+                '--dist-dir', wheel_dir] + opts)
 
 
 @click.command(help='Build wheels for all dependencies found in '
@@ -43,8 +48,13 @@ def do_wheel(src, requirement, wheel_dir):
 @click.option('-w', '--wheel-dir', default='release',
               type=click.Path(),
               help='Path where the wheels will be created (default=release')
-def wheel(src, requirement, wheel_dir):
-    do_wheel(src, requirement, wheel_dir)
+@click.option('--no-cache-dir', is_flag=True,
+              help='Disable the pip cache')
+@click.option('--no-index', is_flag=True,
+              help='Ignore package index '
+                   '(only looking at --find-links URLs instead)')
+def wheel(src, requirement, wheel_dir, no_cache_dir, no_index):
+    do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index)
 
 
 main.add_command(wheel)
