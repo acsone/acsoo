@@ -21,8 +21,10 @@ def do_tag(force, yes):
         raise click.ClickException("Please commit first.")
     if 0 != call(['git', 'diff', '--exit-code', '--cached']):
         raise click.ClickException("Please commit first.")
-    if check_output(['git', 'ls-files', '--other', '--exclude-standard',
-                     '--directory']):
+    out = check_output(['git', 'ls-files', '--other', '--exclude-standard',
+                        '--directory'])
+    if out:
+        click.echo(out)
         raise click.ClickException("Please commit first.")
     check_call(['git', 'tag'] + force_cmd + [tag])
     check_call(['git', 'push'] + force_cmd + ['origin', 'tag', tag])
