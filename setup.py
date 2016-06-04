@@ -34,6 +34,9 @@ setup(
         'setuptools>=20',
         'wheel>=0.29',
     ],
+    setup_requires=[
+        'setuptools-git',
+    ],
     entry_points='''
         [console_scripts]
         acsoo=acsoo.main:main
