@@ -46,7 +46,7 @@ To replace https://github.com/acsone/odoo-scaffold-templates
 
 ### acsoo init-project
 
-If only to show the canonical (project template)[acsoo/templates/project].
+If only to show the canonical [project template](acsoo/templates/project).
 
 ### acsoo freeze
 
