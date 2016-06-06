@@ -16,7 +16,10 @@ To save some time copy odoo {{ series }} sources in src/odoo
 
 2. Install everything
 
-pip install --src src -r requirements-dev.txt
+pip install --src src --pre -r requirements-dev.txt
+
+* --src is to clone editable requirements in the src directory
+* --pre is to get the latest development version of dependencies (odoo addons in particular)
 
 3. run
 
