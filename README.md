@@ -57,6 +57,9 @@ and their dependencies unless such dependencies are required by the project
 (directly or indirectly).
 * excluding the project itself (as usual for python requirements.txt files)
 
+Inspiration to be found in https://pypi.python.org/pypi/pipdeptree, although I don't
+think acsoo should depend on that, as it's only a thin wrapper around the `pip` api.
+
 ### acsoo version
 
 A helper to bump version in `acsoo.cfg` and also bump version in (some?) odoo addons, such
