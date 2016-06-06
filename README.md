@@ -8,7 +8,8 @@ that can be packaged and installed with pip.
 
 Criteria for tools to be included here:
 
-* being sufficiently non-trivial to be error-prone or time consuming when done manually
+* being small wrappers around standard commands (`git`, `pip`, etc)
+* yet being sufficiently non-trivial to be error-prone or time consuming when done manually
 * being used across several Acsone Odoo projects
 
 ## What we have here
@@ -45,7 +46,7 @@ To replace https://github.com/acsone/odoo-scaffold-templates
 
 ### acsoo init-project
 
-If only to show the canonical project template.
+If only to show the canonical (project template)[acsoo/templates/project].
 
 ### acsoo freeze
 
