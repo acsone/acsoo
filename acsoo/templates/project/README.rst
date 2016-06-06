@@ -12,7 +12,7 @@ mkvirtualenv odoo-{{ name }} -a .
 
 run ./bootstrap.sh
 
-To save some time copy odoo 9 sources in src/odoo
+To save some time copy odoo {{ series }} sources in src/odoo
 
 2. Install everything
 
