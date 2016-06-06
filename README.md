@@ -49,9 +49,13 @@ If only to show the canonical project template.
 
 ### acsoo freeze
 
-`pip freeze` (which works very well as is), but exluding some common dev tools
-that are not required in production (pudb, ipdb, acsoo, git-aggregator, setuptools-odoo...)
-and their dependencies unless such dependencies are required by the project (directly or indirectly).
+`pip freeze` (which works very well as is) with the following additions
+
+* exluding some common dev tools that are not required in production 
+(pudb, ipdb, acsoo, git-aggregator, setuptools-odoo...)
+and their dependencies unless such dependencies are required by the project 
+(directly or indirectly).
+* excluding the project itself (as usual for python requirements.txt files)
 
 ### acsoo version
 
