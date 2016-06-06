@@ -24,11 +24,14 @@ odoo-autodiscover.py
 
 4. freeze and release
 
-update VERSION.txt
-./freeze.sh
-check what has changed in requirements.txt
-commit everything
-run acsoo release
+* update version in acsoo.cfg
+* ./freeze.sh
+* carefully check what has changed in requirements.txt
+* git commit everything
+* run acsoo release
 
-# install it there as explained here:
-# https://pip.pypa.io/en/stable/user_guide/#installation-bundles
+5. deploy
+
+On the target machine, create a fresh virtual environment, and
+install the wheels from the release directory, as explained here:
+https://pip.pypa.io/en/stable/user_guide/#installation-bundles
