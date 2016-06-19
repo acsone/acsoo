@@ -40,7 +40,7 @@ Perform `acsoo tag`, `acsoo tag_editable_requirements` and
 
 ### Initialize a new project
 
-```shell
+```
 mkdir project-dir
 cd project-dir
 mkvirtualenv project-dir -a .
