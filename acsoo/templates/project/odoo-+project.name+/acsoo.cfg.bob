@@ -1,0 +1,4 @@
+[acsoo]
+trigram={{{ project.trigram }}}
+series={{{ odoo.series }}}
+version=1.0.0

@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+REQS=requirements.txt
+
+cat requirements-find-links.txt > $REQS
+
+pip freeze |
+  grep -v -E 'odoo-addons-{{{ project.name }}}|acsoo|^mrbob|^bobtemplates.odoo|^pudb|^Pygments|^urwid|^pkg-resources|^click' >> $REQS

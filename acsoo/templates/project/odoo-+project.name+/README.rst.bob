@@ -1,6 +1,6 @@
-===============
-Odoo {{ Name }}
-===============
+====={{{ "=" * project.name|length }}}
+Odoo {{{ project.name|capitalize }}}
+====={{{ "=" * project.name|length }}}
 
 dev env howto
 =============
@@ -8,11 +8,12 @@ dev env howto
 1. Initialize virtualenv
 
 create and activate virtualenv, possibly with virtualenvwrapper's
-mkvirtualenv odoo-{{ name }} -a .
+mkvirtualenv odoo-{{{ project.name }}} -a .
 
 run ./bootstrap.sh
 
-To save some time copy odoo {{ series }} sources in src/odoo
+To save some time copy Odoo {{{ odoo.series }}} sources in src/odoo,
+and do ``git clean -ffdx`` in src/odoo.
 
 2. Install everything
 

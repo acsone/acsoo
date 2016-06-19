@@ -33,6 +33,7 @@ setup(
         'pip',  # TODO >= 8.2
         'setuptools>=20',
         'wheel>=0.29',
+        'bobtemplates.odoo',
     ],
     setup_requires=[
         'setuptools-git',

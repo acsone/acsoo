@@ -38,15 +38,11 @@ but works around a pip quirk.
 Perform `acsoo tag`, `acsoo tag_editable_requirements` and
 `acsoo wheel` in one command.
 
+### Initialize a new project
+
+`mrbob acsoo:templates/project`
+
 ## Ideas
-
-### acsoo init-module
-
-To replace https://github.com/acsone/odoo-scaffold-templates
-
-### acsoo init-project
-
-If only to show the canonical [project template](acsoo/templates/project).
 
 ### acsoo freeze
 

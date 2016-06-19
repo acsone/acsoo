@@ -1,0 +1,18 @@
+-r requirements-find-links.txt
+
+# odoo
+-r https://raw.githubusercontent.com/odoo/odoo/{{{ odoo.series }}}/requirements.txt
+-e git+ssh://git@github.com/acsone/odoo.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master#egg=odoo
+{{% if odoo.enterprise %}}
+-e git+ssh://git@github.com/acsone/enterprise.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master#egg=odoo-addons-enterprise&subdirectory=setup
+{{% endif %}}
+odoo-autodiscover
+
+# patched ACSONE addons
+# ...
+
+# patched OCA addons
+# -e git+ssh://git@github.com/acsone/{oca-project}.git@@{{{ odoo.series }}}-{{{ project.trigram }}}_master#egg=odoo-addon-{addon}&subdirectory=setup/{addon}
+
+# local project
+-e .
