@@ -40,11 +40,13 @@ Perform `acsoo tag`, `acsoo tag_editable_requirements` and
 
 ### Initialize a new project
 
-`mkdir project-dir`
-`cd project-dir`
-`mkvirtualenv project-dir -a .`
-`pip install git+https://github.com/acsone/acsoo.git`
-`mrbob acsoo:templates/project`
+```shell
+mkdir project-dir
+cd project-dir
+mkvirtualenv project-dir -a .
+pip install git+https://github.com/acsone/acsoo.git
+mrbob acsoo:templates/project
+```
 
 ## Ideas
 
