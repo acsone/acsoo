@@ -28,6 +28,7 @@ def do_tag_editable_requirements(force, src, requirement, yes):
         force_cmd = ['-f']
     else:
         force_cmd = []
+    shas = {}  # url: sha
     for req in requirement:
         req = req.strip()
         mo = RE.match(req)
@@ -36,6 +37,17 @@ def do_tag_editable_requirements(force, src, requirement, yes):
         url = mo.group('url')
         sha = mo.group('sha')
         egg = mo.group('egg')
+        if url in shas:
+            if shas[url] != sha:
+                raise click.ClickException(
+                    "Trying to place tag {tag} at {url}@{sha} but the "
+                    "same tag has already been placed at {prevsha}. This "
+                    "is probably due to an inconsistency in your "
+                    "requirements.txt.".format(
+                        tag=tag, url=url, sha=sha, prevsha=shas[url]))
+            # we already tagged this url with this sha
+            _logger.info("Skipping %s@%s because already tagged.", url, sha)
+            continue
         repo = os.path.join(src, egg.replace('_', '-'))
         if not os.path.isdir(os.path.join(repo, '.git')):
             check_call(['git', 'clone', url, repo])
@@ -44,6 +56,7 @@ def do_tag_editable_requirements(force, src, requirement, yes):
             check_call(['git', 'fetch', url, sha])
             check_call(['git', 'tag'] + force_cmd + [tag, sha])
             check_call(['git', 'push'] + force_cmd + [url, tag])
+        shas[url] = sha
 
 
 @click.command(help='Tag all editable requirements found in '
