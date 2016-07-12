@@ -53,7 +53,7 @@ def do_tag_editable_requirements(force, src, requirement, yes):
             check_call(['git', 'clone', url, repo])
         with working_directory(repo):
             _logger.info('placing tag %s on %s@%s', tag, url, sha)
-            check_call(['git', 'fetch', url, sha])
+            check_call(['git', 'fetch', '--tags', url, sha])
             check_call(['git', 'tag'] + force_cmd + [tag, sha])
             check_call(['git', 'push'] + force_cmd + [url, tag])
         shas[url] = sha
