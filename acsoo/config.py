@@ -23,7 +23,7 @@ class AcsooConfig(object):
         if not r:
             raise click.ClickException('Missing series in {}.'.
                                        format(CONFIG_FILE))
-        if r not in ('8.0', '9.0'):
+        if r not in ('8.0', '9.0', '10.0'):
             raise click.ClickException('Unsupported series {} in {}.'.
                                        format(r, CONFIG_FILE))
         return r
