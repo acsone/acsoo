@@ -5,6 +5,7 @@
 import logging
 import re
 import os
+import shutil
 
 import click
 
@@ -31,6 +32,8 @@ def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index):
                 '--wheel-dir', wheel_dir] + opts)
     # TODO 'pip wheel .' is slower and sometimes buggy because of
     #      https://github.com/pypa/pip/issues/3499
+    if os.path.exists('build'):
+        shutil.rmtree('build')
     check_call(['python', 'setup.py', 'bdist_wheel',
                 '--dist-dir', wheel_dir] + opts)
 
