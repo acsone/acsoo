@@ -30,7 +30,7 @@ the referenced commits are not lost in case of git garbage collection.
 Build wheels for all dependencies found in `requirements.txt`,
 plus the project in the current directory.
 
-This is actually almost trivial (ie `pip wheel -r requirements.txt`),
+This is actually almost trivial (ie `pip wheel -r requirements.txt -e .`),
 but works around a pip quirk.
 
 ### acsoo release
