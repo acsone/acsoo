@@ -1,0 +1,3 @@
+--find-links https://wheelhouse.acsone.eu/manylinux1
+--find-links https://wheelhouse.acsone.eu/acsone-odoo
+--find-links https://wheelhouse.odoo-community.org/oca

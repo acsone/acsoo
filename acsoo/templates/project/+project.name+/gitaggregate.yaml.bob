@@ -17,7 +17,7 @@
     merges:
         - oca {{{ odoo.series }}}
         - origin {{{ odoo.series }}}-with-setup
-{{% if odoo.enterprise %}}
+{{% if odoo.enterprise and odoo.series == '9.0' %}}
     shell_command_after:
         - git rm -r addons/web
         - git rm openerp/addons/web

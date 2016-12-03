@@ -1,0 +1,65 @@
+====={{{ "=" * project.name|length }}}
+Odoo {{{ project.name|capitalize }}}
+====={{{ "=" * project.name|length }}}
+
+.. contents::
+
+Development environment howto
+=============================
+
+Initialize virtualenv
+---------------------
+
+create and activate virtualenv, possibly with virtualenvwrapper's
+``mkvirtualenv odoo-{{{ project.name }}} -a .``
+
+run ``./bootstrap.sh``
+
+To save some time copy Odoo {{{ odoo.series }}} sources in src/odoo,
+and do ``git clean -ffdx`` in src/odoo.
+
+Install everything
+------------------
+
+.. code:: bash
+
+   pip install --src src -r requirements.txt
+   pip install --src src -e .
+
+Only when there is a need to refresh the frozen dependencies,
+review ``gitaggregate.yaml`` and ``requirements-dev.txt``, then
+run:
+
+.. code:: bash
+
+   gitaggregate -c gitaggregate.yaml -p
+   rmvirtualenv odoo-{{{ project.name }}}
+   mkvirtualenv odoo-{{{ project.name }}} -a .
+   ./bootstrap.sh
+   pip install --src src --pre -r requirements-dev.txt
+   ./freeze.sh
+   git commit requirements.txt
+
+Run
+---
+
+{{% if odoo.series in ['8.0', '9.0'] %}}
+   odoo-autodiscover.py
+{{% else %}}
+   odoo
+{{% endif %}}
+
+Release
+-------
+
+First make sure you have been testing using the correct dependencies by
+running ``./freeze.sh`` and checking there is no change in ``requirements.txt``.
+
+To release:
+
+- update version in ``acsoo.cfg`` and ``{{{ project.name }}}_all/__openerp__.py``
+- commit everything
+- run ``acsoo release``
+
+At that point the resulting wheel files in ``./release`` contain all the
+code to be deployed.
