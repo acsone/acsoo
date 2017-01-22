@@ -5,12 +5,12 @@
 import click
 
 from .main import main
-from .config import config
+from .config import config, CONFIG_FILE
 from .tools import check_call, call, check_output
 
 
-def do_tag(force, yes):
-    tag = config().version
+def do_tag(force, yes, config_file):
+    tag = config(config_file).version
     if not yes:
         click.confirm('Tag project with {}?'.format(tag), abort=True)
     if force:
@@ -35,8 +35,10 @@ def do_tag(force, yes):
 @click.option('-f', '--force', is_flag=True,
               help='Replace an existing tag (instead of failing)')
 @click.option('-y', '--yes', is_flag=True, default=False)
-def tag(force, yes):
-    do_tag(force, yes)
+@click.option('-c', '--config-file', default=CONFIG_FILE, type=click.File(),
+              help='Configuration file')
+def tag(force, yes, config_file):
+    do_tag(force, yes, config_file)
 
 
 main.add_command(tag)

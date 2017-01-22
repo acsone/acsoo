@@ -13,19 +13,20 @@ SECTION = 'acsoo'
 
 class AcsooConfig(object):
 
-    def __init__(self):
+    def __init__(self, config_file=CONFIG_FILE):
         self.__cfg = ConfigParser()
-        self.__cfg.read(CONFIG_FILE)
+        self.__cfg.read(config_file)
+        self.config_file = config_file
 
     @property
     def series(self):
         r = self.__cfg.get(SECTION, 'series')
         if not r:
             raise click.ClickException('Missing series in {}.'.
-                                       format(CONFIG_FILE))
+                                       format(self.config_file))
         if r not in ('8.0', '9.0', '10.0'):
             raise click.ClickException('Unsupported series {} in {}.'.
-                                       format(r, CONFIG_FILE))
+                                       format(r, self.config_file))
         return r
 
     @property
@@ -33,7 +34,7 @@ class AcsooConfig(object):
         r = self.__cfg.get(SECTION, 'version')
         if not r:
             raise click.ClickException('Missing version in {}.'.
-                                       format(CONFIG_FILE))
+                                       format(self.config_file))
         return r
 
     @property
@@ -41,12 +42,15 @@ class AcsooConfig(object):
         r = self.__cfg.get(SECTION, 'trigram')
         if not r:
             raise click.ClickException('Missing trigram in {}.'.format(
-                CONFIG_FILE))
+                self.config_file))
         return r
 
 
-_config = AcsooConfig()
+_config = None
 
 
-def config():
+def config(config_file):
+    global _config
+    if _config is None:
+        _config = AcsooConfig(config_file.name)
     return _config
