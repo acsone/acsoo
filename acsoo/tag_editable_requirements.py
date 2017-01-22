@@ -9,7 +9,7 @@ import os
 import click
 
 from .main import main
-from .config import config
+from .config import config, CONFIG_FILE
 from .tools import check_call, working_directory
 
 _logger = logging.getLogger(__name__)
@@ -19,9 +19,10 @@ RE = re.compile(r"^-e git\+(?P<url>ssh://.*?/.*?)@(?P<sha>[^?#&]+)"
                 r".*?[#?]egg=(?P<egg>[^?#&]+)")
 
 
-def do_tag_editable_requirements(force, src, requirement, yes):
+def do_tag_editable_requirements(force, src, requirement, yes, config_file):
     tag = '{}-{}_{}'.format(
-        config().series, config().trigram, config().version)
+        config(config_file).series, config(config_file).trigram,
+        config(config_file).version)
     if not yes:
         click.confirm('Tag dependencies with {}?'.format(tag), abort=True)
     if force:
@@ -71,8 +72,10 @@ def do_tag_editable_requirements(force, src, requirement, yes):
               type=click.File(),
               help='Requirements to build (default=requirements.txt)')
 @click.option('-y', '--yes', is_flag=True, default=False)
-def tag_editable_requirements(force, src, requirement, yes):
-    do_tag_editable_requirements(force, src, requirement, yes)
+@click.option('-c', '--config-file', default=CONFIG_FILE, type=click.File(),
+              help='Configuration file')
+def tag_editable_requirements(force, src, requirement, yes, config_file):
+    do_tag_editable_requirements(force, src, requirement, yes, config_file)
 
 
 main.add_command(tag_editable_requirements)
