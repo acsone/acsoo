@@ -1,3 +1,3 @@
 --find-links https://wheelhouse.acsone.eu/manylinux1
 #--find-links https://wheelhouse.acsone.eu/acsone-odoo
-#--extra-index-url https://wheelhouse.odoo-community.org/oca
+#--extra-index-url https://wheelhouse.odoo-community.org/oca-simple
