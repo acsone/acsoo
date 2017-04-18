@@ -12,7 +12,7 @@ odoo-autodiscover
 # ...
 
 # patched OCA addons
-# -e git+ssh://git@github.com/acsone/{oca-project}.git@@{{{ odoo.series }}}-{{{ project.trigram }}}_master#egg=odoo-addon-{addon}&subdirectory=setup/{addon}
+# -e git+ssh://git@github.com/acsone/{oca-project}.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master#egg=odoo-addon-{addon}&subdirectory=setup/{addon}
 
 # local project
 -e .
