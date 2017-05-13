@@ -24,7 +24,7 @@ def do_lint(exclude):
 
 
 @click.command(help='Lint Odoo code, using flake8 and pylint(-odoo)')
-@click.option('--exclude', default='src',
+@click.option('--exclude', default='src,venv*',
               type=click.Path(),
               help='Excluded directories')
 def lint(exclude):
