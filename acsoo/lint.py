@@ -4,15 +4,17 @@
 
 import subprocess
 
+
 import click
 
 from .main import main
+from .tools import find_executable
 
 
 def do_lint(exclude):
     r = 0
     # flake8
-    cmd = ['flake8']
+    cmd = [find_executable('flake8')]
     if exclude:
         cmd.extend(['--exclude', exclude])
     r += subprocess.call(cmd)

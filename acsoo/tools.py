@@ -6,6 +6,8 @@ import contextlib
 import logging
 import os
 import subprocess
+import sys
+from distutils.spawn import find_executable as _fe
 
 import click
 
@@ -69,3 +71,14 @@ def working_directory(path):
     finally:
         _logger.debug('.$ cd %s', _escape(prev_cwd))
         os.chdir(prev_cwd)
+
+
+def find_executable(exe):
+    python_dir = os.path.dirname(sys.executable)
+    exe_path = os.path.join(python_dir, exe)
+    if os.path.exists(exe_path):
+        return exe_path
+    exe_path = _fe(exe)
+    if exe_path:
+        return exe_path
+    raise RuntimeError("%s executable not found" % (exe, ))
