@@ -30,8 +30,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'Click',
-        'pip',  # TODO >= 8.2
-        'setuptools>=20',
+        'pip>=9.0.1',
+        'setuptools>=20,<31',
         'wheel>=0.29',
         'bobtemplates.odoo',
     ],
