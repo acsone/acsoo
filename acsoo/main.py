@@ -6,7 +6,7 @@ import logging
 
 import click
 
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 __notice__ = '''%(prog)s, version %(version)s
 
