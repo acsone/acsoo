@@ -4,6 +4,7 @@
 
 import main
 # commands
+import lint
 import release
 import tag
 import tag_editable_requirements

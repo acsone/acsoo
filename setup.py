@@ -34,6 +34,7 @@ setup(
         'setuptools>=20,<31',
         'wheel>=0.29',
         'bobtemplates.odoo',
+        'flake8',
     ],
     setup_requires=[
         'setuptools-git',
