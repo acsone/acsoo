@@ -2,22 +2,19 @@
 # Copyright 2016-2017 ACSONE SA/NV (<http://acsone.eu>)
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
-import subprocess
-
-
 import click
 
 from .main import main
-from .tools import find_executable
+from .tools import check_call
 
 
 def do_lint(exclude):
     r = 0
     # flake8
-    cmd = [find_executable('flake8')]
+    cmd = ['flake8']
     if exclude:
         cmd.extend(['--exclude', exclude])
-    r += subprocess.call(cmd)
+    r += check_call(cmd)
     # pylint
     # TODO
     return r

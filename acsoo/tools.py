@@ -35,6 +35,7 @@ def _log_cmd(cmd, cwd=None):
 
 
 def call(cmd, cwd=None):
+    _adapt_executable(cmd)
     _log_cmd(cmd, cwd=cwd)
     try:
         return subprocess.call(cmd, cwd=cwd)
@@ -43,6 +44,7 @@ def call(cmd, cwd=None):
 
 
 def check_call(cmd, cwd=None):
+    _adapt_executable(cmd)
     _log_cmd(cmd, cwd=cwd)
     try:
         return subprocess.check_call(cmd, cwd=cwd)
@@ -51,6 +53,7 @@ def check_call(cmd, cwd=None):
 
 
 def check_output(cmd, cwd=None):
+    _adapt_executable(cmd)
     _log_cmd(cmd, cwd=cwd)
     try:
         return subprocess.check_output(cmd, cwd=cwd)
@@ -73,7 +76,11 @@ def working_directory(path):
         os.chdir(prev_cwd)
 
 
-def find_executable(exe):
+def _adapt_executable(cmd):
+    cmd[0] = _find_executable(cmd[0])
+
+
+def _find_executable(exe):
     python_dir = os.path.dirname(sys.executable)
     exe_path = os.path.join(python_dir, exe)
     if os.path.exists(exe_path):
