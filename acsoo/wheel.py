@@ -3,14 +3,12 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import logging
-import re
 import os
 import shutil
 
 import click
 
 from .main import main
-from .config import config
 from .tools import check_call, working_directory
 
 _logger = logging.getLogger(__name__)
