@@ -5,6 +5,7 @@
 import main
 # commands
 import release
+import rmlang
 import tag
 import tag_editable_requirements
 import wheel
