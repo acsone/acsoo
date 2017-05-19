@@ -30,31 +30,34 @@ def _cmd_string(cmd):
     return " ".join([_escape(s) for s in cmd])
 
 
-def _log_cmd(cmd, cwd=None):
-    _logger.debug('%s$ %s', cwd or '.', _cmd_string(cmd))
+def _log_cmd(cmd, cwd=None, level=logging.DEBUG, echo=False):
+    s = _cmd_string(cmd)
+    if echo:
+        click.echo(click.style(s, bold=True))
+    _logger.log(level, '%s$ %s', cwd or '.', s)
 
 
-def call(cmd, cwd=None):
+def call(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
     _adapt_executable(cmd)
-    _log_cmd(cmd, cwd=cwd)
+    _log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
     try:
         return subprocess.call(cmd, cwd=cwd)
     except subprocess.CalledProcessError:
         raise click.ClickException(_cmd_string(cmd))
 
 
-def check_call(cmd, cwd=None):
+def check_call(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
     _adapt_executable(cmd)
-    _log_cmd(cmd, cwd=cwd)
+    _log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
     try:
         return subprocess.check_call(cmd, cwd=cwd)
     except subprocess.CalledProcessError:
         raise click.ClickException(_cmd_string(cmd))
 
 
-def check_output(cmd, cwd=None):
+def check_output(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
     _adapt_executable(cmd)
-    _log_cmd(cmd, cwd=cwd)
+    _log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
     try:
         return subprocess.check_output(cmd, cwd=cwd)
     except subprocess.CalledProcessError:
@@ -89,3 +92,7 @@ def _find_executable(exe):
     if exe_path:
         return exe_path
     raise RuntimeError("%s executable not found" % (exe, ))
+
+
+def cfg_path(filename):
+    return os.path.join(os.path.dirname(__file__), 'cfg', filename)
