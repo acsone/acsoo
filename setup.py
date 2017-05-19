@@ -36,6 +36,7 @@ setup(
         'bobtemplates.odoo',
         'flake8',
         'pylint-odoo',
+        'lxml',  # pylint-odoo dep not installed automatically?
     ],
     setup_requires=[
         'setuptools-git',
