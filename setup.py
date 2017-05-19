@@ -35,6 +35,7 @@ setup(
         'wheel>=0.29',
         'bobtemplates.odoo',
         'flake8',
+        'pylint-odoo',
     ],
     setup_requires=[
         'setuptools-git',
