@@ -26,12 +26,12 @@ def _escape(s):
     return s
 
 
-def _cmd_string(cmd):
+def cmd_string(cmd):
     return " ".join([_escape(s) for s in cmd])
 
 
-def _log_cmd(cmd, cwd=None, level=logging.DEBUG, echo=False):
-    s = _cmd_string(cmd)
+def log_cmd(cmd, cwd=None, level=logging.DEBUG, echo=False):
+    s = cmd_string(cmd)
     if echo:
         click.echo(click.style(s, bold=True))
     _logger.log(level, '%s$ %s', cwd or '.', s)
@@ -39,29 +39,29 @@ def _log_cmd(cmd, cwd=None, level=logging.DEBUG, echo=False):
 
 def call(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
     _adapt_executable(cmd)
-    _log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
+    log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
     try:
         return subprocess.call(cmd, cwd=cwd)
     except subprocess.CalledProcessError:
-        raise click.ClickException(_cmd_string(cmd))
+        raise click.ClickException(cmd_string(cmd))
 
 
 def check_call(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
     _adapt_executable(cmd)
-    _log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
+    log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
     try:
         return subprocess.check_call(cmd, cwd=cwd)
     except subprocess.CalledProcessError:
-        raise click.ClickException(_cmd_string(cmd))
+        raise click.ClickException(cmd_string(cmd))
 
 
 def check_output(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
     _adapt_executable(cmd)
-    _log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
+    log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
     try:
         return subprocess.check_output(cmd, cwd=cwd)
     except subprocess.CalledProcessError:
-        raise click.ClickException(_cmd_string(cmd))
+        raise click.ClickException(cmd_string(cmd))
 
 
 @contextlib.contextmanager

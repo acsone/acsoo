@@ -4,8 +4,8 @@
 
 from . import main
 # commands
-from . import flake8
-from . import pylint
+from . import flake8cmd
+from . import pylintcmd
 from . import release
 from . import tag
 from . import tag_editable_requirements
