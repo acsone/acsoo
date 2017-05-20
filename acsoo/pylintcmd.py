@@ -4,6 +4,7 @@
 
 import logging
 import os
+import sys
 from ConfigParser import ConfigParser
 
 import click
@@ -57,6 +58,8 @@ def do_pylintcmd(load_plugins, rcfile, no_fail, fail, pylint_options):
         cmd.append('odoo_addons')
     log_cmd(['pylint'] + cmd, level=logging.INFO)
     lint_res = pylint.lint.Run(cmd[:], exit=False)
+    sys.stdout.flush()
+    sys.stderr.flush()
     no_fail = _consolidate_no_fail(rcfile, no_fail, fail)
     fails, no_fails = _get_failures(lint_res.linter.stats, no_fail)
     if fails:
