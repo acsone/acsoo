@@ -40,19 +40,19 @@ Perform `acsoo tag`, `acsoo tag_editable_requirements` and
 
 ### acsoo flake8
 
-Run flake8 with sensible default for Odoo code.
+Run [flake8](https://pypi.python.org/pypi/flake8) with sensible default for Odoo code.
 
-It is possible to pass additional options to the flake8 command, eg:
+It is possible to pass additional options to the `flake8` command, eg:
 
 `acsoo flake8 -- --ignore E24,W504`
 
 ### acsoo pylint
 
-Run pylint on the `odoo` or `odoo_addons` namespace. It automatically
-uses the pylint-odoo plugins and runs with a reasonable configuration,
-including an opinionated set of disabled message.
+Run [pylint](https://pypi.python.org/pypi/pylint) on the `odoo` or `odoo_addons` namespace. 
+It automatically uses the [pylint-odoo](https://pypi.python.org/pypi/pylint-odoo) plugins and 
+runs with a reasonable configuration, including an opinionated set of disabled message.
 
-It is possible to pass additional options to the pylint command, eg:
+It is possible to pass additional options to the `pylint` command, eg:
 
 `acsoo pylint -- --disable missing-final-newline`
 
