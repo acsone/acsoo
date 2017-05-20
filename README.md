@@ -38,6 +38,34 @@ but works around a pip quirk.
 Perform `acsoo tag`, `acsoo tag_editable_requirements` and
 `acsoo wheel` in one command.
 
+### acsoo flake8
+
+Run flake8 with sensible default for Odoo code.
+
+It is possible to pass additional options to the flake8 command, eg:
+
+`acsoo flake8 -- --ignore E24,W504`
+
+### acsoo pylint
+
+Run pylint on the `odoo` or `odoo_addons` namespace. It automatically
+uses the pylint-odoo plugins and runs with a reasonable configuration,
+including an opinionated set of disabled message.
+
+It is possible to pass additional options to the pylint command, eg:
+
+`acsoo pylint -- --disable missing-final-newline`
+
+This commands return an non-zero exit code if any message is reported.
+It is however possibly to continue displaying messages while reporting success, eg:
+
+`acsoo pylint --no-fail api-one-deprecated,line-too-long`
+
+It is also possible to force failure on messages that are `no-fail` in the
+default configuration, eg to fail on `fixme` errors, do:
+
+`acsoo pylint --fail fixme`
+
 ### Initialize a new project
 
 ```
