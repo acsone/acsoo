@@ -1,4 +1,5 @@
-# acsoo - Acsone Odoo Dev Tools
+acsoo - Acsone Odoo Dev Tools
+=============================
 
 This is a set of command-line utilities to facilitate
 the Odoo development workflow at Acsone.
@@ -12,20 +13,37 @@ Criteria for tools to be included here:
 * yet being sufficiently non-trivial to be error-prone or time consuming when done manually
 * being used across several Acsone Odoo projects
 
-## What we have here
+Installation
+~~~~~~~~~~~~
+
+  .. code:: shell
+
+    pip install acsoo
+
+To enable bash completion, add this line in your `.bashrc`:
+
+  .. code:: shell
+
+     eval "$(_ACSOO_COMPLETE=source acsoo)"
+
+What we have here
+~~~~~~~~~~~~~~~~~
 
 Try `acsoo --help`.
 
-### acsoo tag
+acsoo tag
+---------
 
 Tag the current project after ensuring everything has been commited to git.
 
-### acsoo tag_editable_requirements
+acsoo tag_editable_requirements
+-------------------------------
 
 Tag all editable requirements found in `requirements.txt`, so
 the referenced commits are not lost in case of git garbage collection.
 
-### acsoo wheel
+acsoo wheel
+-----------
 
 Build wheels for all dependencies found in `requirements.txt`,
 plus the project in the current directory.
@@ -33,52 +51,69 @@ plus the project in the current directory.
 This is actually almost trivial (ie `pip wheel -r requirements.txt -e .`),
 but works around a pip quirk.
 
-### acsoo release
+acsoo release
+-------------
 
 Perform `acsoo tag`, `acsoo tag_editable_requirements` and
 `acsoo wheel` in one command.
 
-### acsoo flake8
+acsoo flake8
+------------
 
-Run [flake8](https://pypi.python.org/pypi/flake8) with sensible default for Odoo code.
+Run `flake8 <https://pypi.python.org/pypi/flake8>` with sensible default for Odoo code.
 
 It is possible to pass additional options to the `flake8` command, eg:
 
-`acsoo flake8 -- --ignore E24,W504`
+  .. code:: shell
 
-### acsoo pylint
+    acsoo flake8 -- --ignore E24,W504
 
-Run [pylint](https://pypi.python.org/pypi/pylint) on the `odoo` or `odoo_addons` namespace. 
-It automatically uses the [pylint-odoo](https://pypi.python.org/pypi/pylint-odoo) plugins and 
+acsoo pylint
+------------
+
+Run `pylint <https://pypi.python.org/pypi/pylint>`_ on the `odoo` or `odoo_addons` namespace. 
+It automatically uses the `pylint-odoo <https://pypi.python.org/pypi/pylint-odoo>`_ plugin and 
 runs with a reasonable configuration, including an opinionated set of disabled message.
 
 It is possible to pass additional options to the `pylint` command, eg:
 
-`acsoo pylint -- --disable missing-final-newline`
+  .. code:: shell
 
-This commands return an non-zero exit code if any message is reported.
-It is however possibly to continue displaying messages while reporting success, eg:
+    acsoo pylint -- --disable missing-final-newline
 
-`acsoo pylint --no-fail api-one-deprecated,line-too-long`
+This command returns an non-zero exit code if any message is reported.
+It is however possibly to display messages while reporting success, eg:
+
+  .. code:: shell
+
+    acsoo pylint --no-fail api-one-deprecated:2,line-too-long
+
+The above command succeeds despite having exactly 2 api-one-deprecated and 
+any number of line-to-long messages being reported.
 
 It is also possible to force failure on messages that are `no-fail` in the
-default configuration, eg to fail on `fixme` errors, do:
+default configuration, eg to fail on `fixme` errors, just expect 0 `fixme` messages, like this:
 
-`acsoo pylint --fail fixme`
+  .. code:: shell
 
-### Initialize a new project
+    acsoo pylint --no-fail fixme:0
 
-```
-mkdir project-dir
-cd project-dir
-mkvirtualenv project-dir -a .
-pip install git+https://github.com/acsone/acsoo.git
-mrbob acsoo:templates/project
-```
+Initialize a new project
+------------------------
 
-## Ideas
+  .. code:: shell
 
-### acsoo freeze
+    mkdir project-dir
+    cd project-dir
+    mkvirtualenv project-dir -a .
+    pip install git+https://github.com/acsone/acsoo.git
+    mrbob acsoo:templates/project
+
+Ideas
+~~~~~
+
+acsoo freeze
+------------
 
 `pip freeze` (which works very well as is) with the following additions
 
@@ -91,7 +126,8 @@ and their dependencies unless such dependencies are required by the project
 Inspiration to be found in https://pypi.python.org/pypi/pipdeptree, although I don't
 think acsoo should depend on that, as it's only a thin wrapper around the `pip` api.
 
-### acsoo version
+acsoo version
+-------------
 
 A helper to bump version in `acsoo.cfg` and also bump version in (some?) odoo addons, such
 as the main addon that pulls dependencies. Requires further thinking.
