@@ -32,12 +32,8 @@ setup(
         'Framework :: Odoo',
     ],
     setup_requires=[
-        'pytest-runner',
         'setuptools-git',
         'setuptools-scm',
-    ],
-    tests_require=[
-        'pytest',
     ],
     entry_points='''
         [console_scripts]
