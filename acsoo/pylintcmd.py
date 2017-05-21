@@ -14,40 +14,70 @@ from .main import main
 from .tools import cmd_string, log_cmd, cfg_path
 
 
-def _get_failures(linter_stats, no_fail):
+def _get_failures(linter_stats, expected):
     fails = []
     no_fails = []
     for msg, count in linter_stats['by_msg'].items():
         if not count:
             continue
-        if msg in no_fail:
-            no_fails.append((msg, count))
+        if msg in expected:
+            expected_count = expected[msg]
+            if expected_count is None or count == expected_count:
+                no_fails.append((msg, count, expected_count))
+            else:
+                fails.append((msg, count, expected_count))
         else:
-            fails.append((msg, count))
-    return (sorted(fails, key=lambda i: i[1]),
-            sorted(no_fails, key=lambda i: i[1]))
+            fails.append((msg, count, None))
+    return (sorted(fails, key=lambda i: i[0]),
+            sorted(no_fails, key=lambda i: i[0]))
 
 
-def _parse_cs_string(s):
-    """Parse a comma-separated string and return a list."""
-    s = s and s.strip()
-    if not s:
-        return []
-    else:
-        return [part.strip() for part in s.split(',')]
+def _failures_to_str(fails, no_fails):
+    def _r(l):
+        for msg, count, expected_count in l:
+            res.append('  {}: {}'.format(msg, count))
+            if expected_count is not None:
+                res.append(' (expected {})'.format(expected_count))
+            res.append('\n')
+
+    res = []
+    if fails:
+        res.append('messages that caused failure:\n')
+        _r(fails)
+    if no_fails:
+        res.append('messages that did not cause failure:\n')
+        _r(no_fails)
+    return ''.join(res)
 
 
-def _consolidate_no_fail(rcfile, no_fail, fail):
+def _parse_msg_string(s):
+    res = {}
+    s = s or ''
+    for msg in s.split(','):
+        msg = msg.strip()
+        if not msg:
+            continue
+        if ':' in msg:
+            msg, count = msg.split(':', 2)
+            msg = msg.strip()
+            count = int(count)
+            res[msg] = count
+        else:
+            res[msg] = None
+    return res
+
+
+def _consolidate_expected(rcfile, expected):
     config = ConfigParser()
     config.read([rcfile])
-    res = set()
-    if config.has_option('ACSOO', 'no-fail'):
-        res.update(_parse_cs_string(config.get('ACSOO', 'no-fail')))
-    res.update(no_fail)
-    return res - set(fail)
+    res = {}
+    if config.has_option('ACSOO', 'expected'):
+        res.update(_parse_msg_string(config.get('ACSOO', 'expected')))
+    res.update(expected)
+    return res
 
 
-def do_pylintcmd(load_plugins, rcfile, no_fail, fail, pylint_options):
+def do_pylintcmd(load_plugins, rcfile, expected, pylint_options):
     cmd = [
         '--load-plugins', load_plugins,
         '--rcfile', rcfile,
@@ -60,30 +90,24 @@ def do_pylintcmd(load_plugins, rcfile, no_fail, fail, pylint_options):
     lint_res = pylint.lint.Run(cmd[:], exit=False)
     sys.stdout.flush()
     sys.stderr.flush()
-    no_fail = _consolidate_no_fail(rcfile, no_fail, fail)
-    fails, no_fails = _get_failures(lint_res.linter.stats, no_fail)
+    expected = _consolidate_expected(rcfile, expected)
+    fails, no_fails = _get_failures(lint_res.linter.stats, expected)
     if fails:
         msg = cmd_string(['pylint'] + cmd)
-        msg += '\n  messages that caused failure:\n    '
-        msg += '\n    '.join(['{0}: {1}'.format(*i) for i in fails])
-        if no_fails:
-            msg += '\n  messages that did not cause failure:\n    '
-            msg += '\n    '.join(['{0}: {1}'.format(*i) for i in no_fails])
+        msg += '\n'
+        msg += _failures_to_str(fails, no_fails)
         raise click.ClickException(msg)
 
 
 @click.command(help='Run pylint on odoo or odoo_addons')
 @click.option('--load-plugins', default='pylint_odoo', metavar='PLUGINS')
 @click.option('--rcfile', type=click.Path(), default=cfg_path('pylint.cfg'))
-@click.option('--no-fail', 'no_fail', metavar='MSG-IDS',
+@click.option('--expected', '-e', 'expected', metavar='MSG-IDS',
               help="Do not fail on these messages")
-@click.option('--fail', 'fail', metavar='MSG-IDS',
-              help="Fail on these messages even if they are in no-fail")
 @click.argument('pylint-options', nargs=-1)
-def pylintcmd(load_plugins, rcfile, no_fail, fail, pylint_options):
-    no_fail = _parse_cs_string(no_fail)
-    fail = _parse_cs_string(fail)
-    do_pylintcmd(load_plugins, rcfile, no_fail, fail, pylint_options)
+def pylintcmd(load_plugins, rcfile, expected, pylint_options):
+    expected = _parse_msg_string(expected)
+    do_pylintcmd(load_plugins, rcfile, expected, pylint_options)
 
 
 main.add_command(pylintcmd, name='pylint')
