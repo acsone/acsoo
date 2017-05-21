@@ -7,13 +7,13 @@ the Odoo development workflow at Acsone.
 It assumes the project is a setuptools-based python package
 that can be packaged and installed with pip.
 
+.. contents::
+
 Criteria for tools to be included here:
 
 * being small wrappers around standard commands (``git``, ``pip``, etc)
 * yet being sufficiently non-trivial to be error-prone or time consuming when done manually
 * being used across several Acsone Odoo projects
-
-.. contents::
 
 Installation
 ~~~~~~~~~~~~
@@ -73,8 +73,8 @@ It is possible to pass additional options to the ``flake8`` command, eg:
 acsoo pylint
 ------------
 
-Run `pylint <https://pypi.python.org/pypi/pylint>`_ on the ``odoo`` or ``odoo_addons`` namespace. 
-It automatically uses the `pylint-odoo <https://pypi.python.org/pypi/pylint-odoo>`_ plugin and 
+Run `pylint <https://pypi.python.org/pypi/pylint>`_ on the ``odoo`` or ``odoo_addons`` namespace.
+It automatically uses the `pylint-odoo <https://pypi.python.org/pypi/pylint-odoo>`_ plugin and
 runs with a reasonable configuration, including an opinionated set of disabled message.
 
 It is possible to pass additional options to the ``pylint`` command, eg:
@@ -88,17 +88,17 @@ It is however possibly to display messages while reporting success, eg:
 
   .. code:: shell
 
-    acsoo pylint --no-fail api-one-deprecated:2,line-too-long
+    acsoo pylint --expected api-one-deprecated:2,line-too-long
 
-The above command succeeds despite having exactly 2 api-one-deprecated and 
-any number of line-to-long messages being reported.
+The above command succeeds despite having exactly 2 ``api-one-deprecated`` or
+any number of ``line-too-long`` messages being reported.
 
-It is also possible to force failure on messages that are ``no-fail`` in the
+It is also possible to force failure on messages that are ``expected`` in the
 default configuration, eg to fail on ``fixme`` errors, just expect 0 ``fixme`` messages, like this:
 
   .. code:: shell
 
-    acsoo pylint --no-fail fixme:0
+    acsoo pylint --expected fixme:0
 
 Initialize a new project
 ------------------------
@@ -119,9 +119,9 @@ acsoo freeze
 
 ``pip freeze`` (which works very well as is) with the following additions
 
-* exluding some common dev tools that are not required in production 
+* exluding some common dev tools that are not required in production
   (pudb, ipdb, acsoo, git-aggregator, setuptools-odoo...)
-  and their dependencies unless such dependencies are required by the project 
+  and their dependencies unless such dependencies are required by the project
   (directly or indirectly).
 * excluding the project itself (as usual for python requirements.txt files)
 
