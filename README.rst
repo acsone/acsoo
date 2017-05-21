@@ -1,6 +1,14 @@
 acsoo - Acsone Odoo Dev Tools
 =============================
 
+.. image:: https://img.shields.io/badge/license-GPL--3-blue.svg
+   :target: http://www.gnu.org/licenses/gpl-3.0-standalone.html
+   :alt: License: GPL-3
+.. image:: https://badge.fury.io/py/acsoo.svg
+    :target: http://badge.fury.io/py/acsoo
+.. image:: https://travis-ci.org/acsone/acsoo.svg?branch=master
+   :target: https://travis-ci.org/acsone/acsoo
+
 This is a set of command-line utilities to facilitate
 the Odoo development workflow at Acsone.
 
