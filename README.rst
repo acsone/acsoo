@@ -8,6 +8,8 @@ acsoo - Acsone Odoo Dev Tools
     :target: http://badge.fury.io/py/acsoo
 .. image:: https://travis-ci.org/acsone/acsoo.svg?branch=master
    :target: https://travis-ci.org/acsone/acsoo
+.. image:: https://codecov.io/gh/acsone/acsoo/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/acsone/acsoo
 
 This is a set of command-line utilities to facilitate
 the Odoo development workflow at Acsone.
