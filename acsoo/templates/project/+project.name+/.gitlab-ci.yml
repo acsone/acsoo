@@ -1,7 +1,7 @@
 before_script:
   - set -e
   - virtualenv venv-acsoo
-  - venv-acsoo/bin/pip install -e git+https://github.com/acsone/acsoo.git#egg=acsoo
+  - venv-acsoo/bin/pip install acsoo
 
 flake8:
   stage: test
@@ -16,5 +16,3 @@ pylint:
     - odoo10
   script:
     - venv-acsoo/bin/acsoo pylint
-  allow_failure: true
-
