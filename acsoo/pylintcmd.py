@@ -40,12 +40,12 @@ def _failures_to_str(fails, no_fails):
             res.append('\n')
 
     res = []
-    if fails:
-        res.append('messages that caused failure:\n')
-        _r(fails)
     if no_fails:
         res.append('messages that did not cause failure:\n')
         _r(no_fails)
+    if fails:
+        res.append('messages that caused failure:\n')
+        _r(fails)
     return ''.join(res)
 
 

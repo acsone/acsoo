@@ -26,9 +26,9 @@ class TestPylint(unittest.TestCase):
             ])
             self.assertTrue(res.exit_code != 0)
             expected = dedent("""\
-                messages that caused failure:
-                  fixme: 1 (expected 0)
                 messages that did not cause failure:
                   manifest-required-key: 1
+                messages that caused failure:
+                  fixme: 1 (expected 0)
             """)
             assert expected in res.output
