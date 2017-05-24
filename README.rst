@@ -91,14 +91,14 @@ It is possible to pass additional options to the ``pylint`` command, eg:
 
   .. code:: shell
 
-    acsoo pylint -- --disable missing-final-newline
+    acsoo pylint -- --disable missing-final-newline odoo
 
 This command returns an non-zero exit code if any message is reported.
 It is however possibly to display messages while reporting success, eg:
 
   .. code:: shell
 
-    acsoo pylint --expected api-one-deprecated:2,line-too-long
+    acsoo pylint --expected api-one-deprecated:2,line-too-long -- odoo
 
 The above command succeeds despite having exactly 2 ``api-one-deprecated`` or
 any number of ``line-too-long`` messages being reported.
@@ -108,7 +108,7 @@ default configuration, eg to fail on ``fixme`` errors, just expect 0 ``fixme`` m
 
   .. code:: shell
 
-    acsoo pylint --expected fixme:0
+    acsoo pylint --expected fixme:0 -- odoo
 
 Initialize a new project
 ------------------------

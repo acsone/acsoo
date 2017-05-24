@@ -22,6 +22,7 @@ class TestPylint(unittest.TestCase):
         with working_directory(DATA_DIR):
             res = runner.invoke(pylintcmd, [
                 '-e', 'fixme:0,manifest-required-key',
+                '--', 'odoo',
             ])
             self.assertTrue(res.exit_code != 0)
             expected = dedent("""\
