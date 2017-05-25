@@ -3,7 +3,6 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import logging
-import os
 import sys
 from ConfigParser import ConfigParser
 
@@ -41,12 +40,12 @@ def _failures_to_str(fails, no_fails):
             res.append('\n')
 
     res = []
-    if fails:
-        res.append('messages that caused failure:\n')
-        _r(fails)
     if no_fails:
         res.append('messages that did not cause failure:\n')
         _r(no_fails)
+    if fails:
+        res.append('messages that caused failure:\n')
+        _r(fails)
     return ''.join(res)
 
 
@@ -82,10 +81,6 @@ def do_pylintcmd(load_plugins, rcfile, expected, pylint_options):
         '--load-plugins', load_plugins,
         '--rcfile', rcfile,
     ] + list(pylint_options)
-    if os.path.exists('odoo'):
-        cmd.append('odoo')
-    elif os.path.exists('odoo_addons'):
-        cmd.append('odoo_addons')
     log_cmd(['pylint'] + cmd, level=logging.INFO)
     lint_res = pylint.lint.Run(cmd[:], exit=False)
     sys.stdout.flush()

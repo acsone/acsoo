@@ -22,12 +22,13 @@ class TestPylint(unittest.TestCase):
         with working_directory(DATA_DIR):
             res = runner.invoke(pylintcmd, [
                 '-e', 'fixme:0,manifest-required-key',
+                '--', 'odoo',
             ])
             self.assertTrue(res.exit_code != 0)
             expected = dedent("""\
-                messages that caused failure:
-                  fixme: 1 (expected 0)
                 messages that did not cause failure:
                   manifest-required-key: 1
+                messages that caused failure:
+                  fixme: 1 (expected 0)
             """)
             assert expected in res.output

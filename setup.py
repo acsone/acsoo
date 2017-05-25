@@ -8,6 +8,10 @@ from setuptools import setup, find_packages
 setup(
     name='acsoo',
     description='Acsone Odoo Dev Tools',
+    long_description='\n'.join((
+        open('README.rst').read(),
+        open('CHANGES.rst').read(),
+    )),
     use_scm_version=True,
     packages=find_packages(),
     include_package_data=True,
