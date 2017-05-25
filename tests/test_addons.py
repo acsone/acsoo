@@ -48,11 +48,11 @@ class TestPylint(unittest.TestCase):
             expected = 'addon1'
             assert expected in res.output
 
-    def test_depends(self):
+    def test_list_depends(self):
         runner = CliRunner()
         with working_directory(DATA_DIR):
             res = runner.invoke(addons, [
-                'depends',
+                'list-depends',
             ])
             self.assertTrue(res.exit_code == 0)
             expected = 'base'

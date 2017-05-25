@@ -12,7 +12,7 @@ Changes
   of a subset of a project. Examples: acsoo pylint -- odoo, acsoo pylint -- odoo.addons.xyz
 - [IMP] pylint: display messages causing failure last, so emails from CI that show the last lines of the log
   are more relevant
-- [ADD] ``acsoo addons list`` and ``acsoo addons depends``
+- [ADD] ``acsoo addons list`` and ``acsoo addons list-depends``
 
 1.0.1 (2017-05-21)
 ------------------

@@ -134,7 +134,7 @@ A set of commands to print addons lists, useful when running tests.
   .. code:: shell
      
      acsoo addons list
-     acsoo addons depends
+     acsoo addons list-depends
 
 Ideas
 ~~~~~

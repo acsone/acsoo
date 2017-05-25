@@ -58,7 +58,7 @@ addons.add_command(addons_list, 'list')
 @click.command(help="Print a comma separated list of the direct dependencies "
                     "of installable addons found in --addons-dir.")
 @click.pass_context
-def addons_depends(ctx):
+def addons_list_depends(ctx):
     manifests = ctx.obj['manifests']
     depends = set()
     for manifest in manifests.values():
@@ -68,4 +68,4 @@ def addons_depends(ctx):
     click.echo(','.join(addon_names))
 
 
-addons.add_command(addons_depends, 'depends')
+addons.add_command(addons_list_depends, 'list-depends')
