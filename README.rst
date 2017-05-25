@@ -32,6 +32,13 @@ Installation
 
     pip install acsoo
 
+.. note::
+
+   Since `acsoo` has a lot of dependencies that are not required at runtime, it
+   is not recommanded to install it in the same virtualenv as your project.
+   A good approach is to install it in it's own virtual env and symlink the `acsoo`
+   and `mrbob` executable somewhere in your PATH.
+
 To enable bash completion, add this line in your ``.bashrc``:
 
   .. code:: shell
