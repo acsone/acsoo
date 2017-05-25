@@ -26,6 +26,28 @@ class TestPylint(unittest.TestCase):
             expected = 'addon1'
             assert expected in res.output
 
+    def test_exclude(self):
+        runner = CliRunner()
+        with working_directory(DATA_DIR):
+            res = runner.invoke(addons, [
+                '--exclude', 'addon1',
+                'list',
+            ])
+            self.assertTrue(res.exit_code == 0)
+            expected = ''
+            assert expected in res.output
+
+    def test_include(self):
+        runner = CliRunner()
+        with working_directory(DATA_DIR):
+            res = runner.invoke(addons, [
+                '--include', 'addon1',
+                'list',
+            ])
+            self.assertTrue(res.exit_code == 0)
+            expected = 'addon1'
+            assert expected in res.output
+
     def test_depends(self):
         runner = CliRunner()
         with working_directory(DATA_DIR):
