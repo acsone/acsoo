@@ -2,4 +2,7 @@
 {
     'author': 'ACSONE SA/NV',
     # TODO ...
+    'depends': [
+        'base',
+    ],
 }
