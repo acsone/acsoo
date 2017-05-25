@@ -16,14 +16,14 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'Click',
+        'bobtemplates.odoo',
+        'click',
+        'flake8',
+        'lxml',  # pylint-odoo dep not installed automatically?
         'pip>=9.0.1',
+        'pylint-odoo',
         'setuptools>=20,<31',
         'wheel>=0.29',
-        'bobtemplates.odoo',
-        'flake8',
-        'pylint-odoo',
-        'lxml',  # pylint-odoo dep not installed automatically?
     ],
     license='GPLv3+',
     classifiers=[
