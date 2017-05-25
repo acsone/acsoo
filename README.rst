@@ -115,11 +115,9 @@ Initialize a new project
 
   .. code:: shell
 
-    mkdir project-dir
-    cd project-dir
-    mkvirtualenv project-dir -a .
-    pip install git+https://github.com/acsone/acsoo.git
     mrbob acsoo:templates/project
+    cd {project name}
+    mkvirtualenv {project name} -a .
 
 Ideas
 ~~~~~
