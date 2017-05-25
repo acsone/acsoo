@@ -34,10 +34,10 @@ Installation
 
 .. note::
 
-   Since `acsoo` has a lot of dependencies that are not required at runtime, it
+   Since ``acsoo`` has a lot of dependencies that are not required at runtime, it
    is not recommanded to install it in the same virtualenv as your project.
-   A good approach is to install it in it's own virtual env and symlink the `acsoo`
-   and `mrbob` executable somewhere in your PATH.
+   A good approach is to install it in it's own virtual env and symlink the ``acsoo``
+   and ``mrbob`` executable somewhere in your PATH.
 
 To enable bash completion, add this line in your ``.bashrc``:
 
@@ -49,6 +49,15 @@ What we have here
 ~~~~~~~~~~~~~~~~~
 
 Try ``acsoo --help``.
+
+Initialize a new project
+------------------------
+
+  .. code:: shell
+
+    mrbob acsoo:templates/project
+    cd {project name}
+    mkvirtualenv {project name} -a .
 
 acsoo tag
 ---------
@@ -117,14 +126,15 @@ default configuration, eg to fail on ``fixme`` errors, just expect 0 ``fixme`` m
 
     acsoo pylint --expected fixme:0 -- odoo
 
-Initialize a new project
-------------------------
+acsoo addons
+------------
+
+A set of commands to print addons lists, useful when running tests.
 
   .. code:: shell
-
-    mrbob acsoo:templates/project
-    cd {project name}
-    mkvirtualenv {project name} -a .
+     
+     acsoo addons list
+     acsoo addons depends
 
 Ideas
 ~~~~~
