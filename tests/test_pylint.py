@@ -32,3 +32,18 @@ class TestPylint(unittest.TestCase):
                   fixme: 1 (expected 0)
             """)
             assert expected in res.output
+
+    def test2(self):
+        runner = CliRunner()
+        with working_directory(DATA_DIR):
+            res = runner.invoke(pylintcmd, [
+                '-e', 'fixme:0,manifest-required-key',
+            ])
+            self.assertTrue(res.exit_code != 0)
+            expected = dedent("""\
+                messages that did not cause failure:
+                  manifest-required-key: 1
+                messages that caused failure:
+                  fixme: 1 (expected 0)
+            """)
+            assert expected in res.output

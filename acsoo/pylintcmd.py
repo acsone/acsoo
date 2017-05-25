@@ -3,6 +3,7 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import logging
+import os
 import sys
 from ConfigParser import ConfigParser
 
@@ -77,6 +78,11 @@ def _consolidate_expected(rcfile, expected):
 
 
 def do_pylintcmd(load_plugins, rcfile, expected, pylint_options):
+    if not pylint_options:
+        if os.path.isdir(os.path.join('odoo', 'addons')):
+            pylint_options = ['--', 'odoo']
+        if os.path.isdir(os.path.join('odoo_addons')):
+            pylint_options = ['--', 'odoo_addons']
     cmd = [
         '--load-plugins', load_plugins,
         '--rcfile', rcfile,
@@ -94,7 +100,10 @@ def do_pylintcmd(load_plugins, rcfile, expected, pylint_options):
         raise click.ClickException(msg)
 
 
-@click.command(help='Run pylint on odoo or odoo_addons')
+@click.command(help="Run pylint with reasonable defaults. But default it "
+                    "runs on odoo or odoo_addons. You may pass additional "
+                    "options to pylint using '-- options' in which case "
+                    "the package to lint must be passed explicitly")
 @click.option('--load-plugins', default='pylint_odoo', metavar='PLUGINS')
 @click.option('--rcfile', type=click.Path(), default=cfg_path('pylint.cfg'))
 @click.option('--expected', '-e', 'expected', metavar='MSG-IDS',
