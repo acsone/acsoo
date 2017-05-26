@@ -101,6 +101,7 @@ def do_pylintcmd(load_plugins, rcfile, expected, pylint_options):
         msg = cmd_string(['pylint'] + cmd)
         msg += '\n'
         msg += _failures_to_str(fails, no_fails)
+        click.echo('\n')
         click.echo(msg)
     if fails:
         raise click.ClickException("pylint errors detected.")
