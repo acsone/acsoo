@@ -42,10 +42,14 @@ def _failures_to_str(fails, no_fails):
 
     res = []
     if no_fails:
-        res.append('messages that did not cause failure:\n')
+        res.append(click.style(
+            'messages that did not cause failure:\n',
+            bold=True))
         _r(no_fails)
     if fails:
-        res.append('messages that caused failure:\n')
+        res.append(click.style(
+            'messages that caused failure:\n',
+            bold=True))
         _r(fails)
     return ''.join(res)
 
@@ -93,11 +97,13 @@ def do_pylintcmd(load_plugins, rcfile, expected, pylint_options):
     sys.stderr.flush()
     expected = _consolidate_expected(rcfile, expected)
     fails, no_fails = _get_failures(lint_res.linter.stats, expected)
-    if fails:
+    if fails or no_fails:
         msg = cmd_string(['pylint'] + cmd)
         msg += '\n'
         msg += _failures_to_str(fails, no_fails)
-        raise click.ClickException(msg)
+        click.echo(msg)
+    if fails:
+        raise click.ClickException("pylint errors detected.")
 
 
 @click.command(help="Run pylint with reasonable defaults. But default it "

@@ -15,6 +15,8 @@ Changes
   ``too-many-return-statements``
 - [IMP] pylint: display messages causing failure last, so emails from CI
   that show the last lines of the log are more relevant
+- [IMP] pylint: display summary of messages that did not cause failure, also
+  when there is no failure
 - [ADD] ``acsoo addons list`` and ``acsoo addons list-depends``
 - [ADD] ``acsoo checklog``
 
