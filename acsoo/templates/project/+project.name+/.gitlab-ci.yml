@@ -28,7 +28,7 @@ flake8:
 test:
   stage: test
   tags:
-    - odoo10
+    - odoo-{{{ odoo.series }}}
   script:
     - set -u -e -o pipefail
     - virtualenv venv
@@ -49,7 +49,7 @@ test:
 dropdb:
   stage: clean
   tags:
-    - odoo10
+    - odoo-{{{ odoo.series }}}
   script:
     # this may run on another runner, in which case it will do nothing
     - dropdb --if-exists ${DB_NAME}
