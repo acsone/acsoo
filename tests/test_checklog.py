@@ -20,9 +20,9 @@ class TestChecklog(unittest.TestCase):
         res = runner.invoke(checklog, [
             os.path.join(DATA_DIR, 'test1.log'),
         ])
-        self.assertTrue(res.exit_code != 0)
+        assert res.exit_code != 0
         expected = "errors that caused failure (2):"
-        self.assertTrue(expected in res.output)
+        assert expected in res.output
 
     def test2(self):
         runner = CliRunner()
@@ -30,8 +30,19 @@ class TestChecklog(unittest.TestCase):
             '--ignore', ' ERROR ',
             os.path.join(DATA_DIR, 'test1.log'),
         ])
-        self.assertTrue(res.exit_code != 0)
+        assert res.exit_code != 0
         expected = "errors that caused failure (1):"
-        self.assertTrue(expected in res.output)
+        assert expected in res.output
         expected = "errors that did not cause failure (1):"
-        self.assertTrue(expected in res.output)
+        assert expected in res.output
+
+    def test3(self):
+        runner = CliRunner()
+        res = runner.invoke(checklog, [
+            '-i', ' ERROR ',
+            '-i', ' CRITICAL ',
+            os.path.join(DATA_DIR, 'test1.log'),
+        ])
+        assert res.exit_code == 0
+        expected = "errors that did not cause failure (2):"
+        assert expected in res.output
