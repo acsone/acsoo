@@ -14,7 +14,7 @@ from acsoo.tools import working_directory
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
-class TestPylint(unittest.TestCase):
+class TestAddons(unittest.TestCase):
 
     def test_list(self):
         runner = CliRunner()
