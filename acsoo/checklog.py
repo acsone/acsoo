@@ -25,17 +25,17 @@ def _render_errors(error_records, ignored_error_records):
     msg = []
     if ignored_error_records:
         msg.append(click.style(
-            'errors that did not cause failure ({}):\n'.
+            '\nerrors that did not cause failure ({}):\n'.
             format(len(ignored_error_records)),
             bold=True))
         msg.extend(ignored_error_records)
     if error_records:
         msg.append(click.style(
-            'errors that caused failure ({}):\n'.
+            '\nerrors that caused failure ({}):\n'.
             format(len(error_records)),
             bold=True))
         msg.extend(error_records)
-    return '\n'.join(msg)
+    return ''.join(msg)
 
 
 def do_checklog(filename, ignore, echo):
