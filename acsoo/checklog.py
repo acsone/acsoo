@@ -41,15 +41,10 @@ def _render_errors(error_records, ignored_error_records):
 def do_checklog(filename, ignore, echo):
     ignore_regexes = [re.compile(i, re.MULTILINE) for i in ignore]
 
-    if filename:
-        logfile = open(filename, 'r')
-    else:
-        logfile = sys.stdin
-
-    if echo is None and not filename:
+    if echo is None and filename == '-':
         echo = True
 
-    try:
+    with click.open_file(filename) as logfile:
         cur_rec_mo = None
         cur_rec = []
         error_records = []
@@ -86,9 +81,6 @@ def do_checklog(filename, ignore, echo):
             click.echo(msg)
         if error_records:
             raise click.ClickException("errors detected in log.")
-    finally:
-        if filename:
-            logfile.close()
 
 
 @click.command(help="Check an odoo log file for errors. When no filename is "
@@ -97,7 +89,7 @@ def do_checklog(filename, ignore, echo):
               help="Regular expression of log records to ignore.")
 @click.option('--echo/--no-echo', default=None,
               help="Echo the input file (default when reading from stdin).")
-@click.argument('filename', type=click.Path(), required=False)
+@click.argument('filename', type=click.Path(), default='-')
 def checklog(filename, ignore, echo):
     do_checklog(filename, ignore, echo)
 
