@@ -5,7 +5,7 @@ Changes
 .. ----------
 .. -
 
-1.1.0 (2017-05-??)
+1.1.0 (2017-05-25)
 ------------------
 - [IMP] pylint: BREAKING the package to test must be provided explicitly,
   as soon as additional pylint options are provided,
