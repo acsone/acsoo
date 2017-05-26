@@ -16,6 +16,7 @@ Changes
 - [IMP] pylint: display messages causing failure last, so emails from CI
   that show the last lines of the log are more relevant
 - [ADD] ``acsoo addons list`` and ``acsoo addons list-depends``
+- [ADD] ``acsoo checklog``
 
 1.0.1 (2017-05-21)
 ------------------

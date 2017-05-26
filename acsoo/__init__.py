@@ -7,6 +7,7 @@
 from . import main
 # commands
 from . import addons
+from . import checklog
 from . import flake8cmd
 from . import pylintcmd
 from . import release
