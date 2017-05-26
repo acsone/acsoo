@@ -70,6 +70,7 @@ def do_checklog(filename, ignore, echo):
         for line in logfile:
             if echo:
                 sys.stdout.write(line)
+                sys.stdout.flush()
             line = ANSI_CSI_RE.sub('', line)  # strip ANSI colors
             mo = LOG_START_RE.match(line)
             if mo:
@@ -79,9 +80,6 @@ def do_checklog(filename, ignore, echo):
             else:
                 cur_rec.append(line)
         _process_cur_rec()  # last record
-
-        if echo:
-            sys.stdout.flush()
 
         if error_records or ignored_error_records:
             msg = _render_errors(error_records, ignored_error_records)
