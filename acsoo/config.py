@@ -25,10 +25,11 @@ class AcsooConfig(object):
         self.__cfg = RawConfigParser()
         if not filename and os.path.isfile(DEFAULT_CONFIG_FILE):
             filename = DEFAULT_CONFIG_FILE
-        if not os.path.isfile(filename):
-            raise click.ClickException("Configuration file {} not found.".
-                                       format(filename))
-        self.__cfg.read(filename)
+        if filename:
+            if not os.path.isfile(filename):
+                raise click.ClickException("Configuration file {} not found.".
+                                           format(filename))
+            self.__cfg.read(filename)
 
     @staticmethod
     def add_default_map_reader(reader):
