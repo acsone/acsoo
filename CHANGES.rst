@@ -11,6 +11,11 @@ Changes
 - [IMP] checklog: read default options from [checklog] section of config file
 - [IMP] pylint: read default options from [pylint] section of config file
 - [IMP] pylint: the module or package to lint may be provided with -m
+- [IMP] flake8: read default options from [flake8] section of config file;
+  the only option so far is ``config`` to provide an alternate flake8
+  configuration file; this is useful so developer only need to type
+  ``acsoo flake8`` locally, even when a specific configuration is needed,
+  so it's trivial to run locally with the same config as in CI
 
 1.1.0 (2017-05-25)
 ------------------

@@ -6,6 +6,7 @@ import logging
 
 import click
 
+from .config import AcsooConfig
 from .main import main
 from .tools import check_call, cfg_path
 
@@ -34,3 +35,15 @@ def flake8(config, flake8_options):
 
 
 main.add_command(flake8)
+
+
+def _read_defaults(config):
+    section = 'pylint'
+    defaults = dict(
+        config=config.get(
+            section, 'config', default=cfg_path('flake8.cfg')),
+    )
+    return dict(flake8=defaults)
+
+
+AcsooConfig.add_default_map_reader(_read_defaults)
