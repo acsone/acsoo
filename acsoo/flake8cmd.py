@@ -26,7 +26,8 @@ def do_flake8(config, flake8_options):
 
 
 @click.command(help='Run flake8')
-@click.option('--config', type=click.Path(), default=cfg_path('flake8.cfg'))
+@click.option('--config', type=click.Path(), default=cfg_path('flake8.cfg'),
+              help="Flake8 config file. Default is provided by acsoo.")
 @click.argument('flake8-options', nargs=-1)
 def flake8(config, flake8_options):
     do_flake8(config, flake8_options)

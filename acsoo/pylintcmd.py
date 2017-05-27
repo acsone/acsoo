@@ -112,7 +112,8 @@ def do_pylintcmd(load_plugins, rcfile, expected, pylint_options):
                     "options to pylint using '-- options' in which case "
                     "the package to lint must be passed explicitly")
 @click.option('--load-plugins', default='pylint_odoo', metavar='PLUGINS')
-@click.option('--rcfile', type=click.Path(), default=cfg_path('pylint.cfg'))
+@click.option('--rcfile', type=click.Path(), default=cfg_path('pylint.cfg'),
+              help="Pylint configuration file. Default is provided by acsoo.")
 @click.option('--expected', '-e', 'expected', metavar='MSG-IDS',
               help="Do not fail on these messages")
 @click.argument('pylint-options', nargs=-1)
