@@ -26,7 +26,7 @@ License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).'''
 @click.group()
 @click.version_option(version=__version__, message=__notice__)
 @click.option('-v', '--verbose', count=True)
-@click.option('-c', '--config', type=click.Path(), default='./acsoo.cfg',
+@click.option('-c', '--config', type=click.Path(),
               help="Configuration file (default: ./acsoo.cfg).")
 @click.pass_context
 def main(ctx, verbose, config):
