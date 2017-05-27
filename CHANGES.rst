@@ -8,6 +8,7 @@ Changes
 1.2.0 (unreleased)
 ------------------
 - [IMP] add possibility to pass main config file as option
+- [IMP] checklog: read default options from [checklog] section of config file
 
 1.1.0 (2017-05-25)
 ------------------

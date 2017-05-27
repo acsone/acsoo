@@ -7,6 +7,7 @@ import sys
 
 import click
 
+from .config import AcsooConfig
 from .main import main
 
 
@@ -84,7 +85,9 @@ def do_checklog(filename, ignore, echo):
 
 
 @click.command(help="Check an odoo log file for errors. When no filename "
-                    "or - is provided, read from stdin.")
+                    "or - is provided, read from stdin. Default options "
+                    "are read from the [checklog] section of the acsoo "
+                    "configuration file.")
 @click.option('--ignore', '-i', metavar='REGEX', multiple=True,
               help="Regular expression of log records to ignore.")
 @click.option('--echo/--no-echo', default=None,
@@ -95,3 +98,15 @@ def checklog(filename, ignore, echo):
 
 
 main.add_command(checklog)
+
+
+def _read_defaults(config):
+    section = 'checklog'
+    defaults = dict(
+        ignore=config.getlist(section, 'ignore', []),
+        echo=config.getboolean(section, 'echo', None),
+    )
+    return dict(checklog=defaults)
+
+
+AcsooConfig.add_default_map_reader(_read_defaults)
