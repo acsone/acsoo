@@ -29,6 +29,7 @@ class AcsooConfig(object):
             if not os.path.isfile(filename):
                 raise click.ClickException("Configuration file {} not found.".
                                            format(filename))
+            self.__cfgfile = filename
             self.__cfg.read(filename)
 
     @staticmethod
@@ -46,10 +47,10 @@ class AcsooConfig(object):
         r = self.__cfg.get(SECTION, 'series')
         if not r:
             raise click.ClickException('Missing series in {}.'.
-                                       format(CONFIG_FILE))
+                                       format(self.__cfgfile))
         if r not in ('8.0', '9.0', '10.0'):
             raise click.ClickException('Unsupported series {} in {}.'.
-                                       format(r, CONFIG_FILE))
+                                       format(r, self.__cfgfile))
         return r
 
     @property
@@ -57,15 +58,15 @@ class AcsooConfig(object):
         r = self.__cfg.get(SECTION, 'version')
         if not r:
             raise click.ClickException('Missing version in {}.'.
-                                       format(CONFIG_FILE))
+                                       format(self.__cfgfile))
         return r
 
     @property
     def trigram(self):
         r = self.__cfg.get(SECTION, 'trigram')
         if not r:
-            raise click.ClickException('Missing trigram in {}.'.format(
-                CONFIG_FILE))
+            raise click.ClickException('Missing trigram in {}.'.
+                                       format(self.__cfgfile))
         return r
 
     def get(self, section, option, default=None, flatten=False):
