@@ -10,6 +10,7 @@ from ConfigParser import ConfigParser
 import click
 import pylint.lint
 
+from .config import AcsooConfig
 from .main import main
 from .tools import cmd_string, log_cmd, cfg_path
 
@@ -81,16 +82,19 @@ def _consolidate_expected(rcfile, expected):
     return res
 
 
-def do_pylintcmd(load_plugins, rcfile, expected, pylint_options):
-    if not pylint_options:
+def do_pylintcmd(load_plugins, rcfile, module, expected, pylint_options):
+    if not module:
         if os.path.isdir(os.path.join('odoo', 'addons')):
-            pylint_options = ['--', 'odoo']
-        if os.path.isdir(os.path.join('odoo_addons')):
-            pylint_options = ['--', 'odoo_addons']
+            module = ['odoo']
+        elif os.path.isdir(os.path.join('odoo_addons')):
+            module = ['odoo_addons']
+        else:
+            raise click.UsageError("Please provide module or package "
+                                   "to lint (--module).")
     cmd = [
         '--load-plugins', load_plugins,
         '--rcfile', rcfile,
-    ] + list(pylint_options)
+    ] + list(pylint_options) + list(module)
     log_cmd(['pylint'] + cmd, level=logging.INFO)
     lint_res = pylint.lint.Run(cmd[:], exit=False)
     sys.stdout.flush()
@@ -107,19 +111,67 @@ def do_pylintcmd(load_plugins, rcfile, expected, pylint_options):
         raise click.ClickException("pylint errors detected.")
 
 
-@click.command(help="Run pylint with reasonable defaults. But default it "
-                    "runs on odoo or odoo_addons. You may pass additional "
-                    "options to pylint using '-- options' in which case "
-                    "the package to lint must be passed explicitly")
-@click.option('--load-plugins', default='pylint_odoo', metavar='PLUGINS')
+@click.command()
+@click.option('--module', '-m', metavar='module_or_package', multiple=True,
+              help="Module or package to lint (default: autodetected odoo "
+                   "or odoo_addons).")
+@click.option('--load-plugins', metavar='PLUGINS', default='pylint_odoo',
+              help="Pylint plugins to use (default: pylint_odoo).")
 @click.option('--rcfile', type=click.Path(), default=cfg_path('pylint.cfg'),
               help="Pylint configuration file. Default is provided by acsoo.")
 @click.option('--expected', '-e', 'expected', metavar='MSG-IDS',
-              help="Do not fail on these messages")
+              help="Do not fail on these messages.")
 @click.argument('pylint-options', nargs=-1)
-def pylintcmd(load_plugins, rcfile, expected, pylint_options):
+@click.pass_context
+def pylintcmd(ctx, load_plugins, rcfile, module, expected, pylint_options):
+    """Run pylint with reasonable defaults.
+
+    You may pass additional
+    options to pylint using '--' to separate them from
+    acsoo options.
+
+    Default options are read from the
+    [pylint] section of the acsoo configuration file.
+    The pylint-options key in that section can be used
+    to provide default additional pylint options (one
+    per line). Example configuration file:
+
+    \b
+    [pylint]
+    expected=fixme:5
+    pylint-options=
+      --disable=all
+      --enable=fixme
+
+    The above configuration file is equivalent to:
+
+    acsoo pylint --expected=fixme:5 -- --disable=all --enable=fixme
+    """
     expected = _parse_msg_string(expected)
-    do_pylintcmd(load_plugins, rcfile, expected, pylint_options)
+    default_pylint_options = (ctx.default_map or {}).\
+        get('default_pylint_options', [])
+    pylint_options = default_pylint_options + list(pylint_options)
+    do_pylintcmd(load_plugins, rcfile, module, expected, pylint_options)
 
 
 main.add_command(pylintcmd, name='pylint')
+
+
+def _read_defaults(config):
+    section = 'pylint'
+    defaults = dict(
+        module=config.getlist(
+            section, 'module'),
+        load_plugins=config.get(
+            section, 'load-plugins', default='pylint_odoo'),
+        rcfile=config.get(
+            section, 'rcfile', default=cfg_path('pylint.cfg')),
+        expected=config.get(
+            section, 'expected', flatten=True),
+        default_pylint_options=config.getlist(
+            section, 'pylint-options'),
+    )
+    return dict(pylint=defaults)
+
+
+AcsooConfig.add_default_map_reader(_read_defaults)

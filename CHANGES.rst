@@ -9,6 +9,8 @@ Changes
 ------------------
 - [IMP] add possibility to pass main config file as option
 - [IMP] checklog: read default options from [checklog] section of config file
+- [IMP] pylint: read default options from [pylint] section of config file
+- [IMP] pylint: the module or package to lint may be provided with -m
 
 1.1.0 (2017-05-25)
 ------------------
