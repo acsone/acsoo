@@ -3,7 +3,7 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import os
-from ConfigParser import ConfigParser
+from ConfigParser import RawConfigParser, NoOptionError
 
 import click
 
@@ -12,12 +12,29 @@ CONFIG_FILE = 'acsoo.cfg'
 SECTION = 'acsoo'
 
 
+def _split_multiline(s):
+    return [i.strip() for i in s.splitlines() if i.strip()]
+
+
 class AcsooConfig(object):
 
+    # list of callables returning dictionaries to update default_map
+    default_map_readers = []
+
     def __init__(self, filename):
-        self.__cfg = ConfigParser()
+        self.__cfg = RawConfigParser()
         if os.path.isfile(filename):
             self.__cfg.read(filename)
+
+    @staticmethod
+    def add_default_map_reader(reader):
+        AcsooConfig.default_map_readers.append(reader)
+
+    def get_default_map(self):
+        default_map = {}
+        for reader in self.default_map_readers:
+            default_map.update(reader(self))
+        return default_map
 
     @property
     def series(self):
@@ -45,3 +62,24 @@ class AcsooConfig(object):
             raise click.ClickException('Missing trigram in {}.'.format(
                 CONFIG_FILE))
         return r
+
+    def get(self, section, option, default=None, flatten=False):
+        try:
+            r = self.__cfg.get(section, option)
+            if flatten:
+                r = ''.join(_split_multiline(r))
+            return r
+        except NoOptionError:
+            return default
+
+    def getboolean(self, section, option, default=None):
+        try:
+            return self.__cfg.getboolean(section, option)
+        except NoOptionError:
+            return default
+
+    def getlist(self, section, option, default=None):
+        try:
+            return _split_multiline(self.__cfg.get(section, option))
+        except NoOptionError:
+            return default or []
