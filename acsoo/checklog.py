@@ -83,8 +83,8 @@ def do_checklog(filename, ignore, echo):
             raise click.ClickException("errors detected in log.")
 
 
-@click.command(help="Check an odoo log file for errors. When no filename is "
-                    "provided, read from stdin.")
+@click.command(help="Check an odoo log file for errors. When no filename "
+                    "or - is provided, read from stdin.")
 @click.option('--ignore', '-i', metavar='REGEX', multiple=True,
               help="Regular expression of log records to ignore.")
 @click.option('--echo/--no-echo', default=None,
