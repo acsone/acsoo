@@ -7,6 +7,8 @@ from pkg_resources import get_distribution, DistributionNotFound
 
 import click
 
+from .config import AcsooConfig
+
 try:
     __version__ = get_distribution('acsoo').version
 except DistributionNotFound:
@@ -24,7 +26,11 @@ License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).'''
 @click.group()
 @click.version_option(version=__version__, message=__notice__)
 @click.option('-v', '--verbose', count=True)
-def main(verbose):
+@click.option('-c', '--config', type=click.Path(),
+              help="Configuration file (default: ./acsoo.cfg).")
+@click.pass_context
+def main(ctx, verbose, config):
+    ctx.config = AcsooConfig(config)
     if verbose > 1:
         level = logging.DEBUG
     elif verbose > 0:

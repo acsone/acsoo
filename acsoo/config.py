@@ -2,6 +2,7 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
+import os
 from ConfigParser import ConfigParser
 
 import click
@@ -13,9 +14,10 @@ SECTION = 'acsoo'
 
 class AcsooConfig(object):
 
-    def __init__(self):
+    def __init__(self, filename):
         self.__cfg = ConfigParser()
-        self.__cfg.read(CONFIG_FILE)
+        if os.path.isfile(filename):
+            self.__cfg.read(filename)
 
     @property
     def series(self):
@@ -43,10 +45,3 @@ class AcsooConfig(object):
             raise click.ClickException('Missing trigram in {}.'.format(
                 CONFIG_FILE))
         return r
-
-
-_config = AcsooConfig()
-
-
-def config():
-    return _config

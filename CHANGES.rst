@@ -5,6 +5,10 @@ Changes
 .. ----------
 .. -
 
+1.2.0 (unreleased)
+------------------
+- [IMP] add possibility to pass main config file as option
+
 1.1.0 (2017-05-25)
 ------------------
 - [IMP] pylint: BREAKING the package to test must be provided explicitly,
