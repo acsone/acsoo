@@ -3,7 +3,7 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import os
-from ConfigParser import RawConfigParser, NoOptionError
+from ConfigParser import RawConfigParser, NoOptionError, NoSectionError
 
 import click
 
@@ -75,17 +75,17 @@ class AcsooConfig(object):
             if flatten:
                 r = ''.join(_split_multiline(r))
             return r
-        except NoOptionError:
+        except (NoOptionError, NoSectionError):
             return default
 
     def getboolean(self, section, option, default=None):
         try:
             return self.__cfg.getboolean(section, option)
-        except NoOptionError:
+        except (NoOptionError, NoSectionError):
             return default
 
     def getlist(self, section, option, default=None):
         try:
             return _split_multiline(self.__cfg.get(section, option))
-        except NoOptionError:
+        except (NoOptionError, NoSectionError):
             return default or []

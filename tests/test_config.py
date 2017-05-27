@@ -28,6 +28,9 @@ class TestConfig(unittest.TestCase):
         assert self.config.getlist('test', 'multi') == ['ABC', 'DEF']
         assert self.config.getlist('test', 'absent') == []
         assert self.config.getlist('test', 'absent', ['A', 'B']) == ['A', 'B']
+        assert self.config.get('absent', 'absent') is None
+        assert self.config.getboolean('absent', 'absent') is None
+        assert self.config.getlist('absent', 'absent') == []
 
     def test2(self):
         assert self.config.trigram == 'xyz'
