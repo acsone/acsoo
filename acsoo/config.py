@@ -8,7 +8,7 @@ from ConfigParser import RawConfigParser, NoOptionError
 import click
 
 
-CONFIG_FILE = 'acsoo.cfg'
+DEFAULT_CONFIG_FILE = 'acsoo.cfg'
 SECTION = 'acsoo'
 
 
@@ -23,8 +23,12 @@ class AcsooConfig(object):
 
     def __init__(self, filename):
         self.__cfg = RawConfigParser()
-        if os.path.isfile(filename):
-            self.__cfg.read(filename)
+        if not filename and os.path.isfile(DEFAULT_CONFIG_FILE):
+            filename = DEFAULT_CONFIG_FILE
+        if not os.path.isfile(filename):
+            raise click.ClickException("Configuration file {} not found.".
+                                       format(filename))
+        self.__cfg.read(filename)
 
     @staticmethod
     def add_default_map_reader(reader):
