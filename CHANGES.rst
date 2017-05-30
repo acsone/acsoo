@@ -5,6 +5,10 @@ Changes
 .. ----------
 .. -
 
+1.2.2 (2017-05-30)
+------------------
+- [FIX] regression in tag, tag_editable_requirements and release commands.
+
 1.2.1 (2017-05-27)
 ------------------
 - [IMP] add possibility to provide main config file as option.
