@@ -30,9 +30,11 @@ License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).'''
               help="Configuration file (default: ./acsoo.cfg).")
 @click.pass_context
 def main(ctx, verbose, config):
-    ctx.config = AcsooConfig(config)
+    config = AcsooConfig(config)
 
-    ctx.default_map = ctx.config.get_default_map()
+    ctx.obj = dict(config=config)
+
+    ctx.default_map = config.get_default_map()
 
     if verbose > 1:
         level = logging.DEBUG

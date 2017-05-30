@@ -72,7 +72,7 @@ def do_tag_editable_requirements(config, force, src, requirement, yes):
 @click.option('-y', '--yes', is_flag=True, default=False)
 @click.pass_context
 def tag_editable_requirements(ctx, force, src, requirement, yes):
-    do_tag_editable_requirements(ctx.config, force, src, requirement, yes)
+    do_tag_editable_requirements(ctx.obj['config'], force, src, requirement, yes)
 
 
 main.add_command(tag_editable_requirements)

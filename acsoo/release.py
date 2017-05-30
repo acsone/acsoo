@@ -43,7 +43,7 @@ def do_release(config, force, src, requirement, wheel_dir, yes,
 @click.pass_context
 def release(ctx, force, src, requirement, wheel_dir, yes,
             no_cache_dir, no_index):
-    do_release(ctx.config, force, src, requirement, wheel_dir, yes,
+    do_release(ctx.obj['config'], force, src, requirement, wheel_dir, yes,
                no_cache_dir, no_index)
 
 

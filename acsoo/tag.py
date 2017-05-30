@@ -36,7 +36,7 @@ def do_tag(config, force, yes):
 @click.option('-y', '--yes', is_flag=True, default=False)
 @click.pass_context
 def tag(ctx, force, yes):
-    do_tag(ctx.config, force, yes)
+    do_tag(ctx.obj['config'], force, yes)
 
 
 main.add_command(tag)
