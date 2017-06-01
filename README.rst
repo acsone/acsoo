@@ -48,7 +48,7 @@ To enable bash completion, add this line in your ``.bashrc``:
 What we have here
 ~~~~~~~~~~~~~~~~~
 
-Below are is the list of available commands wth a few examples.
+Below, the list of available commands with a few examples.
 
 Use ``acsoo --help`` or ``acsoo <command> --help`` for more information.
 
@@ -141,7 +141,7 @@ A set of commands to print addons lists, useful when running tests.
 acsoo checklog
 --------------
 
-Check if an odoo log file conatains error, with the possibility to ignore some
+Check if an odoo log file contains error, with the possibility to ignore some
 errors based on regular expressions.
 
   .. code:: shell
