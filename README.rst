@@ -48,7 +48,7 @@ To enable bash completion, add this line in your ``.bashrc``:
 What we have here
 ~~~~~~~~~~~~~~~~~
 
-Below are is the list of available commands wth a few examples.
+Below, the list of available commands with a few examples.
 
 Use ``acsoo --help`` or ``acsoo <command> --help`` for more information.
 
@@ -141,7 +141,7 @@ A set of commands to print addons lists, useful when running tests.
 acsoo checklog
 --------------
 
-Check if an odoo log file conatains error, with the possibility to ignore some
+Check if an odoo log file contains error, with the possibility to ignore some
 errors based on regular expressions.
 
   .. code:: shell
@@ -149,6 +149,19 @@ errors based on regular expressions.
      acsoo checklog odoo.log
      odoo -d mydb -i base --stop-after-init | acsoo checklog
      acsoo checklog --ignore "WARNING.*blah" odoo.log
+
+bumpversion
+-----------
+Bumpversion is a software automatically installed with acsoo. It allows you to increment or simply change the version of the project in several files at once, including acsoo.cfg.
+
+  .. code:: shell
+
+    bumpversion {part}
+
+Where part is 'major', 'minor' or 'patch' (see `semantic versioning <http://semver.org/>`_).
+
+Configure bumpversion by editing the .bumpversion.cfg config file at the root of your project.
+See the bumpversion `documentation <https://pypi.python.org/pypi/bumpversion>`_ to go further (automatic commit, tag, customisation...).
 
 Ideas
 ~~~~~
@@ -166,12 +179,6 @@ acsoo freeze
 
 Inspiration to be found in https://pypi.python.org/pypi/pipdeptree, although I don't
 think acsoo should depend on that, as it's only a thin wrapper around the ``pip`` api.
-
-acsoo version
--------------
-
-A helper to bump version in ``acsoo.cfg`` and also bump version in (some?) odoo addons, such
-as the main addon that pulls dependencies. Requires further thinking.
 
 Useful links
 ~~~~~~~~~~~~

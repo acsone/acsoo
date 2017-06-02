@@ -24,6 +24,7 @@ setup(
         'pylint-odoo',
         'setuptools>=20,<31',
         'wheel>=0.29',
+        'bumpversion',
     ],
     license='GPLv3+',
     classifiers=[
