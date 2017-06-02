@@ -39,6 +39,7 @@ test:
     - virtualenv venv
     - venv/bin/pip install coverage
     - venv/bin/pip install -r requirements.txt -e .
+    - createdb ${DB_NAME}
     - ADDONS_INIT=$(./acsoo addons list-depends)
     - echo Installing ${ADDONS_INIT}
     - unbuffer venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init  -i ${ADDONS_INIT} | ./acsoo checklog
