@@ -6,7 +6,7 @@ commit = False
 
 [bumpversion:file:acsoo.cfg]
 
-{{% if odoo.series in ['8.0', '9.0']%}}
+{{% if odoo.series in ['8.0', '9.0'] %}}
 [bumpversion:file:odoo_addons/{{{ project.trigram }}}_all/__openerp__.py]
 
 [bumpversion:file:odoo_addons/server_environment_files/dev/dev.conf]

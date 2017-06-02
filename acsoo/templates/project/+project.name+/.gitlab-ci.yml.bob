@@ -25,6 +25,11 @@ flake8:
   script:
     - ./acsoo flake8
 
+{{% if odoo.series in ['8.0', '9.0'] %}}
+{{% set odoocmd = 'odoo-server-autodiscover' %}}
+{{% else %}}
+{{% set odoocmd = 'odoo' %}}
+{{% endif %}}
 test:
   stage: test
   tags:
@@ -36,13 +41,13 @@ test:
     - venv/bin/pip install -r requirements.txt -e .
     - ADDONS_INIT=$(./acsoo addons list-depends)
     - echo Installing ${ADDONS_INIT}
-    - unbuffer venv/bin/odoo -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init  -i ${ADDONS_INIT} | ./acsoo checklog
+    - unbuffer venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init  -i ${ADDONS_INIT} | ./acsoo checklog
     # do not test server_environment_files because server_environment depends on it,
     # so testing server_environment_files implies testing server_environment,
     # and the server_environment tests require a very specific server_environment_files
     - ADDONS_TEST=$(./acsoo addons --exclude server_environment_files list)
     - echo Testing ${ADDONS_TEST}
-    - unbuffer venv/bin/coverage run venv/bin/odoo -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init  -i ${ADDONS_TEST} --test-enable | ./acsoo checklog
+    - unbuffer venv/bin/coverage run venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init  -i ${ADDONS_TEST} --test-enable | ./acsoo checklog
     - venv/bin/coverage report
   coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+\%)/'
 
