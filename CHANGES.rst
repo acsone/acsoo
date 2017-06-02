@@ -5,6 +5,10 @@ Changes
 .. ----------
 .. -
 
+1.3.0 (2017-??-??)
+------------------
+- [IMP] flake8: read additional flake8-options in acsoo configuration file
+
 1.2.2 (2017-05-30)
 ------------------
 - [FIX] regression in tag, tag_editable_requirements and release commands.
