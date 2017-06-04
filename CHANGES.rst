@@ -5,11 +5,12 @@ Changes
 .. ----------
 .. -
 
-1.3.0 (2017-??-??)
+1.3.0 (2017-06-04)
 ------------------
 - [IMP] flake8: read additional flake8-options in acsoo configuration file.
 - [IMP] template: series-dependent odoo command in .gitlab.ci.yml.
 - [IMP] template: createdb in .gitlab-ci.yml because in 8 Odoo does not do it by itself.
+- [ADD] addons list-depends: --exclude option
 
 1.2.2 (2017-05-30)
 ------------------

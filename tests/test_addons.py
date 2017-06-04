@@ -7,7 +7,7 @@ import unittest
 
 from click.testing import CliRunner
 
-from acsoo.addons import addons
+from acsoo.main import main
 from acsoo.tools import working_directory
 
 
@@ -19,41 +19,57 @@ class TestAddons(unittest.TestCase):
     def test_list(self):
         runner = CliRunner()
         with working_directory(DATA_DIR):
-            res = runner.invoke(addons, [
+            res = runner.invoke(main, [
+                'addons',
                 'list',
             ])
-            self.assertTrue(res.exit_code == 0)
+            assert res.exit_code == 0
             expected = 'addon1'
             assert expected in res.output
 
     def test_exclude(self):
         runner = CliRunner()
         with working_directory(DATA_DIR):
-            res = runner.invoke(addons, [
+            res = runner.invoke(main, [
+                'addons',
                 '--exclude', 'addon1',
                 'list',
             ])
-            self.assertTrue(res.exit_code == 0)
+            assert res.exit_code == 0
             expected = ''
             assert expected in res.output
 
     def test_include(self):
         runner = CliRunner()
         with working_directory(DATA_DIR):
-            res = runner.invoke(addons, [
+            res = runner.invoke(main, [
+                'addons',
                 '--include', 'addon1',
                 'list',
             ])
-            self.assertTrue(res.exit_code == 0)
+            assert res.exit_code == 0
             expected = 'addon1'
             assert expected in res.output
 
     def test_list_depends(self):
         runner = CliRunner()
         with working_directory(DATA_DIR):
-            res = runner.invoke(addons, [
+            res = runner.invoke(main, [
+                'addons',
                 'list-depends',
             ])
-            self.assertTrue(res.exit_code == 0)
+            assert res.exit_code == 0
             expected = 'base'
+            assert expected in res.output
+
+    def test_list_depends_exclude(self):
+        runner = CliRunner()
+        with working_directory(DATA_DIR):
+            res = runner.invoke(main, [
+                'addons',
+                'list-depends',
+                '--exclude=base',
+            ])
+            assert res.exit_code == 0
+            expected = ''
             assert expected in res.output
