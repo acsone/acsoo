@@ -12,5 +12,5 @@ from . import flake8cmd
 from . import pylintcmd
 from . import release
 from . import tag
-from . import tag_editable_requirements
+from . import tag_requirements
 from . import wheel

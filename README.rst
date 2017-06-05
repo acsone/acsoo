@@ -66,11 +66,11 @@ acsoo tag
 
 Tag the current project after ensuring everything has been commited to git.
 
-acsoo tag_editable_requirements
--------------------------------
+acsoo tag_requirements
+----------------------
 
-Tag all editable requirements found in ``requirements.txt``, so
-the referenced commits are not lost in case of git garbage collection.
+Tag all VCS requirements found in ``requirements.txt``, so
+the referenced commits are not lost in case of VCS garbage collection.
 
 acsoo wheel
 -----------
@@ -84,7 +84,7 @@ but works around a pip quirk.
 acsoo release
 -------------
 
-Perform ``acsoo tag``, ``acsoo tag_editable_requirements`` and
+Perform ``acsoo tag``, ``acsoo tag_requirements`` and
 ``acsoo wheel`` in one command.
 
 acsoo flake8

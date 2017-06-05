@@ -27,7 +27,7 @@ class ColoredFormatter(logging.Formatter):
 
     COLORS = {
         'DEBUG': dict(dim=True),
-        'INFO': dict(bold=True),
+        'INFO': dict(),
         'WARNING': dict(fg='yellow'),
         'ERROR': dict(fg='red'),
         'CRITICAL': dict(fg='white', bg='red'),

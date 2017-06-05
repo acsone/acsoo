@@ -7,7 +7,6 @@ import click
 from .main import main
 from .wheel import do_wheel
 from .tag import do_tag
-from .tag_editable_requirements import do_tag_editable_requirements
 
 
 def do_release(config, force, src, requirement, wheel_dir, yes,
@@ -16,13 +15,11 @@ def do_release(config, force, src, requirement, wheel_dir, yes,
         click.confirm('Tag and release version {}?'.format(config.version),
                       abort=True)
         yes = True
-    do_tag(config, force, yes)
-    do_tag_editable_requirements(config, force, src, requirement, yes)
+    do_tag(config, force, src, requirement, yes)
     do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index)
 
 
-@click.command(help='Perform acsoo tag, acsoo tag_editable_requirements and '
-                    'acsoo wheel')
+@click.command(help='Perform acsoo tag, and acsoo wheel')
 @click.option('-f', '--force', is_flag=True,
               help='Replace an existing tag (instead of failing)')
 @click.option('--src', default='src', envvar='PIP_SRC',
