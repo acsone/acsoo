@@ -16,9 +16,9 @@ def do_tag(config, force, yes):
         force_cmd = ['-f']
     else:
         force_cmd = []
-    if 0 != call(['git', 'diff', '--exit-code']):
+    if call(['git', 'diff', '--exit-code']) != 0:
         raise click.ClickException("Please commit first.")
-    if 0 != call(['git', 'diff', '--exit-code', '--cached']):
+    if call(['git', 'diff', '--exit-code', '--cached']) != 0:
         raise click.ClickException("Please commit first.")
     out = check_output(['git', 'ls-files', '--other', '--exclude-standard',
                         '--directory'])
