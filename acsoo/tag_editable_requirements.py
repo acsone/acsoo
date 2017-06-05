@@ -14,8 +14,9 @@ from .tools import check_call, working_directory
 _logger = logging.getLogger(__name__)
 
 
-RE = re.compile(r"^-e git\+(?P<url>ssh://.*?/.*?)@(?P<sha>[^?#&]+)"
+RE = re.compile(r"-e git\+(?P<url>ssh://.*?/.*?)@(?P<sha>[^?#&]+)"
                 r".*?[#?]egg=(?P<egg>[^?#&]+)")
+NOTAG_RE = re.compile(r"([a-zA-Z0-9-_\.]+==)|(-f )|(--find-links )")
 
 
 def do_tag_editable_requirements(config, force, src, requirement, yes):
@@ -31,6 +32,8 @@ def do_tag_editable_requirements(config, force, src, requirement, yes):
         req = req.strip()
         mo = RE.match(req)
         if not mo:
+            if not NOTAG_RE.match(req):
+                _logger.warning("Could not tag %s", req)
             continue
         url = mo.group('url')
         sha = mo.group('sha')
