@@ -8,6 +8,9 @@ Changes
 Future (?)
 ----------
 - [IMP] colored logging
+- [IMP] tag_editable_requirements: include egg name in tag, so it is possible
+  to have several requirements (ie Odoo addons) on different commits in the same repo.
+- [IMP] tag, tag_editable_requirements: quiet git fetch and push
 
 1.3.0 (2017-06-04)
 ------------------
