@@ -44,9 +44,9 @@ def do_tag_editable_requirements(config, force, src, requirement, yes):
         eggtag = tag + '#' + egg
         with working_directory(repo):
             _logger.info('placing tag %s on %s@%s', eggtag, url, sha)
-            check_call(['git', 'fetch', '--tags', url, sha])
+            check_call(['git', 'fetch', '-q', '--tags', url, sha])
             check_call(['git', 'tag'] + force_cmd + [eggtag, sha])
-            check_call(['git', 'push'] + force_cmd + [url, eggtag])
+            check_call(['git', 'push', '-q'] + force_cmd + [url, eggtag])
 
 
 @click.command(help='Tag all editable requirements found in '
