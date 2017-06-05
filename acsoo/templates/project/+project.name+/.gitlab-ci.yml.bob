@@ -3,7 +3,6 @@ stages:
   - clean
 
 before_script:
-  - set -e
   - virtualenv venv-acsoo
   - venv-acsoo/bin/pip install acsoo
   - ln -s venv-acsoo/bin/acsoo
@@ -35,7 +34,6 @@ test:
   tags:
     - odoo-{{{ odoo.series }}}
   script:
-    - set -u -e -o pipefail
     - virtualenv venv
     - venv/bin/pip install coverage
     - venv/bin/pip install -r requirements.txt -e .
