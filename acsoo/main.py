@@ -23,6 +23,21 @@ Copyright 2016-2017 ACSONE SA/NV (<http://acsone.eu>)
 License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).'''
 
 
+class ColoredFormatter(logging.Formatter):
+
+    COLORS = {
+        'DEBUG': dict(dim=True),
+        'INFO': dict(bold=True),
+        'WARNING': dict(fg='yellow'),
+        'ERROR': dict(fg='red'),
+        'CRITICAL': dict(fg='white', bg='red'),
+    }
+
+    def format(self, record):
+        res = super(ColoredFormatter, self).format(record)
+        return click.style(res, **self.COLORS[record.levelname])
+
+
 @click.group()
 @click.version_option(version=__version__, message=__notice__)
 @click.option('-v', '--verbose', count=True)
@@ -42,4 +57,9 @@ def main(ctx, verbose, config):
         level = logging.INFO
     else:
         level = logging.WARNING
-    logging.basicConfig(format='%(message)s', level=level)
+
+    logger = logging.getLogger()
+    channel = logging.StreamHandler()
+    channel.setFormatter(ColoredFormatter())
+    logger.setLevel(level)
+    logger.addHandler(channel)

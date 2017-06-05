@@ -5,6 +5,10 @@ Changes
 .. ----------
 .. -
 
+Future (?)
+----------
+- [IMP] colored logging
+
 1.3.0 (2017-06-04)
 ------------------
 - [IMP] flake8: read additional flake8-options in acsoo configuration file.
