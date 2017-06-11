@@ -92,7 +92,7 @@ def do_checklog(filename, ignore, echo):
               help="Regular expression of log records to ignore.")
 @click.option('--echo/--no-echo', default=None,
               help="Echo the input file (default when reading from stdin).")
-@click.argument('filename', type=click.Path(), default='-')
+@click.argument('filename', type=click.Path(dir_okay=False), default='-')
 def checklog(filename, ignore, echo):
     do_checklog(filename, ignore, echo)
 

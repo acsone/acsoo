@@ -41,7 +41,7 @@ class ColoredFormatter(logging.Formatter):
 @click.group()
 @click.version_option(version=__version__, message=__notice__)
 @click.option('-v', '--verbose', count=True)
-@click.option('-c', '--config', type=click.Path(),
+@click.option('-c', '--config', type=click.Path(dir_okay=False, exists=True),
               help="Configuration file (default: ./acsoo.cfg).")
 @click.pass_context
 def main(ctx, verbose, config):

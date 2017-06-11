@@ -117,7 +117,8 @@ def do_pylintcmd(load_plugins, rcfile, module, expected, pylint_options):
                    "or odoo_addons).")
 @click.option('--load-plugins', metavar='PLUGINS', default='pylint_odoo',
               help="Pylint plugins to use (default: pylint_odoo).")
-@click.option('--rcfile', type=click.Path(), default=cfg_path('pylint.cfg'),
+@click.option('--rcfile', type=click.Path(dir_okay=False, exists=True),
+              default=cfg_path('pylint.cfg'),
               help="Pylint configuration file. Default is provided by acsoo.")
 @click.option('--expected', '-e', 'expected', metavar='MSG-IDS',
               help="Do not fail on these messages.")

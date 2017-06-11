@@ -41,13 +41,13 @@ def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index):
                     'directory. CAUTION: all wheel files are removed from '
                     'the target directory before building')
 @click.option('--src', default='src', envvar='PIP_SRC',
-              type=click.Path(),
+              type=click.Path(file_okay=False),
               help='Directory where editable requirements are checked out')
 @click.option('-r', '--requirement', default='requirements.txt',
               type=click.File(),
               help='Requirements to build (default=requirements.txt)')
 @click.option('-w', '--wheel-dir', default='release',
-              type=click.Path(),
+              type=click.Path(file_okay=False),
               help='Path where the wheels will be created (default=release')
 @click.option('--no-cache-dir', is_flag=True,
               help='Disable the pip cache')

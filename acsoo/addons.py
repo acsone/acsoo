@@ -16,7 +16,8 @@ def _split_set(csv):
 
 @click.group(help="Do things with addons lists. Options of this command "
                   "select addons on which the subcommands will act.")
-@click.option('--addons-dir', 'addons_dirs', multiple=True, type=click.Path(),
+@click.option('--addons-dir', 'addons_dirs', multiple=True,
+              type=click.Path(file_okay=False, exists=True),
               help="Directory containing addons. Defaults to odoo/addons or "
                    "odoo_addons if present. This option can be repeated.")
 @click.option('--include', default='',
