@@ -37,7 +37,7 @@ def do_tag(config, force, src, requirement, yes):
               type=click.Path(file_okay=False),
               help='Directory where editable requirements are checked out')
 @click.option('-r', '--requirement', default='requirements.txt',
-              type=click.File(),
+              type=click.Path(dir_okay=False, exists=True),
               help='Requirements to build (default=requirements.txt)')
 @click.option('-f', '--force', is_flag=True,
               help='Replace an existing tag (instead of failing)')
