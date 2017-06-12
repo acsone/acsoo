@@ -93,17 +93,31 @@ def do_tag_requirements(config, force, src, requirement, yes):
             check_call(['git', 'clone', '-q', url, repodir])
         with working_directory(repodir):
             push_url = _make_push_url(url)
-            check_call(['git', 'fetch', '-q', '--tags', url, sha])
+            ex_tag = _has_tag(config.series, config.trigram, egg, sha)
+            if ex_tag:
+                # TODO this assumes that if we find the tag locally
+                # it is also present on the remote, in rare situations
+                # this may not be the case, but this is so much more
+                # performant that it's probably worth taking this shortcut.
+                click.echo('tag {ex_tag} already exists on {push_url}@{sha}'.
+                           format(**locals()))
+                continue
+            check_call(['git', 'fetch', '-q', '-f', '--tags', push_url])
             ex_tag = _has_tag(config.series, config.trigram, egg, sha)
             if ex_tag:
                 click.echo('tag {ex_tag} already exists on {push_url}@{sha}'.
                            format(**locals()))
-            else:
-                eggtag = base_tag + '-' + egg
-                click.echo('placing tag {eggtag} on {push_url}@{sha}'.
-                           format(**locals()))
-                check_call(['git', 'tag'] + force_cmd + [eggtag, sha])
+                continue
+            eggtag = base_tag + '-' + egg
+            click.echo('placing tag {eggtag} on {push_url}@{sha}'.
+                       format(**locals()))
+            check_call(['git', 'tag'] + force_cmd + [eggtag, sha])
+            try:
                 check_call(['git', 'push'] + force_cmd + [push_url, eggtag])
+            except:
+                # if push failed, delete local tag
+                call(['git', 'tag', '-d', eggtag])
+                raise
 
 
 @click.command()
