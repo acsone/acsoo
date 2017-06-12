@@ -90,7 +90,8 @@ def do_tag_requirements(config, force, src, requirement, yes):
             continue
         repodir = os.path.join(src, egg.replace('_', '-'))
         if not os.path.isdir(os.path.join(repodir, '.git')):
-            check_call(['git', 'clone', '-q', url, repodir])
+            os.makedirs(repodir)
+            check_call(['git', 'init'], cwd=repodir)
         with working_directory(repodir):
             push_url = _make_push_url(url)
             ex_tag = _has_tag(config.series, config.trigram, egg, sha)
