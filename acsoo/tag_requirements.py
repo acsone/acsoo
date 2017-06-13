@@ -20,22 +20,30 @@ RE = re.compile(r"(?P<editable>-e )?(?P<vcs>(git|svn|hg))\+"
 NOTAG_RE = re.compile(r"([a-zA-Z0-9-_\.]+==)|"
                       r"(-f )|(--find-links )|"
                       r"(--extra-index-url )")
+GIT_URL_RE = re.compile(r"(?P<scheme>ssh|http|https)://"
+                        r"(?P<user>git@)?(?P<host>.*?)/"
+                        r"(?P<org>.*?)/(?P<rest>.*)")
+PUSHABLE = [
+    ('github.com', 'acsone'),
+]
 
 
 def _make_push_url(url):
-    GIT_URL_RE = re.compile(r"(?P<scheme>ssh|http|https)://"
-                            r"(?P<user>git@)?(?P<host>.*?)/"
-                            r"(?P<rest>.*)")
     mo = GIT_URL_RE.match(url)
     if not mo:
-        raise click.ClickException("Unsupported git url: %s" % url)
-    return GIT_URL_RE.sub(r"ssh://git@\g<host>/\g<rest>", url)
+        return False
+    groups = mo.groupdict()
+    if groups['scheme'] == 'ssh':
+        return url
+    if (groups['host'].lower(), groups['org'].lower()) not in PUSHABLE:
+        return False
+    return 'ssh://git@{host}/{org}/{rest}'.format(**groups)
 
 
-def _get_last_sha(requirement):
-    # find the short sha of the last commit to requirements.txt
+def _get_last_sha(filename):
+    # find the short sha of the last commit to filename
     return check_output([
-        'git', 'log', '-n', '1', '--format=%h', requirement
+        'git', 'log', '-n', '1', '--format=%h', filename
     ]).strip()
 
 
@@ -83,30 +91,33 @@ def do_tag_requirements(config, force, src, requirement, yes):
         egg = mo.group('egg')
         sha = mo.group('sha')
         if vcs != 'git':
-            _logger.warning("Cannot tag %s (unsupported vcs)", (req))
+            _logger.warning("Cannot tag %s (unsupported vcs)", req)
             continue
         if not editable:
-            _logger.warning("Cannot tag %s (non editable)", (req, ))
+            _logger.warning("Cannot tag %s (non editable)", req)
+            continue
+        push_url = _make_push_url(url)
+        if not push_url:
+            _logger.warning("Cannot tag %s (not pushable)", req)
             continue
         repodir = os.path.join(src, egg.replace('_', '-'))
         if not os.path.isdir(os.path.join(repodir, '.git')):
             os.makedirs(repodir)
             check_call(['git', 'init'], cwd=repodir)
         with working_directory(repodir):
-            push_url = _make_push_url(url)
             ex_tag = _has_tag(config.series, config.trigram, egg, sha)
             if ex_tag:
-                # TODO this assumes that if we find the tag locally
+                # this assumes that if we find the tag locally
                 # it is also present on the remote, in rare situations
                 # this may not be the case, but this is so much more
                 # performant that it's probably worth taking this shortcut.
-                click.echo('tag {ex_tag} already exists on {push_url}@{sha}'.
+                click.echo('tag {ex_tag} already exists on {url}@{sha}'.
                            format(**locals()))
                 continue
-            check_call(['git', 'fetch', '-q', '-f', '--tags', push_url])
+            check_call(['git', 'fetch', '-q', '-f', '--tags', url])
             ex_tag = _has_tag(config.series, config.trigram, egg, sha)
             if ex_tag:
-                click.echo('tag {ex_tag} already exists on {push_url}@{sha}'.
+                click.echo('tag {ex_tag} already exists on {url}@{sha}'.
                            format(**locals()))
                 continue
             eggtag = base_tag + '-' + egg

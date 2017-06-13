@@ -31,7 +31,8 @@ Future (?)
   - ``tag_requirements`` automatically transforms http(s) urls into ssh urls
     for the purpose of pushing tags. This allows to maximize the use of http(s)
     urls in requirements so CI and scripts do not require ssh access
-    to the public dependencies.
+    to the public dependencies. This currently only works for the acsone organization
+    on github but the mechanism is easy to extend, should the need arise.
 
 1.3.0 (2017-06-04)
 ------------------
