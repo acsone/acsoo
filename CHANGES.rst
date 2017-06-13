@@ -5,8 +5,8 @@ Changes
 .. ----------
 .. -
 
-Future (?)
-----------
+1.4.0 (2017-06-13)
+------------------
 - [IMP] colored logging
 - [IMP] major change to acsoo tag and tag_editable_requirements. These changes
   make it easier to work with a CI-driven release process that is triggered on
