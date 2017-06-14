@@ -5,6 +5,10 @@ Changes
 .. ----------
 .. -
 
+1.4.1 (2017-06-14)
+------------------
+- [FIX] regression in acsoo release
+
 1.4.0 (2017-06-13)
 ------------------
 - [IMP] colored logging

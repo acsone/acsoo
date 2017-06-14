@@ -26,7 +26,7 @@ def do_release(config, force, src, requirement, wheel_dir, yes,
               type=click.Path(file_okay=False),
               help='Directory where editable requirements are checked out')
 @click.option('-r', '--requirement', default='requirements.txt',
-              type=click.File(),
+              type=click.Path(dir_okay=False, exists=True),
               help='Requirements to build (default=requirements.txt)')
 @click.option('-w', '--wheel-dir', default='release',
               type=click.Path(file_okay=False),
