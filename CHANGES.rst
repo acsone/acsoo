@@ -5,8 +5,8 @@ Changes
 .. ----------
 .. -
 
-Future (?)
-----------
+1.4.3 (2017-06-16)
+------------------
 - [IMP] checklog: consider ignore lines starting with # as comments
 - [FIX] checklog: the previous release broke checklog color output
 
