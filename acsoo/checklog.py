@@ -72,7 +72,7 @@ def do_checklog(filename, ignore, echo):
         reccount = 0
         for line in logfile:
             if echo:
-                click.echo(line, nl=False)
+                click.echo(line, nl=False, color=True)
                 sys.stdout.flush()
             line = ANSI_CSI_RE.sub('', line)  # strip ANSI colors
             mo = LOG_START_RE.match(line)
