@@ -63,13 +63,15 @@ def do_checklog(filename, ignore, echo):
                 else:
                     error_records.append(record)
 
+        reccount = 0
         for line in logfile:
             if echo:
-                sys.stdout.write(line)
+                click.echo(line, nl=False)
                 sys.stdout.flush()
             line = ANSI_CSI_RE.sub('', line)  # strip ANSI colors
             mo = LOG_START_RE.match(line)
             if mo:
+                reccount += 1
                 _process_cur_rec()
                 cur_rec_mo = mo
                 cur_rec = [line]
@@ -77,11 +79,14 @@ def do_checklog(filename, ignore, echo):
                 cur_rec.append(line)
         _process_cur_rec()  # last record
 
+        if not reccount:
+            raise click.ClickException("No Odoo log record found in input.")
+
         if error_records or ignored_error_records:
             msg = _render_errors(error_records, ignored_error_records)
             click.echo(msg)
         if error_records:
-            raise click.ClickException("errors detected in log.")
+            raise click.ClickException("Errors detected in log.")
 
 
 @click.command(help="Check an odoo log file for errors. When no filename "
