@@ -2,6 +2,7 @@
 # Copyright 2017 ACSONE SA/NV (<http://acsone.eu>)
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
+import logging
 import re
 import sys
 
@@ -9,6 +10,9 @@ import click
 
 from .config import AcsooConfig
 from .main import main
+
+
+_logger = logging.getLogger(__name__)
 
 
 # from tartley/colorama
@@ -40,6 +44,8 @@ def _render_errors(error_records, ignored_error_records):
 
 
 def do_checklog(filename, ignore, echo):
+    ignore = [i for i in ignore if not i.startswith('#')]
+    _logger.debug("ignored regular expressions:\n%s", '\n'.join(ignore))
     ignore_regexes = [re.compile(i, re.MULTILINE) for i in ignore]
 
     if echo is None and filename == '-':

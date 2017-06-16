@@ -5,10 +5,14 @@ Changes
 .. ----------
 .. -
 
+Future (?)
+----------
+- [IMP] checklog: consider ignore lines starting with # as comments
+
 1.4.2 (2017-06-16)
 ------------------
-- [IMP] acsoo checklog: fail if no log record found in input
-- [IMP] acsoo checklog: echo with click to be less sensitive to unicode issues
+- [IMP] checklog: fail if no log record found in input
+- [IMP] checklog: echo with click to be less sensitive to unicode issues
 
 1.4.1 (2017-06-14)
 ------------------
