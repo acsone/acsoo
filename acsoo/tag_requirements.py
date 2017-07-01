@@ -114,7 +114,9 @@ def do_tag_requirements(config, force, src, requirement, yes):
                 click.echo('tag {ex_tag} already exists on {url}@{sha}'.
                            format(**locals()))
                 continue
-            check_call(['git', 'fetch', '-q', '-f', '--tags', url])
+            check_call([
+                'git', 'fetch', '-q', '-f', '--tags', url,
+                '+refs/heads/*:refs/remotes/acsoo/*'])
             ex_tag = _has_tag(config.series, config.trigram, egg, sha)
             if ex_tag:
                 click.echo('tag {ex_tag} already exists on {url}@{sha}'.

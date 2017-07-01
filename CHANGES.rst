@@ -5,6 +5,11 @@ Changes
 .. ----------
 .. -
 
+Future (?)
+----------
+- [IMP] tag_requirements: fetch more aggressively; this solves the errors
+  trying to write ref with non existent object.
+
 1.4.3 (2017-06-16)
 ------------------
 - [IMP] checklog: consider ignore lines starting with # as comments
