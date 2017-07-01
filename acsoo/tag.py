@@ -28,7 +28,7 @@ def do_tag(config, force, src, requirement, yes):
         raise click.ClickException("Please commit first.")
     check_call(['git', 'tag'] + force_cmd + [tag])
     check_call(['git', 'push', '-q'] + force_cmd + ['origin', 'tag', tag])
-    do_tag_requirements(config, force, src, requirement, yes)
+    do_tag_requirements(config, force, src, requirement, yes=True)
 
 
 @click.command(help='Tag the current project after ensuring '

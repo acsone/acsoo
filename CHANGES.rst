@@ -8,7 +8,8 @@ Changes
 Future (?)
 ----------
 - [IMP] tag_requirements: fetch more aggressively; this solves the errors
-  trying to write ref with non existent object.
+  trying to write ref with non existent object
+- [IMP] tag: always tag requirements when doing acsoo tag
 
 1.4.3 (2017-06-16)
 ------------------
