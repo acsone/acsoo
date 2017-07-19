@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+import subprocess
+import ConfigParser
+
+config = ConfigParser.ConfigParser()
+config.read('acsoo.cfg')
+
+VERSION = config.get('acsoo', 'version')
+HOST = 'odoo-{{{ project.name }}}.acsone.eu'
+USER = 'odoo-{{{ project.name }}}-test'
+
+subprocess.check_call([
+    'rsync', '--verbose', '--recursive', '--times', '--delete',
+    '--rsync-path', 'sudo -u {USER} rsync'.format(**locals()),
+    'release/',
+    '{HOST}:/home/{USER}/instance/release/'.format(**locals()),
+])
+subprocess.check_call([
+    'ssh', HOST,
+    'sudo -H -u {USER} /home/{USER}/instance/install.sh {VERSION}'.format(**locals()),
+])
+subprocess.check_call([
+    'ssh', HOST,
+    'sudo -H -u {USER} /home/{USER}/instance/upgrade.sh {VERSION} --i18n-overwrite'.format(**locals()),
+])
