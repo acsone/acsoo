@@ -10,6 +10,9 @@ Future (?)
 - [IMP] tag_requirements: fetch more aggressively; this solves the errors
   trying to write ref with non existent object
 - [IMP] tag: always tag requirements when doing acsoo tag
+- [IMP] tag: tag requirements before tagging project, so if something fails
+  when tagging the requirements the project is not tagged and the release 
+  build is not triggered.
 
 1.4.3 (2017-06-16)
 ------------------
