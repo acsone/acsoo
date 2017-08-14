@@ -36,8 +36,10 @@ Installation
 
    Since ``acsoo`` has a lot of dependencies that are not required at runtime, it
    is not recommanded to install it in the same virtualenv as your project.
-   A good approach is to install it in it's own virtual env and symlink the ``acsoo``
-   and ``mrbob`` executable somewhere in your PATH.
+   A good approach is to install it in it's own virtual env and symlink the ``acsoo``,
+   ``mrbob`` and ``bumpversion`` executables somewhere in your PATH.
+   By the way, `pipsi <https://github.com/mitsuhiko/pipsi>`_ is an interesting way to manage
+   such python scripts without polluting your system.
 
 To enable bash completion, add this line in your ``.bashrc``:
 
