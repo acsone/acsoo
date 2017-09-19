@@ -25,8 +25,10 @@ def _split_set(csv):
                    "installable addons found in --addons-dir').")
 @click.option('--exclude', default='',
               help="Comma separated list of addons to exclude.")
+@click.option('--separator', '-s', default=',',
+              help="Separator (default: comma)")
 @click.pass_context
-def addons(ctx, addons_dirs, include, exclude):
+def addons(ctx, addons_dirs, include, exclude, separator):
     include = _split_set(include)
     exclude = _split_set(exclude)
     if not addons_dirs:
@@ -43,7 +45,10 @@ def addons(ctx, addons_dirs, include, exclude):
         for addon, manifest in get_installable_addons(addons_dir).items():
             if (not include or addon in include) and addon not in exclude:
                 manifests[addon] = manifest
-    ctx.obj.update(dict(manifests=manifests))
+    ctx.obj.update(dict(
+        manifests=manifests,
+        separator=separator,
+    ))
 
 
 main.add_command(addons)
@@ -54,7 +59,7 @@ main.add_command(addons)
 def addons_list(ctx):
     manifests = ctx.obj['manifests']
     addon_names = sorted(manifests.keys())
-    click.echo(','.join(addon_names))
+    click.echo(ctx.obj['separator'].join(addon_names))
 
 
 addons.add_command(addons_list, 'list')
@@ -75,7 +80,7 @@ def addons_list_depends(ctx, exclude):
     depends -= set(manifests.keys())
     depends -= exclude
     addon_names = sorted(depends)
-    click.echo(','.join(addon_names))
+    click.echo(ctx.obj['separator'].join(addon_names))
 
 
 addons.add_command(addons_list_depends, 'list-depends')

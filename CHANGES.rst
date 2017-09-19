@@ -13,6 +13,7 @@ Future (?)
 - [IMP] tag: tag requirements before tagging project, so if something fails
   when tagging the requirements the project is not tagged and the release 
   build is not triggered.
+- [ADD] addons: add --separator option (and fix tests that where not testing much)
 
 1.4.3 (2017-06-16)
 ------------------

@@ -24,8 +24,8 @@ class TestAddons(unittest.TestCase):
                 'list',
             ])
             assert res.exit_code == 0
-            expected = 'addon1'
-            assert expected in res.output
+            expected = 'addon1,addon2\n'
+            assert expected == res.output
 
     def test_exclude(self):
         runner = CliRunner()
@@ -36,8 +36,8 @@ class TestAddons(unittest.TestCase):
                 'list',
             ])
             assert res.exit_code == 0
-            expected = ''
-            assert expected in res.output
+            expected = 'addon2\n'
+            assert expected == res.output
 
     def test_include(self):
         runner = CliRunner()
@@ -48,8 +48,8 @@ class TestAddons(unittest.TestCase):
                 'list',
             ])
             assert res.exit_code == 0
-            expected = 'addon1'
-            assert expected in res.output
+            expected = 'addon1\n'
+            assert expected == res.output
 
     def test_list_depends(self):
         runner = CliRunner()
@@ -59,8 +59,8 @@ class TestAddons(unittest.TestCase):
                 'list-depends',
             ])
             assert res.exit_code == 0
-            expected = 'base'
-            assert expected in res.output
+            expected = 'base\n'
+            assert expected == res.output
 
     def test_list_depends_exclude(self):
         runner = CliRunner()
@@ -71,5 +71,17 @@ class TestAddons(unittest.TestCase):
                 '--exclude=base',
             ])
             assert res.exit_code == 0
-            expected = ''
-            assert expected in res.output
+            expected = '\n'
+            assert expected == res.output
+
+    def test_separator(self):
+        runner = CliRunner()
+        with working_directory(DATA_DIR):
+            res = runner.invoke(main, [
+                'addons',
+                '--separator', ';',
+                'list',
+            ])
+            assert res.exit_code == 0
+            expected = 'addon1;addon2\n'
+            assert expected == res.output
