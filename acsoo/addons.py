@@ -35,7 +35,8 @@ def addons(ctx, addons_dirs, include, exclude, separator):
         addons_dirs = []
         candidate_addons_dirs = (
             os.path.join('odoo', 'addons'),
-            os.path.join('odoo_addons'),
+            'odoo_addons',
+            '.',
         )
         for addons_dir in candidate_addons_dirs:
             if os.path.isdir(addons_dir):

@@ -3,6 +3,7 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import os
+from os.path import join as opj
 import unittest
 
 from click.testing import CliRunner
@@ -11,7 +12,7 @@ from acsoo.main import main
 from acsoo.tools import working_directory
 
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
+DATA_DIR = opj(os.path.dirname(__file__), 'data')
 
 
 class TestAddons(unittest.TestCase):
@@ -77,6 +78,18 @@ class TestAddons(unittest.TestCase):
     def test_separator(self):
         runner = CliRunner()
         with working_directory(DATA_DIR):
+            res = runner.invoke(main, [
+                'addons',
+                '--separator', ';',
+                'list',
+            ])
+            assert res.exit_code == 0
+            expected = 'addon1;addon2\n'
+            assert expected == res.output
+
+    def test_addons_in_cur_dir(self):
+        runner = CliRunner()
+        with working_directory(opj(DATA_DIR, 'odoo', 'addons')):
             res = runner.invoke(main, [
                 'addons',
                 '--separator', ';',
