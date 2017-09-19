@@ -5,8 +5,8 @@ Changes
 .. ----------
 .. -
 
-Future (?)
-----------
+1.5.0 (2017-09-19)
+------------------
 - [IMP] tag_requirements: fetch more aggressively; this solves the errors
   trying to write ref with non existent object
 - [IMP] tag: always tag requirements when doing acsoo tag
