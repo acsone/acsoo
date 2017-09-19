@@ -4,6 +4,7 @@
 
 import logging
 import os
+from os.path import join as opj
 import sys
 from ConfigParser import ConfigParser
 
@@ -12,6 +13,7 @@ import pylint.lint
 
 from .config import AcsooConfig
 from .main import main
+from .manifest import get_installable_addons
 from .tools import cmd_string, log_cmd, cfg_path
 
 
@@ -83,12 +85,21 @@ def _consolidate_expected(rcfile, expected):
 
 
 def do_pylintcmd(load_plugins, rcfile, module, expected, pylint_options):
+    # import pdb; pdb.set_trace()
     if not module:
-        if os.path.isdir(os.path.join('odoo', 'addons')):
-            module = ['odoo']
-        elif os.path.isdir(os.path.join('odoo_addons')):
-            module = ['odoo_addons']
-        else:
+        module = []
+        candidate_addons_dirs = (
+            opj('odoo', 'addons'),
+            'odoo_addons',
+            '.',
+        )
+        for candidate_addons_dir in candidate_addons_dirs:
+            if os.path.isdir(candidate_addons_dir):
+                module.extend(
+                    opj(candidate_addons_dir, addon) for addon in
+                    get_installable_addons(candidate_addons_dir)
+                )
+        if not module:
             raise click.UsageError("Please provide module or package "
                                    "to lint (--module).")
     cmd = [

@@ -15,6 +15,9 @@ Future (?)
   build is not triggered.
 - [ADD] addons: add --separator option (and fix tests that were not testing much)
 - [IMP] addons: consider current dir as addons dir candidate
+- [IMP] pylint: look for module to test in current dir by default, using the
+  same algorithm as ``addons list``
+- [IMP] pylint: support python 3 style odoo/addons namespace (without __init__.py)
 
 1.4.3 (2017-06-16)
 ------------------
