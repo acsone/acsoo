@@ -124,8 +124,8 @@ def do_pylintcmd(load_plugins, rcfile, module, expected, pylint_options):
 
 @click.command()
 @click.option('--module', '-m', metavar='module_or_package', multiple=True,
-              help="Module or package to lint (default: autodetected odoo "
-                   "or odoo_addons).")
+              help="Module or package to lint (default: autodetected "
+                   "odoo/addons or odoo_addons or in current directory).")
 @click.option('--load-plugins', metavar='PLUGINS', default='pylint_odoo',
               help="Pylint plugins to use (default: pylint_odoo).")
 @click.option('--rcfile', type=click.Path(dir_okay=False, exists=True),

@@ -103,7 +103,8 @@ It is possible to pass additional options to the ``flake8`` command, eg:
 acsoo pylint
 ------------
 
-Run `pylint <https://pypi.python.org/pypi/pylint>`_ on the ``odoo`` or ``odoo_addons`` namespace.
+Run `pylint <https://pypi.python.org/pypi/pylint>`_ on detected Odoo addons in odoo/addons,
+odoo_addons or the current directory.
 It automatically uses the `pylint-odoo <https://pypi.python.org/pypi/pylint-odoo>`_ plugin and
 runs with a reasonable configuration, including an opinionated set of disabled message.
 
@@ -111,14 +112,14 @@ It is possible to pass additional options to the ``pylint`` command, eg:
 
   .. code:: shell
 
-    acsoo pylint -- --disable missing-final-newline odoo
+    acsoo pylint -- --disable missing-final-newline
 
 This command returns an non-zero exit code if any message is reported.
 It is however possibly to display messages while reporting success, eg:
 
   .. code:: shell
 
-    acsoo pylint --expected api-one-deprecated:2,line-too-long -- odoo
+    acsoo pylint --expected api-one-deprecated:2,line-too-long
 
 The above command succeeds despite having exactly 2 ``api-one-deprecated`` or
 any number of ``line-too-long`` messages being reported.
@@ -128,7 +129,7 @@ default configuration, eg to fail on ``fixme`` errors, just expect 0 ``fixme`` m
 
   .. code:: shell
 
-    acsoo pylint --expected fixme:0 -- odoo
+    acsoo pylint --expected fixme:0
 
 acsoo addons
 ------------
