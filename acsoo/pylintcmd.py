@@ -6,7 +6,7 @@ import logging
 import os
 from os.path import join as opj
 import sys
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 import click
 import pylint.lint

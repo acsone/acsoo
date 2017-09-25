@@ -3,7 +3,7 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import os
-from ConfigParser import RawConfigParser, NoOptionError, NoSectionError
+from configparser import RawConfigParser, NoOptionError, NoSectionError
 
 import click
 

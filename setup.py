@@ -19,6 +19,7 @@ setup(
         'bobtemplates.odoo',
         'click',
         'colorama',
+        'configparser',
         'flake8',
         'lxml',  # pylint-odoo dep not installed automatically?
         'pip>=9.0.1',
