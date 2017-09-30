@@ -3,10 +3,12 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import os
+import sys
 import unittest
 from textwrap import dedent
 
 from click.testing import CliRunner
+import pytest
 
 from acsoo.main import main
 from acsoo.pylintcmd import pylintcmd
@@ -16,6 +18,8 @@ from acsoo.tools import working_directory
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
+@pytest.mark.skipif(sys.version_info.major >= 3,
+                    reason="pylint-odoo does not work on python3 yet")
 class TestPylint(unittest.TestCase):
 
     def test1(self):
