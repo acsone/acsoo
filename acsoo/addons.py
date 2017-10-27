@@ -8,6 +8,7 @@ import click
 
 from .main import main
 from .manifest import get_installable_addons
+from .tools import check_output
 
 
 def _split_set(csv):
@@ -49,6 +50,7 @@ def addons(ctx, addons_dirs, include, exclude, separator):
     ctx.obj.update(dict(
         manifests=manifests,
         separator=separator,
+        addons_dirs=addons_dirs,
     ))
 
 
@@ -85,3 +87,38 @@ def addons_list_depends(ctx, exclude):
 
 
 addons.add_command(addons_list_depends, 'list-depends')
+
+
+@click.command(help="Print a coma separated list of the modified addons "
+                    "against the specifiec target branch.")
+@click.argument('branch', default='origin/master...')
+@click.option('--exclude', default='',
+              help="Comma separated list of addons to exclude from the "
+                   "modified addons.")
+@click.pass_context
+def addons_diff(ctx, branch, exclude):
+    exclude = _split_set(exclude)
+    manifests = ctx.obj['manifests']
+    addon_names = sorted(manifests.keys())
+    cmd = [
+        "git",
+        "diff",
+        "--name-only",
+        branch,
+    ]
+    diff_files = check_output(cmd).split('\n')[0:-1]
+    diff_addons = set()
+    addons_dirs = ctx.obj.get('addons_dirs', [])
+    exclude |= set(addons_dirs)
+    for addons_dir in addons_dirs:
+        for diff_file in diff_files:
+            diff_path = diff_file.replace(
+                "{addons_dir}/".format(addons_dir=addons_dir), "")
+            diff_addon = diff_path.split('/')[0]
+            if diff_addon not in exclude and diff_addon in addon_names:
+                diff_addons.add(diff_addon)
+    diff_addons = sorted(diff_addons)
+    click.echo(ctx.obj['separator'].join(diff_addons))
+
+
+addons.add_command(addons_diff, 'list-diff')
