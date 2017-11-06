@@ -82,4 +82,4 @@ deploy-test:
     name: test
     url: https://odoo-{{{ project.name }}}-test.acsone.eu
   only:
-    - /\d+\.\d+\.\d+/
+    - /^\d+\.\d+\.\d+$/
