@@ -128,7 +128,7 @@ def do_tag_requirements(config, force, src, requirement, yes):
             check_call(['git', 'tag'] + force_cmd + [eggtag, sha])
             try:
                 check_call(['git', 'push'] + force_cmd + [push_url, eggtag])
-            except:
+            except:  # noqa
                 # if push failed, delete local tag
                 call(['git', 'tag', '-d', eggtag])
                 raise
