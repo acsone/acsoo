@@ -140,6 +140,7 @@ A set of commands to print addons lists, useful when running tests.
 
      acsoo addons list
      acsoo addons list-depends
+     acsoo addons list-diff
 
 acsoo checklog
 --------------
