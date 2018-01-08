@@ -106,6 +106,10 @@ addons.add_command(addons_list_depends, 'list-depends')
 @click.pass_context
 def addons_toupdate(ctx, git_ref, tmp_dir, upstream, addons_dirs,
                     diff_requirements):
+    # Check ancestor
+    if call(['git', 'merge-base', '--is-ancestor', 'HEAD', git_ref]):
+        click.echo('all')
+        return
     repo_url = check_output(['git', 'remote', 'get-url', upstream])
     if not repo_url:
         raise click.ClickException(
