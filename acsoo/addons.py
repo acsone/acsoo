@@ -6,6 +6,7 @@ import click
 
 from .main import main
 from .manifest import get_default_addons_dirs, get_installable_addons
+from .tools import call, check_output
 
 
 def _split_set(csv):
@@ -74,3 +75,37 @@ def addons_list_depends(ctx, exclude):
 
 
 addons.add_command(addons_list_depends, 'list-depends')
+
+
+@click.command(help="Print a comma separated list of the modified installable "
+                    "addons from the given git ref")
+@click.argument('git_ref')
+@click.option('-d', '--tmp-dir', 'tmp_dir', default='tmp_acsoo_toupdate',
+              type=click.Path(file_okay=False),
+              help='Path where the repository will be cloned for comparison')
+@click.option('-u', '--upstream', default='origin',
+              help='Remote upstream URL.')
+@click.option('--addons-dir', 'addons_dirs', multiple=True,
+              type=click.Path(file_okay=False, exists=True),
+              help="Directory containing addons. Defaults to odoo/addons or "
+                   "odoo_addons if present. This option can be repeated.")
+@click.pass_context
+def addons_toupdate(ctx, git_ref, tmp_dir, upstream, addons_dirs):
+    repo_url = check_output(['git', 'remote', 'get-url', upstream])
+    if not repo_url:
+        raise click.ClickException(
+            "No repository found for given upstream name."
+            "{upstream_name}".format(upstream_name=upstream))
+    if not addons_dirs:
+        addons_dirs = get_default_addons_dirs()
+    addon_names = []
+    for addons_dir in addons_dirs:
+        installable_addons = get_installable_addons([addons_dir])
+        for addon_name in installable_addons:
+            addon_dir = os.path.join(addons_dir, addon_name)
+            if call(['git', 'diff', '--quiet', git_ref, addon_dir]):
+                addon_names.append(addon_name)
+    click.echo(ctx.obj['separator'].join(addon_names))
+
+
+addons.add_command(addons_toupdate, 'toupdate')
