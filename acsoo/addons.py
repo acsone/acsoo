@@ -12,10 +12,10 @@ from .manifest import get_default_addons_dirs, get_installable_addons
 from .tools import call, check_output, parse_requirements
 
 
-ODOO_ADDON_REGEX = re.compile(
+ODOO_ADDON_REGEX = re.compile(  # Identifies external Odoo addons dependency
     r'odoo[0-9]+[-_]addon[-_].*'
 )
-EXTERNAL_SOURCES_REGEX = re.compile(
+EXTERNAL_SOURCES_REGEX = re.compile(  # Identifies external sources dependency
     r'odoo[-_]addons[-_].*'
 )
 
@@ -118,13 +118,14 @@ def addons_toupdate(ctx, git_ref, tmp_dir, upstream, addons_dirs,
     if not addons_dirs:
         addons_dirs = get_default_addons_dirs()
     addon_names = []
+    # Compare each installable addons and populate modified addons list
     for addons_dir in addons_dirs:
         installable_addons = get_installable_addons([addons_dir])
         for addon_name in installable_addons:
             addon_dir = os.path.join(addons_dir, addon_name)
             if call(['git', 'diff', '--quiet', git_ref, addon_dir]):
                 addon_names.append(addon_name)
-
+    # Requirements file comparison
     if diff_requirements:
         requirements_filename = 'requirements.txt'
         if not os.path.exists(requirements_filename):
@@ -132,40 +133,50 @@ def addons_toupdate(ctx, git_ref, tmp_dir, upstream, addons_dirs,
                 "No requirements file found in the current project.")
         diff_requirements_filename = os.path.join(
             tmp_dir, requirements_filename)
+        # If the requirements file is new, update all
         if not os.path.exists(diff_requirements_filename):
             click.echo('all')
             return
-        with open(requirements_filename) as f:
-            current_requirements = parse_requirements(f)
-        with open(diff_requirements_filename) as f:
-            diff_requirements = parse_requirements(f)
+        # Parse the requirements files
+        current_requirements = parse_requirements(requirements_filename)
+        diff_requirements = parse_requirements(diff_requirements_filename)
+        # Compare the two requirements files and populate modified addons list
         for module_name in current_requirements:
             current_req = current_requirements.get(module_name)
             diff_req = diff_requirements.get(module_name)
-            if not current_req or not diff_req:
+            # New dependency, ignore
+            if not diff_req:
                 continue
+            # Special case for odoo and enterprise addons, update all if change
             if module_name in ['odoo', 'odoo_addons_enterprise']:
                 if current_req.specs != diff_req.specs or \
                         current_req.revision != diff_req.revision:
                     click.echo('all')
                     return
+            # Special case for external sources, update all if change
+            # TODO: recursive comparison of the changes in the external sources
             if EXTERNAL_SOURCES_REGEX.match(module_name):
                 if current_req.specs != diff_req.specs or \
                         current_req.revision != diff_req.revision:
                     click.echo('all')
                     return
+            # Compare external odoo addons dependencies
             if ODOO_ADDON_REGEX.match(module_name):
+                # Previously editable or newly editable
                 if current_req.editable != diff_req.editable:
                     addon_names.append(module_name)
                     continue
                 if current_req.editable:
+                    # New revision
                     if current_req.revision != diff_req.revision:
                         addon_names.append(module_name)
                         continue
+                    # URL changed
                     if current_req.uri != diff_req.uri:
                         addon_names.append(module_name)
                         continue
                 else:
+                    # New version
                     if current_req.specs != diff_req.specs:
                         addon_names.append(module_name)
                         continue
