@@ -27,6 +27,7 @@ setup(
         'setuptools>=20,<31',
         'wheel>=0.29',
         'bumpversion',
+        'requirements-parser',
     ],
     license='GPLv3+',
     classifiers=[
