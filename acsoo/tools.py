@@ -5,6 +5,7 @@
 import contextlib
 import logging
 import os
+import requirements
 import subprocess
 import sys
 from distutils.spawn import find_executable as _fe
@@ -99,3 +100,10 @@ def _find_executable(exe):
 
 def cfg_path(filename):
     return os.path.join(os.path.dirname(__file__), 'cfg', filename)
+
+
+def parse_requirements(requirement_file):
+    parsed_requirements = {}
+    for req in requirements.parse(requirement_file):
+        parsed_requirements[req.name] = req
+    return parsed_requirements

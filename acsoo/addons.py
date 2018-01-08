@@ -2,11 +2,22 @@
 # Copyright 2017 ACSONE SA/NV (<http://acsone.eu>)
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
+import os
+import re
+
 import click
 
 from .main import main
 from .manifest import get_default_addons_dirs, get_installable_addons
-from .tools import call, check_output
+from .tools import call, check_output, parse_requirements
+
+
+ODOO_ADDON_REGEX = re.compile(
+    r'odoo[0-9]+[-_]addon[-_].*'
+)
+EXTERNAL_SOURCES_REGEX = re.compile(
+    r'odoo[-_]addons[-_].*'
+)
 
 
 def _split_set(csv):
@@ -89,8 +100,12 @@ addons.add_command(addons_list_depends, 'list-depends')
               type=click.Path(file_okay=False, exists=True),
               help="Directory containing addons. Defaults to odoo/addons or "
                    "odoo_addons if present. This option can be repeated.")
+@click.option('-r', '--diff-requirements', 'diff_requirements', is_flag=True,
+              help="Defines whether the comparison must take the requirements "
+                   "file into account or not.")
 @click.pass_context
-def addons_toupdate(ctx, git_ref, tmp_dir, upstream, addons_dirs):
+def addons_toupdate(ctx, git_ref, tmp_dir, upstream, addons_dirs,
+                    diff_requirements):
     repo_url = check_output(['git', 'remote', 'get-url', upstream])
     if not repo_url:
         raise click.ClickException(
@@ -105,6 +120,52 @@ def addons_toupdate(ctx, git_ref, tmp_dir, upstream, addons_dirs):
             addon_dir = os.path.join(addons_dir, addon_name)
             if call(['git', 'diff', '--quiet', git_ref, addon_dir]):
                 addon_names.append(addon_name)
+
+    if diff_requirements:
+        requirements_filename = 'requirements.txt'
+        if not os.path.exists(requirements_filename):
+            raise click.ClickException(
+                "No requirements file found in the current project.")
+        diff_requirements_filename = os.path.join(
+            tmp_dir, requirements_filename)
+        if not os.path.exists(diff_requirements_filename):
+            click.echo('all')
+            return
+        with open(requirements_filename) as f:
+            current_requirements = parse_requirements(f)
+        with open(diff_requirements_filename) as f:
+            diff_requirements = parse_requirements(f)
+        for module_name in current_requirements:
+            current_req = current_requirements.get(module_name)
+            diff_req = diff_requirements.get(module_name)
+            if not current_req or not diff_req:
+                continue
+            if module_name in ['odoo', 'odoo_addons_enterprise']:
+                if current_req.specs != diff_req.specs or \
+                        current_req.revision != diff_req.revision:
+                    click.echo('all')
+                    return
+            if EXTERNAL_SOURCES_REGEX.match(module_name):
+                if current_req.specs != diff_req.specs or \
+                        current_req.revision != diff_req.revision:
+                    click.echo('all')
+                    return
+            if ODOO_ADDON_REGEX.match(module_name):
+                if current_req.editable != diff_req.editable:
+                    addon_names.append(module_name)
+                    continue
+                if current_req.editable:
+                    if current_req.revision != diff_req.revision:
+                        addon_names.append(module_name)
+                        continue
+                    if current_req.uri != diff_req.uri:
+                        addon_names.append(module_name)
+                        continue
+                else:
+                    if current_req.specs != diff_req.specs:
+                        addon_names.append(module_name)
+                        continue
+
     click.echo(ctx.obj['separator'].join(addon_names))
 
 
