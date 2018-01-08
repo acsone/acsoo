@@ -5,7 +5,7 @@
 import click
 
 from .main import main
-from .manifest import get_installable_addons
+from .manifest import get_default_addons_dirs, get_installable_addons
 
 
 def _split_set(csv):
