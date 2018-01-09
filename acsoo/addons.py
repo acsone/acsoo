@@ -8,15 +8,20 @@ import re
 import click
 
 from .main import main
-from .manifest import get_default_addons_dirs, get_installable_addons
+from .manifest import get_installable_addons
 from .tools import call, check_output, parse_requirements
 
 
-ODOO_ADDON_REGEX = re.compile(  # Identifies external Odoo addons dependency
+# Identifies external Odoo addon dependency
+ODOO_ADDON_REGEX = re.compile(
     r'odoo[0-9]+[-_]addon[-_].*'
 )
-EXTERNAL_SOURCES_REGEX = re.compile(  # Identifies external sources dependency
+# Identifies another distribution providing several addons
+ODOO_ADDONS_REGEX = re.compile(
     r'odoo[-_]addons[-_].*'
+)
+ODOO_REGEX = re.compile(
+    r'(^odoo$)|(^odoo.*enterprise$)'
 )
 
 
@@ -91,94 +96,85 @@ addons.add_command(addons_list_depends, 'list-depends')
 @click.command(help="Print a comma separated list of the modified installable "
                     "addons from the given git ref")
 @click.argument('git_ref')
-@click.option('-d', '--tmp-dir', 'tmp_dir', default='tmp_acsoo_toupdate',
-              type=click.Path(file_okay=False),
-              help='Path where the repository will be cloned for comparison')
-@click.option('-u', '--upstream', default='origin',
-              help='Remote upstream URL.')
-@click.option('--addons-dir', 'addons_dirs', multiple=True,
-              type=click.Path(file_okay=False, exists=True),
-              help="Directory containing addons. Defaults to odoo/addons or "
-                   "odoo_addons if present. This option can be repeated.")
 @click.option('-r', '--diff-requirements', 'diff_requirements', is_flag=True,
               help="Defines whether the comparison must take the requirements "
                    "file into account or not.")
 @click.pass_context
-def addons_toupdate(ctx, git_ref, tmp_dir, upstream, addons_dirs,
-                    diff_requirements):
+def addons_toupdate(ctx, git_ref, diff_requirements):
     # Check ancestor
     if call(['git', 'merge-base', '--is-ancestor', 'HEAD', git_ref]):
         click.echo('all')
         return
-    repo_url = check_output(['git', 'remote', 'get-url', upstream])
-    if not repo_url:
-        raise click.ClickException(
-            "No repository found for given upstream name."
-            "{upstream_name}".format(upstream_name=upstream))
-    if not addons_dirs:
-        addons_dirs = get_default_addons_dirs()
     addon_names = []
     # Compare each installable addons and populate modified addons list
-    for addons_dir in addons_dirs:
-        installable_addons = get_installable_addons([addons_dir])
-        for addon_name in installable_addons:
-            addon_dir = os.path.join(addons_dir, addon_name)
-            if call(['git', 'diff', '--quiet', git_ref, addon_dir]):
-                addon_names.append(addon_name)
+    addons_paths = ctx.obj['addons_paths']
+    for addon_name in addons_paths:
+        addon_dir = os.path.join(addons_paths[addon_name], addon_name)
+        if call(['git', 'diff', '--quiet', git_ref, addon_dir]):
+            addon_names.append(addon_name)
     # Requirements file comparison
     if diff_requirements:
-        requirements_filename = 'requirements.txt'
-        if not os.path.exists(requirements_filename):
-            raise click.ClickException(
-                "No requirements file found in the current project.")
-        diff_requirements_filename = os.path.join(
-            tmp_dir, requirements_filename)
+        req_ref = 'HEAD:requirements.txt'
+        diff_req_ref = git_ref + ':' + 'requirements.txt'
+        requirements_string = diff_requirements_string = ""
+        try:
+            requirements_string = check_output(['git', 'show', req_ref])
+            diff_requirements_string = check_output(
+                ['git', 'show', diff_req_ref])
+        except click.ClickException:
+            if not requirements_string:
+                raise click.ClickException(
+                    "No requirements found in the current project.")
         # If the requirements file is new, update all
-        if not os.path.exists(diff_requirements_filename):
+        if not diff_requirements_string:
             click.echo('all')
             return
+        # If requirements are the same, stop
+        if requirements_string == diff_requirements_string:
+            click.echo(ctx.obj['separator'].join(addon_names))
+            return
         # Parse the requirements files
-        current_requirements = parse_requirements(requirements_filename)
-        diff_requirements = parse_requirements(diff_requirements_filename)
+        current_requirements = parse_requirements(requirements_string)
+        diff_requirements = parse_requirements(diff_requirements_string)
         # Compare the two requirements files and populate modified addons list
-        for module_name in current_requirements:
-            current_req = current_requirements.get(module_name)
-            diff_req = diff_requirements.get(module_name)
+        for req_name in current_requirements:
+            current_req = current_requirements.get(req_name)
+            diff_req = diff_requirements.get(req_name)
             # New dependency, ignore
             if not diff_req:
                 continue
             # Special case for odoo and enterprise addons, update all if change
-            if module_name in ['odoo', 'odoo_addons_enterprise']:
+            if ODOO_REGEX.match(req_name):
                 if current_req.specs != diff_req.specs or \
                         current_req.revision != diff_req.revision:
                     click.echo('all')
                     return
             # Special case for external sources, update all if change
             # TODO: recursive comparison of the changes in the external sources
-            if EXTERNAL_SOURCES_REGEX.match(module_name):
+            if ODOO_ADDONS_REGEX.match(req_name):
                 if current_req.specs != diff_req.specs or \
                         current_req.revision != diff_req.revision:
                     click.echo('all')
                     return
             # Compare external odoo addons dependencies
-            if ODOO_ADDON_REGEX.match(module_name):
+            if ODOO_ADDON_REGEX.match(req_name):
                 # Previously editable or newly editable
                 if current_req.editable != diff_req.editable:
-                    addon_names.append(module_name)
+                    addon_names.append(req_name)
                     continue
                 if current_req.editable:
                     # New revision
                     if current_req.revision != diff_req.revision:
-                        addon_names.append(module_name)
+                        addon_names.append(req_name)
                         continue
                     # URL changed
                     if current_req.uri != diff_req.uri:
-                        addon_names.append(module_name)
+                        addon_names.append(req_name)
                         continue
                 else:
                     # New version
                     if current_req.specs != diff_req.specs:
-                        addon_names.append(module_name)
+                        addon_names.append(req_name)
                         continue
 
     click.echo(ctx.obj['separator'].join(addon_names))

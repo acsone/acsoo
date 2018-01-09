@@ -3,6 +3,7 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import logging
+from os.path import join as opj
 import sys
 from configparser import ConfigParser
 

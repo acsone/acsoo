@@ -102,15 +102,14 @@ def cfg_path(filename):
     return os.path.join(os.path.dirname(__file__), 'cfg', filename)
 
 
-def parse_requirements(requirement_file_path):
+def parse_requirements(requirements_string):
     """
-    This method parses the given requirements file into a dictionary sorted
-    by addon name.
-    :param requirement_file_path: requirements file path
+    This method parses the given requirements string into a dictionary sorted
+    by name.
+    :param requirements_string: requirements string
     :return: Dictionary like : {'addon_name': Requirement object}
     """
     parsed_requirements = {}
-    with open(requirement_file_path) as f:
-        for req in requirements.parse(f):
-            parsed_requirements[req.name] = req
+    for req in requirements.parse(requirements_string):
+        parsed_requirements[req.name] = req
     return parsed_requirements
