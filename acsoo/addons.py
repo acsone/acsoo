@@ -102,7 +102,7 @@ addons.add_command(addons_list_depends, 'list-depends')
 @click.pass_context
 def addons_toupdate(ctx, git_ref, diff_requirements):
     # Check ancestor
-    if call(['git', 'merge-base', '--is-ancestor', 'HEAD', git_ref]):
+    if call(['git', 'merge-base', '--is-ancestor', git_ref, 'HEAD']):
         click.echo('all')
         return
     addon_names = []
