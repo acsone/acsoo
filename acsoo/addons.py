@@ -14,11 +14,11 @@ from .tools import call, check_output, parse_requirements
 
 # Identifies external Odoo addon dependency
 ODOO_ADDON_REGEX = re.compile(
-    r'odoo[0-9]+[-_]addon[-_].*'
+    r'(?P<prefix>odoo[0-9]+[-_]addon[-_])(?P<addon_name>.*)'
 )
 # Identifies another distribution providing several addons
 ODOO_ADDONS_REGEX = re.compile(
-    r'odoo[-_]addons[-_].*'
+    r'(?P<prefix>odoo[-_]addons[-_])(?P<addons_name>.*)'
 )
 ODOO_REGEX = re.compile(
     r'(^odoo$)|(^odoo.*enterprise$)'
@@ -155,24 +155,26 @@ def addons_toupdate(ctx, git_ref, diff_requirements):
                     click.echo('all')
                     return
             # Compare external odoo addons dependencies
-            if ODOO_ADDON_REGEX.match(req_name):
+            odoo_addon_match = ODOO_ADDON_REGEX.match(req_name)
+            if odoo_addon_match:
+                odoo_addon_name = odoo_addon_match.group('addon_name')
                 # Previously editable or newly editable
                 if current_req.editable != diff_req.editable:
-                    addon_names.append(req_name)
+                    addon_names.append(odoo_addon_name)
                     continue
                 if current_req.editable:
                     # New revision
                     if current_req.revision != diff_req.revision:
-                        addon_names.append(req_name)
+                        addon_names.append(odoo_addon_name)
                         continue
                     # URL changed
                     if current_req.uri != diff_req.uri:
-                        addon_names.append(req_name)
+                        addon_names.append(odoo_addon_name)
                         continue
                 else:
                     # New version
                     if current_req.specs != diff_req.specs:
-                        addon_names.append(req_name)
+                        addon_names.append(odoo_addon_name)
                         continue
 
     click.echo(ctx.obj['separator'].join(addon_names))
