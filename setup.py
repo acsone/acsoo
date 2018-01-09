@@ -29,6 +29,10 @@ setup(
         'bumpversion',
         'requirements-parser',
     ],
+    dependency_links=[
+        "https://github.com/davidfischer/requirements-parser/tarball/"
+        "caca172b80d448c6175c1b4f5777781d583fc9b7#egg=requirements-parser",
+    ],
     license='GPLv3+',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
