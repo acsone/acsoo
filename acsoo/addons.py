@@ -114,19 +114,17 @@ def addons_toupdate(ctx, git_ref, diff_requirements):
             addon_names.append(addon_name)
     # Requirements file comparison
     if diff_requirements:
-        req_ref = 'HEAD:requirements.txt'
         diff_req_ref = git_ref + ':' + 'requirements.txt'
-        requirements_string = diff_requirements_string = ""
+        requirements_filename = "requirements.txt"
+        if not os.path.exists(requirements_filename):
+            raise click.ClickException(
+                "No requirements file found in the current project.")
+        with open(requirements_filename) as f:
+            requirements_string = f.read()
         try:
-            requirements_string = check_output(['git', 'show', req_ref])
             diff_requirements_string = check_output(
                 ['git', 'show', diff_req_ref])
         except click.ClickException:
-            if not requirements_string:
-                raise click.ClickException(
-                    "No requirements found in the current project.")
-        # If the requirements file is new, update all
-        if not diff_requirements_string:
             click.echo('all')
             return
         # If requirements are the same, stop
