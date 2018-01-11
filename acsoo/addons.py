@@ -99,19 +99,22 @@ addons.add_command(addons_list_depends, 'list-depends')
 @click.option('-r', '--diff-requirements', 'diff_requirements', is_flag=True,
               help="Defines whether the comparison must take the requirements "
                    "file into account or not.")
+@click.option('--exclude', default='',
+              help="Comma separated list of addons to exclude from "
+                   "the dependencies.")
 @click.pass_context
-def addons_toupdate(ctx, git_ref, diff_requirements):
+def addons_toupdate(ctx, git_ref, diff_requirements, exclude):
     # Check ancestor
     if call(['git', 'merge-base', '--is-ancestor', git_ref, 'HEAD']):
         click.echo('all')
         return
-    addon_names = []
-    # Compare each installable addons and populate modified addons list
+    addon_names = set()
+    # Compare each installable addons and populate modified addons set
     addons_paths = ctx.obj['addons_paths']
     for addon_name in addons_paths:
         addon_dir = os.path.join(addons_paths[addon_name], addon_name)
         if call(['git', 'diff', '--quiet', git_ref, addon_dir]):
-            addon_names.append(addon_name)
+            addon_names.add(addon_name)
     # Requirements file comparison
     if diff_requirements:
         diff_req_ref = git_ref + ':' + 'requirements.txt'
@@ -129,6 +132,7 @@ def addons_toupdate(ctx, git_ref, diff_requirements):
             return
         # If requirements are the same, stop
         if requirements_string == diff_requirements_string:
+            addon_names = sorted(addon_names)
             click.echo(ctx.obj['separator'].join(addon_names))
             return
         # Parse the requirements files
@@ -160,24 +164,27 @@ def addons_toupdate(ctx, git_ref, diff_requirements):
                 odoo_addon_name = odoo_addon_match.group('addon_name')
                 # Previously editable or newly editable
                 if current_req.editable != diff_req.editable:
-                    addon_names.append(odoo_addon_name)
+                    addon_names.add(odoo_addon_name)
                     continue
                 if current_req.editable:
                     # New revision
                     if current_req.revision != diff_req.revision:
-                        addon_names.append(odoo_addon_name)
+                        addon_names.add(odoo_addon_name)
                         continue
                     # URL changed
                     if current_req.uri != diff_req.uri:
-                        addon_names.append(odoo_addon_name)
+                        addon_names.add(odoo_addon_name)
                         continue
                 else:
                     # New version
                     if current_req.specs != diff_req.specs:
-                        addon_names.append(odoo_addon_name)
+                        addon_names.add(odoo_addon_name)
                         continue
+        # Remove excluded dependencies from addons list
+        exclude = _split_set(exclude)
+        addon_names -= exclude
 
-    click.echo(ctx.obj['separator'].join(addon_names))
+    click.echo(ctx.obj['separator'].join(sorted(addon_names)))
 
 
 addons.add_command(addons_toupdate, 'toupdate')
