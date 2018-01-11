@@ -136,12 +136,12 @@ def addons_toupdate(ctx, git_ref, diff_requirements, exclude):
             click.echo(ctx.obj['separator'].join(addon_names))
             return
         # Parse the requirements files
-        current_requirements = parse_requirements(requirements_string)
-        diff_requirements = parse_requirements(diff_requirements_string)
+        current_reqs = parse_requirements(requirements_string)
+        diff_reqs = parse_requirements(diff_requirements_string)
         # Compare the two requirements files and populate modified addons list
-        for req_name in current_requirements:
-            current_req = current_requirements.get(req_name)
-            diff_req = diff_requirements.get(req_name)
+        for req_name in current_reqs:
+            current_req = current_reqs.get(req_name)
+            diff_req = diff_reqs.get(req_name)
             # New dependency, ignore
             if not diff_req:
                 continue
