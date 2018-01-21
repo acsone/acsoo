@@ -17,6 +17,7 @@ after_script:
   # important to cleanup after ourselves to avoid
   # leaving ssh agents running on the shell executor
   - kill $(cat ssh-agent.pid)
+  - dropdb --if-exists ${DB_NAME}
 
 variables:
   DB_NAME: "${CI_PROJECT_NAME}-${CI_PIPELINE_ID}"
@@ -59,15 +60,6 @@ test:
     - unbuffer venv/bin/coverage run venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_TEST} --test-enable | ./acsoo checklog
     - venv/bin/coverage report
   coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+\%)/'
-
-dropdb:
-  stage: clean
-  tags:
-    - odoo-{{{ odoo.series }}}
-  script:
-    # this may run on another runner, in which case it will do nothing
-    - dropdb --if-exists ${DB_NAME}
-  when: always
 
 deploy-test:
   stage: deploy
