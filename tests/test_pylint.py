@@ -16,8 +16,6 @@ from acsoo.tools import working_directory
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
-@pytest.mark.skipif(sys.version_info.major >= 3,
-                    reason="pylint-odoo does not work on python3 yet")
 class TestPylint(unittest.TestCase):
 
     def test1(self):
