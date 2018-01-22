@@ -1,6 +1,5 @@
 stages:
   - test
-  - clean
   - deploy
 
 before_script:
