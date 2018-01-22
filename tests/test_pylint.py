@@ -3,12 +3,10 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import os
-import sys
 import unittest
 from textwrap import dedent
 
 from click.testing import CliRunner
-import pytest
 
 from acsoo.main import main
 from acsoo.pylintcmd import pylintcmd
