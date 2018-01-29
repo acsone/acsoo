@@ -31,21 +31,12 @@ def _split_set(csv):
 def addons(ctx, addons_dirs, include, exclude, separator):
     include = _split_set(include)
     exclude = _split_set(exclude)
-    if not addons_dirs:
-        addons_dirs = []
-        candidate_addons_dirs = (
-            os.path.join('odoo', 'addons'),
-            'odoo_addons',
-            '.',
-        )
-        for addons_dir in candidate_addons_dirs:
-            if os.path.isdir(addons_dir):
-                addons_dirs.append(addons_dir)
     manifests = {}
-    for addons_dir in addons_dirs:
-        for addon, manifest in get_installable_addons(addons_dir).items():
-            if (not include or addon in include) and addon not in exclude:
-                manifests[addon] = manifest
+    addons_paths = {}
+    installable_addons = get_installable_addons(addons_dirs)
+    for addon, addons_path_manifest in installable_addons.items():
+        if (not include or addon in include) and addon not in exclude:
+            addons_paths[addon], manifests[addon] = addons_path_manifest
     ctx.obj.update(dict(
         manifests=manifests,
         separator=separator,
