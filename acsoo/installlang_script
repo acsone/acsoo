@@ -1,0 +1,12 @@
+# -*- coding: utf-8 -*-
+# Copyright 2018 ACSONE SA/NV (<http://acsone.eu>)
+# License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
+
+iso_code =  "%(lang)s"
+lang = env['res.lang'].search([('iso_code', '=', iso_code), ('active', '>=', 0)], limit=1)
+vals = {
+    'lang': lang.code,
+    'overwrite': True,
+}
+wiz = env['base.language.install'].create(vals)
+wiz.lang_install()

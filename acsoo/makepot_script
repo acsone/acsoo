@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+# Copyright 2018 ACSONE SA/NV (<http://acsone.eu>)
+# License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
+
+import base64
+import os
+from os.path import join
+
+module_name = "%(module_name)s"
+pot_file_path = "%(pot_file_path)s"
+iso_code =  "%(lang)s"
+i18n_path = "%(i18n_path)s"
+locale_code = iso_code
+module = self.env['ir.module.module'].search([
+    ('name', '=', module_name),
+    ('state', '=', 'installed'),
+])
+if module:
+    if iso_code != '__new__':
+        lang = env['res.lang'].search([('iso_code', '=', iso_code), ('active', '>=', 0)], limit=1)
+        locale_code = lang.code
+    lang_export = self.env['base.language.export'].create({
+         'lang': locale_code,
+         'format': 'po',
+         'modules': [(6, 0, [module.id])],
+    })
+    lang_export.act_getfile()
+    if not os.path.isdir(i18n_path):
+        os.makedirs(i18n_path)
+    with open(pot_file_path, 'w') as pot_file:
+        pot_file.write(base64.decodestring(lang_export.data))
