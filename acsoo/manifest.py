@@ -57,5 +57,5 @@ def get_installable_addons(addons_dirs=None):
                 manifest = parse_manifest(f.read())
             if not manifest.get('installable', True):
                 continue
-            res[addon_name] = (addons_dir, manifest)
+            res[addon_name] = (addon_dir, manifest)
     return res

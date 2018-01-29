@@ -2,8 +2,6 @@
 # Copyright 2017 ACSONE SA/NV (<http://acsone.eu>)
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
-import os
-
 import click
 
 from .main import main
@@ -31,15 +29,14 @@ def _split_set(csv):
 def addons(ctx, addons_dirs, include, exclude, separator):
     include = _split_set(include)
     exclude = _split_set(exclude)
-    manifests = {}
-    addons_paths = {}
+    addons = {}
     installable_addons = get_installable_addons(addons_dirs)
-    for addon, addons_path_manifest in installable_addons.items():
-        if (not include or addon in include) and addon not in exclude:
-            addons_paths[addon], manifests[addon] = addons_path_manifest
+    for addon_name, (addon_dir, manifest) in installable_addons.items():
+        if (not include or addon_name in include) and \
+                addon_name not in exclude:
+            addons[addon_name] = (addon_dir, manifest)
     ctx.obj.update(dict(
-        addons_paths=addons_paths,
-        manifests=manifests,
+        addons=addons,
         separator=separator,
     ))
 
@@ -50,8 +47,8 @@ main.add_command(addons)
 @click.command(help="Print a comma separated list of selected addons.")
 @click.pass_context
 def addons_list(ctx):
-    manifests = ctx.obj['manifests']
-    addon_names = sorted(manifests.keys())
+    addons = ctx.obj['addons']
+    addon_names = sorted(addons.keys())
     click.echo(ctx.obj['separator'].join(addon_names))
 
 
@@ -66,11 +63,11 @@ addons.add_command(addons_list, 'list')
 @click.pass_context
 def addons_list_depends(ctx, exclude):
     exclude = _split_set(exclude)
-    manifests = ctx.obj['manifests']
+    addons = ctx.obj['addons']
     depends = set()
-    for manifest in manifests.values():
+    for addon_dir, manifest in addons.values():
         depends.update(manifest.get('depends', []))
-    depends -= set(manifests.keys())
+    depends -= set(addons.keys())
     depends -= exclude
     addon_names = sorted(depends)
     click.echo(ctx.obj['separator'].join(addon_names))

@@ -3,7 +3,6 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import logging
-from os.path import join as opj
 import sys
 from configparser import ConfigParser
 
@@ -87,10 +86,10 @@ def do_pylintcmd(load_plugins, rcfile, module, expected, pylint_options):
     # import pdb; pdb.set_trace()
     if not module:
         module = []
-        installable_addons = get_installable_addons()
+        addons = get_installable_addons()
         module.extend(
-            opj(installable_addons[addon][0], addon)
-            for addon in installable_addons
+            addons[addon_name][0]
+            for addon_name in addons
         )
         if not module:
             raise click.UsageError("Please provide module or package "
