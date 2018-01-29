@@ -19,7 +19,7 @@ after_script:
   - dropdb --if-exists ${DB_NAME}
 
 variables:
-  DB_NAME: "${CI_PROJECT_NAME}-${CI_PIPELINE_ID}"
+  DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
 
 pylint:
   stage: test
