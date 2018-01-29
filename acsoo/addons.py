@@ -38,6 +38,7 @@ def addons(ctx, addons_dirs, include, exclude, separator):
         if (not include or addon in include) and addon not in exclude:
             addons_paths[addon], manifests[addon] = addons_path_manifest
     ctx.obj.update(dict(
+        addons_paths=addons_paths,
         manifests=manifests,
         separator=separator,
     ))
