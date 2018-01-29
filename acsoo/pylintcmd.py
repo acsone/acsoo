@@ -3,7 +3,6 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import logging
-import os
 from os.path import join as opj
 import sys
 from configparser import ConfigParser
@@ -88,17 +87,11 @@ def do_pylintcmd(load_plugins, rcfile, module, expected, pylint_options):
     # import pdb; pdb.set_trace()
     if not module:
         module = []
-        candidate_addons_dirs = (
-            opj('odoo', 'addons'),
-            'odoo_addons',
-            '.',
+        installable_addons = get_installable_addons()
+        module.extend(
+            opj(installable_addons[addon][0], addon)
+            for addon in installable_addons
         )
-        for candidate_addons_dir in candidate_addons_dirs:
-            if os.path.isdir(candidate_addons_dir):
-                module.extend(
-                    opj(candidate_addons_dir, addon) for addon in
-                    get_installable_addons(candidate_addons_dir)
-                )
         if not module:
             raise click.UsageError("Please provide module or package "
                                    "to lint (--module).")
