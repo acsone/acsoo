@@ -88,8 +88,8 @@ def do_pylintcmd(load_plugins, rcfile, module, expected, pylint_options):
         module = []
         addons = get_installable_addons()
         module.extend(
-            addons[addon_name][0]
-            for addon_name in addons
+            addon_dir
+            for addon_name, (addon_dir, manifest) in addons.items()
         )
         if not module:
             raise click.UsageError("Please provide module or package "
