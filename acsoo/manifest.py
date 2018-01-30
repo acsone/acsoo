@@ -23,16 +23,39 @@ def parse_manifest(s):
     return ast.literal_eval(s)
 
 
-def get_installable_addons(addons_dir):
+def get_default_addons_dirs():
+    addons_dirs = []
+    candidate_addons_dirs = (
+        os.path.join('odoo', 'addons'),
+        'odoo_addons',
+        '.',
+    )
+    for addons_dir in candidate_addons_dirs:
+        if os.path.isdir(addons_dir):
+            addons_dirs.append(addons_dir)
+    return addons_dirs
+
+
+def get_installable_addons(addons_dirs=None):
+    """
+    This method builds a dictionary of all installable addons in the specified
+    addons directory or in the default addons directories.
+    :param addons_dirs: path to the addons directories to fetch into
+    :return: Dictionary like: {'addon_name': (addons_directory, manifest)}
+    where manifest is a dictionary.
+    """
+    if not addons_dirs:
+        addons_dirs = get_default_addons_dirs()
     res = {}
-    for addon_name in os.listdir(addons_dir):
-        addon_dir = os.path.join(addons_dir, addon_name)
-        manifest_path = get_manifest_path(addon_dir)
-        if not manifest_path:
-            continue
-        with open(manifest_path) as f:
-            manifest = parse_manifest(f.read())
-        if not manifest.get('installable', True):
-            continue
-        res[addon_name] = manifest
+    for addons_dir in addons_dirs:
+        for addon_name in os.listdir(addons_dir):
+            addon_dir = os.path.join(addons_dir, addon_name)
+            manifest_path = get_manifest_path(addon_dir)
+            if not manifest_path:
+                continue
+            with open(manifest_path) as f:
+                manifest = parse_manifest(f.read())
+            if not manifest.get('installable', True):
+                continue
+            res[addon_name] = (addon_dir, manifest)
     return res

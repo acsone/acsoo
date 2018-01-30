@@ -62,3 +62,7 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# pycharm dev env
+.idea/
+.ropeproject/
