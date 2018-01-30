@@ -43,7 +43,7 @@ def _render_errors(error_records, ignored_error_records):
     return ''.join(msg)
 
 
-def do_checklog(filename, ignore, echo):
+def do_checklog(filename, ignore, echo, err_if_empty=True):
     ignore = [i for i in ignore if not i.startswith('#')]
     _logger.debug("ignored regular expressions:\n%s", '\n'.join(ignore))
     ignore_regexes = [re.compile(i, re.MULTILINE) for i in ignore]
@@ -85,7 +85,7 @@ def do_checklog(filename, ignore, echo):
                 cur_rec.append(line)
         _process_cur_rec()  # last record
 
-        if not reccount:
+        if not reccount and err_if_empty:
             raise click.ClickException("No Odoo log record found in input.")
 
         if error_records or ignored_error_records:
@@ -103,9 +103,12 @@ def do_checklog(filename, ignore, echo):
               help="Regular expression of log records to ignore.")
 @click.option('--echo/--no-echo', default=None,
               help="Echo the input file (default when reading from stdin).")
+@click.option('--err-if-empty/--no-err-if-empty', default=True,
+              help="Exit with an error code if no log record is found "
+                   "(default).")
 @click.argument('filename', type=click.Path(dir_okay=False), default='-')
-def checklog(filename, ignore, echo):
-    do_checklog(filename, ignore, echo)
+def checklog(filename, ignore, echo, err_if_empty):
+    do_checklog(filename, ignore, echo, err_if_empty)
 
 
 main.add_command(checklog)
