@@ -60,3 +60,17 @@ class TestChecklog(unittest.TestCase):
         assert expected in res.output
         expected = "errors that did not cause failure (1):"
         assert expected in res.output
+
+    def test_empty(self):
+        runner = CliRunner()
+        res = runner.invoke(checklog, [
+            os.path.join(DATA_DIR, 'empty.log'),
+        ])
+        assert res.exit_code != 0
+        expected = "No Odoo log record found in input."
+        assert expected in res.output
+        res = runner.invoke(checklog, [
+            '--no-err-if-empty',
+            os.path.join(DATA_DIR, 'empty.log'),
+        ])
+        assert res.exit_code == 0
