@@ -5,6 +5,13 @@ Changes
 .. ----------
 .. -
 
+1.6.0 (unreleased)
+------------------
+- [IMP] checklog: add --no-err-if-empty option
+- [IMP] python 3 support
+- [IMP] project template: various improvements
+- [IMP] refactoring of get_installable_addons() method for better reusability
+
 1.5.0 (2017-09-19)
 ------------------
 - [IMP] tag_requirements: fetch more aggressively; this solves the errors
