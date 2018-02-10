@@ -9,6 +9,7 @@ from . import main
 from . import addons
 from . import checklog
 from . import flake8cmd
+from . import pgenv
 from . import pylintcmd
 from . import release
 from . import tag

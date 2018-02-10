@@ -11,6 +11,7 @@ Changes
 - [IMP] python 3 support
 - [IMP] project template: various improvements
 - [IMP] refactoring of get_installable_addons() method for better reusability
+- [ADD] acsoo pgenv command
 
 1.5.0 (2017-09-19)
 ------------------

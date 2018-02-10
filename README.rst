@@ -150,11 +150,23 @@ errors based on regular expressions.
   .. code:: shell
 
      acsoo checklog odoo.log
-     odoo -d mydb -i base --stop-after-init | acsoo checklog
+     unbuffer odoo -d mydb -i base --stop-after-init | acsoo checklog
      acsoo checklog --ignore "WARNING.*blah" odoo.log
+
+acsoo pgenv
+-----------
+
+Do thing with postgres environment variables (PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE),
+derived from an Odoo configuration file.
+
+  .. code:: shell
+
+     eval $(acsoo pgenv -c odoo.cfg)
+     acsoo pgenv -c odoo.cfg exec psql
 
 bumpversion
 -----------
+
 Bumpversion is a software automatically installed with acsoo. It allows you to increment or simply change the version of the project in several files at once, including acsoo.cfg.
 
   .. code:: shell
