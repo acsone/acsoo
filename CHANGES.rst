@@ -5,10 +5,11 @@ Changes
 .. ----------
 .. -
 
-1.6.0 (unreleased)
+1.6.0 (2018-02-16)
 ------------------
 - [IMP] checklog: add --no-err-if-empty option
 - [IMP] python 3 support
+- [IMP] preliminary Odoo 11 support
 - [IMP] project template: various improvements
 - [IMP] refactoring of get_installable_addons() method for better reusability
 
