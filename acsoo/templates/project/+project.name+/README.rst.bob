@@ -1,3 +1,9 @@
+{{% if odoo.series in ['11.0'] %}}
+{{% set mk_venv_extra = '--python=/usr/bin/python3' %}}
+{{% else %}}
+{{% set mk_venv_extra = '' %}}
+{{% endif %}}
+
 ====={{{ "=" * project.name|length }}}
 Odoo {{{ project.name|capitalize }}}
 ====={{{ "=" * project.name|length }}}
@@ -11,7 +17,7 @@ Initialize virtualenv
 ---------------------
 
 create and activate virtualenv, possibly with virtualenvwrapper's
-``mkvirtualenv odoo-{{{ project.name }}} -a .``
+``mkvirtualenv odoo-{{{ project.name }}} -a . {{{ mk_venv_extra }}}``
 
 To save some time copy Odoo {{{ odoo.series }}} sources in src/odoo,
 and do ``git clean -ffdx`` in src/odoo.
@@ -31,7 +37,7 @@ run:
 
    gitaggregate -c gitaggregate.yaml -p
    rmvirtualenv odoo-{{{ project.name }}}
-   mkvirtualenv odoo-{{{ project.name }}} -a .
+   mkvirtualenv odoo-{{{ project.name }}} -a . {{{ mk_venv_extra }}}
    pip install --src src --pre -r requirements-dev.txt
    ./freeze.sh
    git commit requirements.txt
