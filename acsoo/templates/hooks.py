@@ -1,5 +1,21 @@
 import os
 import shutil
+from ..tools import check_output
+
+
+def pre_render_project(configurator):
+    variables = configurator.variables
+    odoo_serie = variables['odoo.series']
+
+    if odoo_serie in ('11.0',):
+        python_version = 'python3'
+    else:
+        python_version = 'python'
+
+    configurator.variables['python_version'] = python_version
+    configurator.variables['python_path'] = check_output([
+        'which', python_version,
+    ])
 
 
 def post_render_project(configurator):

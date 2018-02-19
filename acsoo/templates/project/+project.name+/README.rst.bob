@@ -1,5 +1,5 @@
 {{% if odoo.series in ['11.0'] %}}
-{{% set mk_venv_extra = '--python=/usr/bin/python3' %}}
+{{% set mk_venv_extra = '--python=' + python_path %}}
 {{% else %}}
 {{% set mk_venv_extra = '' %}}
 {{% endif %}}
