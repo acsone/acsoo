@@ -1,8 +1,15 @@
-#!/usr/bin/env python
+{{% if odoo.series in ['11.0'] %}}
+{{% set config_parser_lib = 'configparser' %}}
+{{% set python_env = 'python3' %}}
+{{% else %}}
+{{% set config_parser_lib = 'ConfigParser' %}}
+{{% set python_env = 'python' %}}
+{{% endif %}}
+#!/usr/bin/env {{{ python_env }}}
 import subprocess
-import ConfigParser
+import {{{ config_parser_lib }}}
 
-config = ConfigParser.ConfigParser()
+config = {{{ config_parser_lib }}}.ConfigParser()
 config.read('acsoo.cfg')
 
 VERSION = config.get('acsoo', 'version')
