@@ -44,7 +44,7 @@ def _get_last_sha(filename):
     # find the short sha of the last commit to filename
     return check_output([
         'git', 'log', '-n', '1', '--format=%h', filename
-    ]).strip().decode('utf-8')
+    ]).strip()
 
 
 def _has_tag(series, trigram, egg, sha, repodir='.'):
@@ -52,7 +52,7 @@ def _has_tag(series, trigram, egg, sha, repodir='.'):
                         "[-_][a-fA-F0-9]+[-_]" + egg)
     tags = check_output(['git', 'tag', '--points-at', sha], cwd=repodir)
     for tag in tags.split():
-        tag = tag.strip().decode('utf-8')
+        tag = tag.strip()
         if tag_re.match(tag):
             return tag
     return False
