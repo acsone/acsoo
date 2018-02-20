@@ -1,11 +1,9 @@
-{{% if odoo.series in ['11.0'] %}}
+{{% if python_version == 'python3' %}}
 {{% set config_parser_lib = 'configparser' %}}
-{{% set python_env = 'python3' %}}
 {{% else %}}
 {{% set config_parser_lib = 'ConfigParser' %}}
-{{% set python_env = 'python' %}}
 {{% endif %}}
-#!/usr/bin/env {{{ python_env }}}
+#!/usr/bin/env {{{ python_version }}}
 import subprocess
 import {{{ config_parser_lib }}}
 
