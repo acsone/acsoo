@@ -4,7 +4,7 @@ stages:
 
 before_script:
   # install acsoo
-  - virtualenv venv-acsoo
+  - virtualenv --python=$(which {{{ python_version }}}) venv-acsoo
   - venv-acsoo/bin/pip install acsoo
   - ln -s venv-acsoo/bin/acsoo
   # ssh-agent
@@ -46,7 +46,7 @@ test:
   tags:
     - odoo-{{{ odoo.series }}}
   script:
-    - virtualenv venv
+    - virtualenv --python=$(which {{{ python_version }}}) venv
     - venv/bin/pip install coverage
     - venv/bin/pip install -r requirements.txt -e .
     - ADDONS_INIT=$(./acsoo addons list-depends)

@@ -1,8 +1,13 @@
-#!/usr/bin/env python
+{{% if python_version == 'python3' %}}
+{{% set config_parser_lib = 'configparser' %}}
+{{% else %}}
+{{% set config_parser_lib = 'ConfigParser' %}}
+{{% endif %}}
+#!/usr/bin/env {{{ python_version }}}
 import subprocess
-import ConfigParser
+import {{{ config_parser_lib }}}
 
-config = ConfigParser.ConfigParser()
+config = {{{ config_parser_lib }}}.ConfigParser()
 config.read('acsoo.cfg')
 
 VERSION = config.get('acsoo', 'version')

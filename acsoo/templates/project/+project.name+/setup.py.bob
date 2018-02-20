@@ -1,4 +1,9 @@
-from ConfigParser import ConfigParser
+{{% if python_version == 'python3' %}}
+{{% set config_parser_lib = 'configparser' %}}
+{{% else %}}
+{{% set config_parser_lib = 'ConfigParser' %}}
+{{% endif %}}
+from {{{ config_parser_lib }}} import ConfigParser
 from setuptools import setup
 
 

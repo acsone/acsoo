@@ -11,7 +11,7 @@ Initialize virtualenv
 ---------------------
 
 create and activate virtualenv, possibly with virtualenvwrapper's
-``mkvirtualenv odoo-{{{ project.name }}} -a .``
+``mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which {{{ python_version }}})``
 
 To save some time copy Odoo {{{ odoo.series }}} sources in src/odoo,
 and do ``git clean -ffdx`` in src/odoo.
@@ -31,7 +31,7 @@ run:
 
    gitaggregate -c gitaggregate.yaml -p
    rmvirtualenv odoo-{{{ project.name }}}
-   mkvirtualenv odoo-{{{ project.name }}} -a .
+   mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which {{{ python_version }}})
    pip install --src src --pre -r requirements-dev.txt
    ./freeze.sh
    git commit requirements.txt
