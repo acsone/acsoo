@@ -25,6 +25,85 @@ ODOO_REGEX = re.compile(
 )
 
 
+def _odoo_addon_dependency_changed(req_name, current_req, diff_req):
+    """
+    This method defines whether the odoo addon dependency has changed.
+    :param req_name: odoo addon requirement name
+    :param current_req: current requirement line of the addon
+    :param diff_req: requirements line of the addon in the git ref
+    :return: False if the addon dependency hasn't changed or if it's not
+    an Odoo addon dependency, True otherwise
+    """
+    # Compare external odoo addons dependencies
+    odoo_addon_match = ODOO_ADDON_REGEX.match(req_name)
+    if not odoo_addon_match:
+        return False
+    # Previously editable or newly editable
+    if current_req.editable != diff_req.editable:
+        return True
+    if current_req.editable:  # Editable dependency
+        if current_req.revision != diff_req.revision:  # New revision
+            return True
+        if current_req.uri != diff_req.uri:  # URL changed
+            return True
+    else:  # Not editable dependency
+        if current_req.specs != diff_req.specs:  # New version
+            return True
+    return False
+
+
+def _get_dependencies_toupdate(requirement, git_ref):
+    """
+    This method parses and compare the requirements file of the current
+    version and the given one.
+    :param requirement: requirements file name
+    :return: list of changed dependencies or 'all'
+    """
+    dependencies = set()
+    diff_req_ref = git_ref + ':' + requirement
+    if not os.path.exists(requirement):
+        raise click.ClickException(
+            "Requirements file not found. No '{req_file}' file has been "
+            "found in the project. Please create the file or do not "
+            "enable the requirements comparison.".format(
+                req_file=requirement))
+    with open(requirement) as req_file:
+        requirements_string = req_file.read()
+    try:
+        diff_requirements_string = check_output(['git', 'show', diff_req_ref])
+    except click.ClickException:  # The requirements file is new
+        return 'all'
+    # If requirements are the same, stop
+    if requirements_string == diff_requirements_string:
+        return dependencies
+    # Parse the requirements files
+    current_requirements = {
+        req.name: req for req in requirements.parse(requirements_string)}
+    diff_requirements = {
+        req.name: req for req in requirements.parse(diff_requirements_string)}
+    # Compare the two requirements files and populate modified addons list
+    for req_name in current_requirements:
+        current_req = current_requirements.get(req_name)
+        diff_req = diff_requirements.get(req_name)
+        if not diff_req:  # New dependency, ignore
+            continue
+        # Special case for odoo and enterprise addons, update all if change
+        if ODOO_REGEX.match(req_name) and \
+                (current_req.specs != diff_req.specs or
+                 current_req.revision != diff_req.revision):
+            return 'all'
+        # Special case for external sources, update all if change
+        # TODO: recursive comparison of the changes in the external sources
+        if ODOO_ADDONS_REGEX.match(req_name) and \
+                (current_req.specs != diff_req.specs or
+                 current_req.revision != diff_req.revision):
+            return 'all'
+        if _odoo_addon_dependency_changed(req_name, current_req, diff_req):
+            dependencies.add(
+                ODOO_ADDON_REGEX.match(req_name).group('addon_name'))
+    return dependencies
+
+
 @click.command(help="Print a comma separated list of the modified installable "
                     "addons from the given git ref")
 @click.argument('git_ref')
@@ -34,8 +113,12 @@ ODOO_REGEX = re.compile(
 @click.option('--exclude', default='',
               help="Comma separated list of addons to exclude from "
                    "the dependencies.")
+@click.option('--requirement', default='requirements.txt',
+              type=click.Path(dir_okay=False, exists=True),
+              help='Requirements to use for requirements comparison '
+                   '(default=requirements.txt)')
 @click.pass_context
-def addons_toupdate(ctx, git_ref, diff_requirements, exclude):
+def addons_toupdate(ctx, git_ref, diff_requirements, exclude, requirement):
     # Check ancestor
     if call(['git', 'merge-base', '--is-ancestor', git_ref, 'HEAD']):
         click.echo('all')
@@ -46,77 +129,17 @@ def addons_toupdate(ctx, git_ref, diff_requirements, exclude):
     for addon_name, (addon_dir, manifest) in addons.items():
         if call(['git', 'diff', '--quiet', git_ref, addon_dir]):
             addon_names.add(addon_name)
+    if not diff_requirements:
+        click.echo(ctx.obj['separator'].join(sorted(addon_names)))
+        return
     # Requirements file comparison
-    if diff_requirements:
-        diff_req_ref = git_ref + ':' + 'requirements.txt'
-        requirements_filename = "requirements.txt"
-        if not os.path.exists(requirements_filename):
-            raise click.ClickException(
-                "No requirements file found in the current project.")
-        with open(requirements_filename) as f:
-            requirements_string = f.read()
-        try:
-            diff_requirements_string = check_output(
-                ['git', 'show', diff_req_ref])
-        except click.ClickException:
-            click.echo('all')
-            return
-        # If requirements are the same, stop
-        if requirements_string == diff_requirements_string:
-            addon_names = sorted(addon_names)
-            click.echo(ctx.obj['separator'].join(addon_names))
-            return
-        # Parse the requirements files
-        current_reqs = {req.name: req
-                        for req in requirements.parse(requirements_string)}
-        diff_reqs = {req.name: req
-                     for req in requirements.parse(diff_requirements_string)}
-        # Compare the two requirements files and populate modified addons list
-        for req_name in current_reqs:
-            current_req = current_reqs.get(req_name)
-            diff_req = diff_reqs.get(req_name)
-            # New dependency, ignore
-            if not diff_req:
-                continue
-            # Special case for odoo and enterprise addons, update all if change
-            if ODOO_REGEX.match(req_name):
-                if current_req.specs != diff_req.specs or \
-                        current_req.revision != diff_req.revision:
-                    click.echo('all')
-                    return
-            # Special case for external sources, update all if change
-            # TODO: recursive comparison of the changes in the external sources
-            if ODOO_ADDONS_REGEX.match(req_name):
-                if current_req.specs != diff_req.specs or \
-                        current_req.revision != diff_req.revision:
-                    click.echo('all')
-                    return
-            # Compare external odoo addons dependencies
-            odoo_addon_match = ODOO_ADDON_REGEX.match(req_name)
-            if odoo_addon_match:
-                odoo_addon_name = odoo_addon_match.group('addon_name')
-                # Previously editable or newly editable
-                if current_req.editable != diff_req.editable:
-                    addon_names.add(odoo_addon_name)
-                    continue
-                if current_req.editable:
-                    # New revision
-                    if current_req.revision != diff_req.revision:
-                        addon_names.add(odoo_addon_name)
-                        continue
-                    # URL changed
-                    if current_req.uri != diff_req.uri:
-                        addon_names.add(odoo_addon_name)
-                        continue
-                else:
-                    # New version
-                    if current_req.specs != diff_req.specs:
-                        addon_names.add(odoo_addon_name)
-                        continue
-        # Remove excluded dependencies from addons list
-        exclude = _split_set(exclude)
-        addon_names -= exclude
-
+    dependency_names = _get_dependencies_toupdate(requirement, git_ref)
+    if dependency_names == 'all':
+        return 'all'
+    # Remove excluded dependencies from addons list
+    exclude = _split_set(exclude)
+    dependency_names -= exclude
+    addon_names |= dependency_names
     click.echo(ctx.obj['separator'].join(sorted(addon_names)))
 
 
