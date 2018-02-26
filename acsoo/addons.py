@@ -110,9 +110,8 @@ def addons_toupdate(ctx, git_ref, diff_requirements, exclude):
         return
     addon_names = set()
     # Compare each installable addons and populate modified addons set
-    addons_paths = ctx.obj['addons_paths']
-    for addon_name in addons_paths:
-        addon_dir = os.path.join(addons_paths[addon_name], addon_name)
+    addons = ctx.obj['addons']
+    for addon_name, (addon_dir, manifest) in addons.items():
         if call(['git', 'diff', '--quiet', git_ref, addon_dir]):
             addon_names.add(addon_name)
     # Requirements file comparison
