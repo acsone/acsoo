@@ -2,5 +2,5 @@
 -e git+https://github.com/odoo/odoo.git@ab60d773eb84a527b3167d7efaf169f70c5c9786#egg=odoo
 Unidecode==0.4.20
 odoo10-addon-base-suspend-security==10.0.1.0.0.99.dev6
--e git+https://github.com/oca/server-tools.git@4b1cd222f7168126c9a90fa795c6f288a359e89b#egg=odoo10_addon_base_user_role&subdirectory=setup/base_user_role
+odoo10-addon-base-user-role==10.0.1.0.0
 -e git+https://github.com/oca/ocb.git@0eca67081bfe120a78cdeb1978f2b26b5372239e#egg=odoo_addons_ocb
