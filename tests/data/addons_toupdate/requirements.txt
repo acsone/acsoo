@@ -1,2 +1,3 @@
 --find-links https://wheelhouse.acsone.eu/manylinux1
 Unidecode==0.4.20
+odoo10-addon-base-suspend-security==10.0.1.0.0.99.dev6
