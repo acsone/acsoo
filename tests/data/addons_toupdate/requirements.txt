@@ -3,4 +3,3 @@
 Unidecode==0.4.20
 odoo10-addon-base-suspend-security==10.0.1.0.0.99.dev9
 odoo10-addon-base-user-role==10.0.1.0.0
--e git+https://github.com/oca/ocb.git@674aaf23c0f9f7b2d135b51d988f2921df88a573#egg=odoo_addons_ocb
