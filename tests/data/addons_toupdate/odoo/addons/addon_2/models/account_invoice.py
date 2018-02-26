@@ -14,4 +14,5 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def invoice_print(self):
-        return super(AccountInvoice, self).invoice_print()
+        if not self.env.context.get('disable_print'):
+            return super(AccountInvoice, self).invoice_print()
