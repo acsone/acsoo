@@ -1,0 +1,1 @@
+--find-links https://wheelhouse.acsone.eu/manylinux1
