@@ -5,7 +5,6 @@
 import contextlib
 import logging
 import os
-import requirements
 import subprocess
 import sys
 from distutils.spawn import find_executable as _fe
@@ -100,16 +99,3 @@ def _find_executable(exe):
 
 def cfg_path(filename):
     return os.path.join(os.path.dirname(__file__), 'cfg', filename)
-
-
-def parse_requirements(requirements_string):
-    """
-    This method parses the given requirements string into a dictionary sorted
-    by name.
-    :param requirements_string: requirements string
-    :return: Dictionary like : {'addon_name': Requirement object}
-    """
-    parsed_requirements = {}
-    for req in requirements.parse(requirements_string):
-        parsed_requirements[req.name] = req
-    return parsed_requirements

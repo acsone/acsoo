@@ -4,12 +4,13 @@
 
 import os
 import re
+import requirements
 
 import click
 
 from .main import main
 from .manifest import get_installable_addons
-from .tools import call, check_output, parse_requirements
+from .tools import call, check_output
 
 
 # Identifies external Odoo addon dependency
@@ -135,8 +136,10 @@ def addons_toupdate(ctx, git_ref, diff_requirements, exclude):
             click.echo(ctx.obj['separator'].join(addon_names))
             return
         # Parse the requirements files
-        current_reqs = parse_requirements(requirements_string)
-        diff_reqs = parse_requirements(diff_requirements_string)
+        current_reqs = {req.name: req
+                        for req in requirements.parse(requirements_string)}
+        diff_reqs = {req.name: req
+                     for req in requirements.parse(diff_requirements_string)}
         # Compare the two requirements files and populate modified addons list
         for req_name in current_reqs:
             current_req = current_reqs.get(req_name)
