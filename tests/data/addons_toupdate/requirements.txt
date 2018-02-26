@@ -1,4 +1,4 @@
 --find-links https://wheelhouse.acsone.eu/manylinux1
 Unidecode==0.4.20
 odoo10-addon-base-suspend-security==10.0.1.0.0.99.dev6
--e git+https://github.com/oca/server-tools.git@d338bf03c8c686af76f906af8e7ae01e44907ac7#egg=odoo10_addon_base_user_role&subdirectory=setup/base_user_role
+-e git+https://github.com/oca/server-tools.git@4b1cd222f7168126c9a90fa795c6f288a359e89b#egg=odoo10_addon_base_user_role&subdirectory=setup/base_user_role
