@@ -1,1 +1,2 @@
 --find-links https://wheelhouse.acsone.eu/manylinux1
+Unidecode==0.4.20
