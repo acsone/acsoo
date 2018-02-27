@@ -135,7 +135,8 @@ def addons_toupdate(ctx, git_ref, diff_requirements, exclude, requirement):
     # Requirements file comparison
     dependency_names = _get_dependencies_toupdate(requirement, git_ref)
     if dependency_names == 'all':
-        return 'all'
+        click.echo('all')
+        return
     # Remove excluded dependencies from addons list
     exclude = _split_set(exclude)
     dependency_names -= exclude
