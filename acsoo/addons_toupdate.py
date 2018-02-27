@@ -70,7 +70,9 @@ def _get_dependencies_toupdate(requirement, git_ref):
     with open(requirement) as req_file:
         requirements_string = req_file.read()
     try:
-        diff_requirements_string = check_output(['git', 'show', diff_req_ref])
+        devnull = open(os.devnull, 'w')
+        diff_requirements_string = check_output(
+            ['git', 'show', diff_req_ref], stderr=devnull)
     except click.ClickException:  # The requirements file is new
         return 'all'
     # If requirements are the same, stop
