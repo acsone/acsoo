@@ -80,9 +80,11 @@ def _get_dependencies_toupdate(requirement, git_ref):
         return dependencies
     # Parse the requirements files
     current_requirements = {
-        req.name: req for req in requirements.parse(requirements_string)}
+        req.name.replace('-', '_'):
+            req for req in requirements.parse(requirements_string)}
     diff_requirements = {
-        req.name: req for req in requirements.parse(diff_requirements_string)}
+        req.name.replace('-', '_'):
+            req for req in requirements.parse(diff_requirements_string)}
     # Compare the two requirements files and populate modified addons list
     for req_name in current_requirements:
         current_req = current_requirements.get(req_name)
@@ -129,7 +131,8 @@ def addons_toupdate(ctx, git_ref, diff_requirements, exclude, requirement):
     # Compare each installable addons and populate modified addons set
     addons = ctx.obj['addons']
     for addon_name, (addon_dir, manifest) in addons.items():
-        if call(['git', 'diff', '--quiet', git_ref, addon_dir]):
+        if call(['git', 'diff', '--quiet', '--diff-filter=M',
+                 git_ref, addon_dir]):
             addon_names.add(addon_name)
     if not diff_requirements:
         click.echo(ctx.obj['separator'].join(sorted(addon_names)))
