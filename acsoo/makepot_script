@@ -24,7 +24,7 @@ if module:
     lang_export.act_getfile()
     if not os.path.isdir(i18n_path):
         os.makedirs(i18n_path)
-    with open(pot_file_path, 'w') as pot_file:
+    with open(pot_file_path, 'wb') as pot_file:
         pot_file.write(base64.decodestring(lang_export.data))
     FNULL = open(os.devnull, 'w')
     for lang in languages:
