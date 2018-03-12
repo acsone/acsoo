@@ -61,7 +61,8 @@ test:
     - virtualenv --python=$(which {{{ python_version }}}) venv
     - venv/bin/pip install coverage
     - venv/bin/pip install --no-deps --no-index release/*.whl
-    - venv/bin/pip install -e . --no-deps --no-index
+    # although the project is part of *.whl, install it in editable mode so coverage sees it
+    - venv/bin/pip install --no-deps --no-index -e .
     - ADDONS_INIT=$(./acsoo addons list-depends)
     - echo Installing ${ADDONS_INIT}
     - unbuffer venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_INIT} | ./acsoo checklog
