@@ -5,7 +5,7 @@
 import os
 import subprocess
 import click
-import time
+import re
 from .tools import cmd_commit, cmd_push, tempinput
 from .checklog import do_checklog
 
@@ -13,9 +13,8 @@ NEW_LANGUAGE = '__new__'
 
 
 def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
-               git_push, languages, git_push_branch, git_remote_url):
-    if not languages:
-        languages = [NEW_LANGUAGE]
+               git_push, languages, git_push_branch, git_remote_url,
+               addons_regex):
     odoo_shell_cmd = [
         odoo_bin,
         'shell',
@@ -32,42 +31,33 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
         stderr=subprocess.STDOUT)
 
     script_dir = os.path.dirname(__file__)
-    installlang_script_path = os.path.join(script_dir, 'installlang_script')
-    with open(installlang_script_path) as f:
-        install_language_cmd = f.read()
-    for lang in languages:
-        if lang == NEW_LANGUAGE:
-            continue
-        lang_kwargs = {
-            'lang': lang,
-        }
-        install_lang_cmd = install_language_cmd % lang_kwargs
-        proc.stdin.write(install_lang_cmd)
-
     script_path = os.path.join(script_dir, 'makepot_script')
     with open(script_path) as f:
         script_cmd = f.read()
     files_to_commit = []
+    addons_regex = addons_regex and re.compile(addons_regex) or False
     for addon_name, (addon_dir, manifest) in installable_addons.items():
+        if addons_regex and not addons_regex.match(addon_name):
+            click.echo("Module %s ignored : not matching" % addon_name)
+            continue
         if os.path.islink(addon_dir):
             click.echo("Module %s ignored : symlink" % addon_name)
             continue
         i18n_path = os.path.join(addon_dir, 'i18n')
+        file_name = '%s.pot' % addon_name
+        pot_file_path = os.path.join(i18n_path, file_name)
+        kwargs = {
+            'module_name': addon_name,
+            'pot_file_path': pot_file_path,
+            'languages': languages,
+            'i18n_path': i18n_path,
+        }
+        module_cmd = script_cmd % kwargs
+        proc.stdin.write(module_cmd)
+        files_to_commit.append(pot_file_path)
         for lang in languages:
-            if lang == NEW_LANGUAGE:
-                file_name = '%s.pot' % addon_name
-            else:
-                file_name = '%s.po' % lang
-            pot_file_path = os.path.join(i18n_path, file_name)
-            kwargs = {
-                'module_name': addon_name,
-                'pot_file_path': pot_file_path,
-                'lang': lang,
-                'i18n_path': i18n_path,
-            }
-            module_cmd = script_cmd % kwargs
-            proc.stdin.write(module_cmd)
-            files_to_commit.append(pot_file_path)
+            lang_file_path = os.path.join(i18n_path, '%s.po' % lang)
+            files_to_commit.append(lang_file_path)
     proc.stdin.close()
     out = proc.stdout.read()
     proc.wait()

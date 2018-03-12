@@ -89,9 +89,10 @@ addons.add_command(addons_list_depends, 'list-depends')
 @click.option('--languages', default='')
 @click.option('--git-push-branch', 'git_push_branch')
 @click.option('--git-remote-url', 'git_remote_url')
+@click.option('--addons-regex')
 @click.pass_context
 def makepot(ctx, database, odoo_bin, odoo_config, git_commit, git_push,
-            languages, git_push_branch, git_remote_url):
+            languages, git_push_branch, git_remote_url, addons_regex):
     config = ctx.obj['config']
     if not odoo_bin:
         bin = {
@@ -101,10 +102,9 @@ def makepot(ctx, database, odoo_bin, odoo_config, git_commit, git_push,
     addons = ctx.obj['addons']
     if not languages:
         languages = config.get('acsoo', 'languages', '__new__')
-    print(languages)
     languages = _split_set(languages)
     do_makepot(database, odoo_bin, addons, odoo_config, git_commit, git_push,
-               languages, git_push_branch, git_remote_url)
+               languages, git_push_branch, git_remote_url, addons_regex)
 
 
 addons.add_command(makepot)

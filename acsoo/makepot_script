@@ -4,23 +4,20 @@
 
 import base64
 import os
+import subprocess
 from os.path import join
 
 module_name = "%(module_name)s"
 pot_file_path = "%(pot_file_path)s"
-iso_code =  "%(lang)s"
+languages = %(languages)s
 i18n_path = "%(i18n_path)s"
-locale_code = iso_code
 module = self.env['ir.module.module'].search([
     ('name', '=', module_name),
     ('state', '=', 'installed'),
 ])
 if module:
-    if iso_code != '__new__':
-        lang = env['res.lang'].search([('iso_code', '=', iso_code), ('active', '>=', 0)], limit=1)
-        locale_code = lang.code
     lang_export = self.env['base.language.export'].create({
-         'lang': locale_code,
+         'lang': '__new__',
          'format': 'po',
          'modules': [(6, 0, [module.id])],
     })
@@ -29,3 +26,14 @@ if module:
         os.makedirs(i18n_path)
     with open(pot_file_path, 'w') as pot_file:
         pot_file.write(base64.decodestring(lang_export.data))
+    FNULL = open(os.devnull, 'w')
+    for lang in languages:
+        if lang == '__new__':
+            continue
+        lang_file_name = lang + ".po"
+        lang_file_path = os.path.join(i18n_path, lang_file_name)
+        if not os.path.isfile(lang_file_path):
+            with open(lang_file_path, 'w') as lang_file:
+                pass
+        res = subprocess.check_call(
+            ["msgmerge", "-U", lang_file_path, pot_file_path], stderr=FNULL)
