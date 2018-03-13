@@ -28,7 +28,7 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
         ])
     proc = subprocess.Popen(
         odoo_shell_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
+        stderr=subprocess.STDOUT, universal_newlines=True)
 
     script_dir = os.path.dirname(__file__)
     script_path = os.path.join(script_dir, 'makepot_script')

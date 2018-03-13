@@ -30,7 +30,7 @@ def _escape(s):
 
 @contextmanager
 def tempinput(data):
-    temp = tempfile.NamedTemporaryFile(delete=False)
+    temp = tempfile.NamedTemporaryFile(mode="w", delete=False)
     temp.write(data)
     temp.close()
     try:
