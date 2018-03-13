@@ -5,6 +5,11 @@ Changes
 .. ----------
 .. -
 
+1.7.0 (unreleased)
+------------------
+- [IMP] more python 3 and Odoo 11 support
+- [IMP] project template: build stage in gitlab-ci
+
 1.6.0 (2018-02-16)
 ------------------
 - [IMP] checklog: add --no-err-if-empty option
