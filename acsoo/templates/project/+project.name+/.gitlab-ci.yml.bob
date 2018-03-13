@@ -1,4 +1,6 @@
 stages:
+  - code quality
+  - build
   - test
   - deploy
 
@@ -22,15 +24,28 @@ after_script:
 variables:
   DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
 
+build:
+  stage: build
+  # use odoo-{{{ odoo.series }}} runner so we have the pre-cloned odoo
+  # except for that optimization, we don't need odoo dependencies for this job
+  tags:
+    - odoo-{{{ odoo.series }}}
+  script:
+    - ./acsoo wheel
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - release/
+
 pylint:
-  stage: test
+  stage: code quality
   tags:
     - python
   script:
     - ./acsoo pylint
 
 flake8:
-  stage: test
+  stage: code quality
   tags:
     - python
   script:
@@ -43,12 +58,12 @@ flake8:
 {{% endif %}}
 test:
   stage: test
-  tags:
-    - odoo-{{{ odoo.series }}}
   script:
     - virtualenv --python=$(which {{{ python_version }}}) venv
     - venv/bin/pip install coverage
-    - venv/bin/pip install -r requirements.txt -e .
+    - venv/bin/pip install --no-deps --no-index release/*.whl
+    # although the project is part of *.whl, install it in editable mode so coverage sees it
+    - venv/bin/pip install --no-deps --no-index -e .
     - ADDONS_INIT=$(./acsoo addons list-depends)
     - echo Installing ${ADDONS_INIT}
     - unbuffer venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_INIT} | ./acsoo checklog
@@ -60,18 +75,17 @@ test:
     - unbuffer venv/bin/coverage run venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_TEST} --test-enable | ./acsoo checklog
     - venv/bin/coverage report
   coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+\%)/'
+  dependencies:
+    - build
 
 deploy-test:
   stage: deploy
-  tags:
-    # use odoo-10.0 runner so we have the pre-cloned odoo
-    # except for that optimization, we don't need odoo dependencies for this job
-    - odoo-10.0
   script:
-    - ./acsoo wheel
     - ./deploy-test
   environment:
     name: test
     url: https://odoo-{{{ project.name }}}-test.acsone.eu
   only:
     - /^\d+\.\d+\.\d+$/
+  dependencies:
+    - build
