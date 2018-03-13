@@ -1,4 +1,5 @@
 stages:
+  - code quality
   - build
   - test
   - deploy
@@ -37,14 +38,14 @@ build:
       - release/
 
 pylint:
-  stage: test
+  stage: code quality
   tags:
     - python
   script:
     - ./acsoo pylint
 
 flake8:
-  stage: test
+  stage: code quality
   tags:
     - python
   script:
