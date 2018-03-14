@@ -10,6 +10,7 @@ from .tools import cmd_commit, cmd_push, tempinput
 from .checklog import do_checklog
 
 NEW_LANGUAGE = '__new__'
+POT_DATE_CHANGE_DIFF = '1 file changed, 2 insertions(+), 2 deletions(-)'
 
 
 def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
@@ -61,11 +62,6 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
     proc.stdin.close()
     out = proc.stdout.read()
     proc.wait()
-    file_to_remove = set([])
-    for file in files_to_commit:
-        if not os.path.exists(file):
-            file_to_remove.add(file)
-    files_to_commit = set(files_to_commit) - file_to_remove
     click.echo(out)
     if out:
         with tempinput(out) as tempfilename:
@@ -76,9 +72,20 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
                     pass
                 else:
                     raise e
+    file_to_remove = set([])
+    for file in files_to_commit:
+        if not os.path.exists(file):
+            file_to_remove.add(file)
+            continue
+        out = subprocess.check_output(
+            ['git', 'diff', '--shortstat', file]).strip()
+        if not out or out == POT_DATE_CHANGE_DIFF:
+            file_to_remove.add(file)
+            continue
+    files_to_commit = set(files_to_commit) - file_to_remove
     if git_commit or git_push:
         cmd_commit(files_to_commit, "Update translation files")
 
-    if git_push:
-        cmd_push(git_push_branch=git_push_branch,
-                 git_remote_url=git_remote_url)
+        if git_push:
+            cmd_push(git_push_branch=git_push_branch,
+                     git_remote_url=git_remote_url)
