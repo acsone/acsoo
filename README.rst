@@ -140,6 +140,15 @@ A set of commands to print addons lists, useful when running tests.
 
      acsoo addons list
      acsoo addons list-depends
+     acsoo addons toupdate {git ref}
+
+``acsoo addons toupdate`` will print the list of modified addons, compared to the given git reference. The -r option enables the requirements comparison.
+In the following cases, ``acsoo addons toupdate -r {git reference}`` will output 'all':
+  - the given git reference is not an ancestor of the current version of the repository
+  - the requirements file is new since the given git reference (it didn't exist in the git reference and exists in the current version)
+  - Odoo or Odoo Enterprise version/revision has changed
+  - an external source of addons has changed
+New addons or removed addons (in the requirements file or in the project) won't be printed in the output.
 
 acsoo checklog
 --------------

@@ -3,7 +3,7 @@ Changes
 
 .. Future (?)
 .. ----------
-.. -
+.. - [ADD] ``acsoo addons toupdate``
 
 1.7.0 (unreleased)
 ------------------

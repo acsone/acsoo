@@ -56,13 +56,13 @@ def check_call(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
 
 
 def check_output(
-        cmd, cwd=None, log_level=logging.DEBUG, echo=False,
+        cmd, cwd=None, stderr=None, log_level=logging.DEBUG, echo=False,
         universal_newlines=True):
     _adapt_executable(cmd)
     log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
     try:
         return subprocess.check_output(
-            cmd, cwd=cwd, universal_newlines=universal_newlines)
+            cmd, cwd=cwd, stderr=stderr, universal_newlines=universal_newlines)
     except subprocess.CalledProcessError:
         raise click.ClickException(cmd_string(cmd))
 
