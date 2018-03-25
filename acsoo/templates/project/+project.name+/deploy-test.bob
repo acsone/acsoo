@@ -1,5 +1,6 @@
 #!/usr/bin/env {{{ python_version }}}
 import subprocess
+import textwrap
 from {{{ 'configparser' if python_version == 'python3' else 'ConfigParser' }}} import ConfigParser
 
 config = ConfigParser()
@@ -17,9 +18,18 @@ subprocess.check_call([
 ])
 subprocess.check_call([
     'ssh', HOST,
-    'sudo -H -u {USER} /home/{USER}/instance/install.sh {VERSION}'.format(**locals()),
-])
-subprocess.check_call([
-    'ssh', HOST,
-    'sudo -H -u {USER} /home/{USER}/instance/upgrade.sh {VERSION} --i18n-overwrite'.format(**locals()),
+    textwrap.dedent("""\
+        sudo -u {USER} -H -s <<'EOF'
+        set -ex
+        cd /home/{USER}/instance
+        ./installvenv {VERSION}
+        ./maintenance_start
+        rm -f venv
+        ln -s venv-{VERSION} venv
+        for db in $(cat DATABASES) ; do
+            venv/bin/click-odoo-upgrade -c odoo.cfg -d $db --i18n-overwrite
+        done
+        ./maintenance_stop
+        EOF
+    """.format(**locals())),
 ])

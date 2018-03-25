@@ -9,6 +9,8 @@ Changes
 ------------------
 - [IMP] more python 3 and Odoo 11 support
 - [IMP] project template: build stage in gitlab-ci
+- [IMP] new style deploy / upgrade (using checksum upgrades
+  and click-odoo-upgrade script)
 
 1.6.0 (2018-02-16)
 ------------------

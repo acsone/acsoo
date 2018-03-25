@@ -11,5 +11,8 @@ setup(
     name='odoo-addons-{{{ project.name }}}',
     description='{{{ project.name|capitalize }}} Odoo Addons',
     setup_requires=['setuptools-odoo'],
+    install_requires=[
+        'click-odoo-contrib',
+    ],
     odoo_addons=True,
 )
