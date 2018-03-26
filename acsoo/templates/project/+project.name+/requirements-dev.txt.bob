@@ -6,8 +6,8 @@
 {{% if odoo.enterprise %}}
 -e git+ssh://git@github.com/acsone/enterprise.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master#egg=odoo{{{ odoo.series }}}-addons-enterprise&subdirectory=setup
 {{% endif %}}
-{{% if odoo.series in ['8.0', '9.0'] %}}
-odoo-autodiscover
+{{% if odoo.major <= 10 %}}
+odoo-autodiscover>=2.0
 {{% endif %}}
 
 # patched ACSONE addons
