@@ -9,8 +9,10 @@ Changes
 ------------------
 - [IMP] more python 3 and Odoo 11 support
 - [IMP] project template: build stage in gitlab-ci
-- [IMP] new style deploy / upgrade (using checksum upgrades
-  and click-odoo-upgrade script)
+- [IMP] project template: new style deploy / upgrade 
+  (using checksum upgrades and click-odoo-upgrade script)
+- [IMP] enforce odoo-autodiscover>=2 and do not use it
+  for Odoo >= 11
 
 1.6.0 (2018-02-16)
 ------------------
