@@ -25,6 +25,7 @@ GIT_URL_RE = re.compile(r"(?P<scheme>ssh|http|https)://"
                         r"(?P<org>.*?)/(?P<rest>.*)")
 PUSHABLE = [
     ('github.com', 'acsone'),
+    ('github.com', 'mozaik-association'),
 ]
 
 
