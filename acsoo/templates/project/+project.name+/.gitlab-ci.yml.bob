@@ -52,7 +52,7 @@ flake8:
     - ./acsoo flake8
 
 {{% if odoo.series in ['8.0', '9.0'] %}}
-{{% set odoocmd = 'odoo-server-autodiscover' %}}
+{{% set odoocmd = 'openerp-server' %}}
 {{% else %}}
 {{% set odoocmd = 'odoo' %}}
 {{% endif %}}
