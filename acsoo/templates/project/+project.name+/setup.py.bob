@@ -16,7 +16,8 @@ setup(
     ],
     odoo_addons={
         'depends_override': {
-            'module_auto_update': 'odoo{{{ odoo.major }}}-addon-module_auto_update>={{{ odoo.major }}}.0.2.0.0',
+            'module_auto_update': 
+                'odoo{{{ odoo.major }}}-addon-module_auto_update>={{{ odoo.major }}}.0.2.0.0',
         },
     },
 )
