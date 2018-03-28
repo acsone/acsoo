@@ -12,6 +12,7 @@ def pre_render_project(configurator):
         python_version = 'python'
 
     configurator.variables['python_version'] = python_version
+    configurator.variables['odoo.major'] = int(odoo_series.split('.')[0])
 
 
 def post_render_project(configurator):

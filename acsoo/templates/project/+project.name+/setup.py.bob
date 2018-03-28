@@ -11,5 +11,13 @@ setup(
     name='odoo-addons-{{{ project.name }}}',
     description='{{{ project.name|capitalize }}} Odoo Addons',
     setup_requires=['setuptools-odoo'],
-    odoo_addons=True,
+    install_requires=[
+        'click-odoo-contrib',
+    ],
+    odoo_addons={
+        'depends_override': {
+            'module_auto_update': 
+                'odoo{{{ odoo.major }}}-addon-module_auto_update>={{{ odoo.major }}}.0.2.0.0',
+        },
+    },
 )
