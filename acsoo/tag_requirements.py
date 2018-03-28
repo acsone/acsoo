@@ -23,19 +23,17 @@ NOTAG_RE = re.compile(r"([a-zA-Z0-9-_\.]+==)|"
 GIT_URL_RE = re.compile(r"(?P<scheme>ssh|http|https)://"
                         r"(?P<user>git@)?(?P<host>.*?)/"
                         r"(?P<org>.*?)/(?P<rest>.*)")
-PUSHABLE = [
-    ('github.com', 'acsone'),
-]
 
 
-def _make_push_url(url):
+def _make_push_url(config, url):
     mo = GIT_URL_RE.match(url)
     if not mo:
         return False
     groups = mo.groupdict()
     if groups['scheme'] == 'ssh':
         return url
-    if (groups['host'].lower(), groups['org'].lower()) not in PUSHABLE:
+    pushkey = groups['host'].lower() + ':' + groups['org'].lower()
+    if pushkey not in config.pushable:
         return False
     return 'ssh://git@{host}/{org}/{rest}'.format(**groups)
 
@@ -96,7 +94,7 @@ def do_tag_requirements(config, force, src, requirement, yes, dry_run=False):
         if not editable:
             _logger.warning("Cannot tag %s (non editable)", req)
             continue
-        push_url = _make_push_url(url)
+        push_url = _make_push_url(config, url)
         if not push_url:
             _logger.warning("Cannot tag %s (not pushable)", req)
             continue

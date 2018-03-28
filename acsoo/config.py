@@ -69,6 +69,14 @@ class AcsooConfig(object):
                                        format(self.__cfgfile))
         return r
 
+    @property
+    def pushable(self):
+        r = self.getlist(SECTION, 'pushable')
+        if not r:
+            return ['github.com:acsone']
+        else:
+            return r
+
     def get(self, section, option, default=None, flatten=False):
         try:
             r = self.__cfg.get(section, option)
