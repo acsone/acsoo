@@ -10,7 +10,6 @@ from .tools import cmd_commit, cmd_push, tempinput
 from .checklog import do_checklog
 
 NEW_LANGUAGE = '__new__'
-POT_DATE_CHANGE_DIFF = '1 file changed, 2 insertions(+), 2 deletions(-)'
 
 
 def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
@@ -77,9 +76,10 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
         if not os.path.exists(file):
             file_to_remove.add(file)
             continue
-        out = subprocess.check_output(
-            ['git', 'diff', '--shortstat', file]).strip()
-        if not out or out == POT_DATE_CHANGE_DIFF:
+        out = subprocess.check_output([
+            'git', 'diff', '--shortstat', file
+        ], universal_newlines=True).strip()
+        if not out:
             file_to_remove.add(file)
             continue
     files_to_commit = set(files_to_commit) - file_to_remove

@@ -4,8 +4,15 @@
 
 import base64
 import os
+import re
 import subprocess
 from os.path import join
+
+
+LINE_PATTERNS_TO_REMOVE = [
+    r'"POT-Creation-Date:.*?"[\n\r]',
+    r'"PO-Revision-Date:.*?"[\n\r]',
+]
 
 module_name = "%(module_name)s"
 pot_file_path = "%(pot_file_path)s"
@@ -17,15 +24,19 @@ module = self.env['ir.module.module'].search([
 ])
 if module:
     lang_export = self.env['base.language.export'].create({
-         'lang': '__new__',
-         'format': 'po',
-         'modules': [(6, 0, [module.id])],
+        'lang': '__new__',
+        'format': 'po',
+        'modules': [(6, 0, [module.id])],
     })
     lang_export.act_getfile()
     if not os.path.isdir(i18n_path):
         os.makedirs(i18n_path)
     with open(pot_file_path, 'wb') as pot_file:
-        pot_file.write(base64.decodestring(lang_export.data))
+        file_content = base64.decodestring(lang_export.data).decode('utf-8')
+        for pattern in LINE_PATTERNS_TO_REMOVE:
+            file_content = re.sub(
+                pattern, '', file_content, flags=re.MULTILINE)
+        pot_file.write(bytes(file_content, 'utf-8'))
     FNULL = open(os.devnull, 'w')
     for lang in languages:
         if lang == '__new__':
@@ -35,5 +46,9 @@ if module:
         if not os.path.isfile(lang_file_path):
             with open(lang_file_path, 'w') as lang_file:
                 pass
-        res = subprocess.check_call(
-            ["msgmerge", "-U", lang_file_path, pot_file_path], stderr=FNULL)
+        res = subprocess.check_call([
+            "msgmerge",
+            "-U",
+            lang_file_path,
+            pot_file_path,
+        ], stderr=FNULL)
