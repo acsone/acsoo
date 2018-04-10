@@ -80,31 +80,28 @@ addons.add_command(addons_list_depends, 'list-depends')
 
 @click.command()
 @click.option('--database')
-@click.option('--odoo-bin', 'odoo_bin', default=None)
+@click.option('--odoo-bin', 'odoo_bin', default='odoo')
 @click.option('--odoo-config', 'odoo_config',
               type=click.Path(dir_okay=False, exists=True))
 @click.option('--git-commit', 'git_commit', is_flag=True, default=False)
-@click.option('--languages', default='')
 @click.option('--git-push', 'git_push', is_flag=True, default=False)
-@click.option('--languages', default='')
+@click.option(
+    '--languages', default='',
+    help="If specified, a msgmerge between the .pot file and the "
+         "specified language file will be performed. If the PO language "
+         "file doesn't exists, it will be created. If --languages is not "
+         "specified, the merge with the .pot will be done with all existing "
+         "PO files in the i18n folder.")
 @click.option('--git-push-branch', 'git_push_branch')
-@click.option('--git-remote-url', 'git_remote_url')
+@click.option('--git-push-remote', 'git_push_remote')
 @click.option('--addons-regex')
 @click.pass_context
 def makepot(ctx, database, odoo_bin, odoo_config, git_commit, git_push,
-            languages, git_push_branch, git_remote_url, addons_regex):
-    config = ctx.obj['config']
-    if not odoo_bin:
-        bin = {
-            '10.0': 'odoo'
-        }
-        odoo_bin = bin.get(config.series, None)
+            languages, git_push_branch, git_push_remote, addons_regex):
     addons = ctx.obj['addons']
-    if not languages:
-        languages = config.get('acsoo', 'languages', '__new__')
     languages = _split_set(languages)
     do_makepot(database, odoo_bin, addons, odoo_config, git_commit, git_push,
-               languages, git_push_branch, git_remote_url, addons_regex)
+               languages, git_push_branch, git_push_remote, addons_regex)
 
 
 addons.add_command(makepot)

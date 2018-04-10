@@ -9,11 +9,9 @@ import re
 from .tools import cmd_commit, cmd_push, tempinput
 from .checklog import do_checklog
 
-NEW_LANGUAGE = '__new__'
-
 
 def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
-               git_push, languages, git_push_branch, git_remote_url,
+               git_push, languages, git_push_branch, git_push_remote,
                addons_regex):
     odoo_shell_cmd = [
         odoo_bin,
@@ -72,20 +70,22 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
                 else:
                     raise e
     file_to_remove = set([])
-    for file in files_to_commit:
-        if not os.path.exists(file):
-            file_to_remove.add(file)
+    for file_to_commit in files_to_commit:
+        if not os.path.exists(file_to_commit):
+            file_to_remove.add(file_to_commit)
             continue
         out = subprocess.check_output([
-            'git', 'diff', '--shortstat', file
+            'git', 'diff', '--shortstat', file_to_commit
         ], universal_newlines=True).strip()
         if not out:
-            file_to_remove.add(file)
+            file_to_remove.add(file_to_commit)
             continue
     files_to_commit = set(files_to_commit) - file_to_remove
-    if git_commit or git_push:
-        cmd_commit(files_to_commit, "Update translation files")
 
+    if git_commit or git_push and files_to_commit:
+        cmd_commit(files_to_commit, "Update translation files")
         if git_push:
-            cmd_push(git_push_branch=git_push_branch,
-                     git_remote_url=git_remote_url)
+            cmd_push(
+                remote=git_push_remote,
+                branch=git_push_branch,
+            )

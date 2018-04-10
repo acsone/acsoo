@@ -6,13 +6,15 @@ import base64
 import os
 import re
 import subprocess
-from os.path import join
+from os.path import isfile, join
 
 
 LINE_PATTERNS_TO_REMOVE = [
     r'"POT-Creation-Date:.*?"[\n\r]',
     r'"PO-Revision-Date:.*?"[\n\r]',
 ]
+
+PO_FILE_EXT = '.po'
 
 module_name = "%(module_name)s"
 pot_file_path = "%(pot_file_path)s"
@@ -22,6 +24,7 @@ module = self.env['ir.module.module'].search([
     ('name', '=', module_name),
     ('state', '=', 'installed'),
 ])
+
 if module:
     lang_export = self.env['base.language.export'].create({
         'lang': '__new__',
@@ -38,7 +41,15 @@ if module:
                 pattern, '', file_content, flags=re.MULTILINE)
         pot_file.write(bytes(file_content, 'utf-8'))
     FNULL = open(os.devnull, 'w')
-    for lang in languages:
+    module_languages = languages or []
+    if not module_languages:
+        for filename in os.listdir(i18n_path):
+            is_po_file = filename.endswith(PO_FILE_EXT)
+            if not is_po_file or not isfile(join(i18n_path, filename)):
+                continue
+            language = filename.replace(PO_FILE_EXT, '')
+            module_languages.append(language)
+    for lang in module_languages:
         if lang == '__new__':
             continue
         lang_file_name = lang + ".po"
@@ -48,7 +59,8 @@ if module:
                 pass
         res = subprocess.check_call([
             "msgmerge",
+            "--quiet",
             "-U",
             lang_file_path,
             pot_file_path,
-        ], stderr=FNULL)
+        ])

@@ -51,25 +51,33 @@ def cmd_commit(paths_to_commit, message, skip_ci=True):
         click.echo('Nothing to commit')
 
 
-def cmd_push(git_push_branch=None, git_remote_url=None):
-    if not git_push_branch:
-        git_push_branch = check_output(
-            ['git', 'rev-parse', '--abbrev-ref', 'HEAD'])
-        git_push_branch = git_push_branch.strip('\n')
-    if git_remote_url:
-        old_origin = check_output(['git', 'remote', 'get-url', 'origin'])
-        old_origin = old_origin.replace('\n', '')
-        check_call(['git', 'remote', 'set-url', 'origin', git_remote_url])
-        click.echo('Change remote origin to %s ...' % git_remote_url)
-    if not check_output(
-            ['git', 'ls-remote', '--heads', 'origin', git_push_branch]):
-        click.echo('%s not a branch : skipping ...' % git_push_branch)
-    else:
-        check_call(['git', 'pull', '--no-ff', 'origin', git_push_branch])
-        check_call(['git', 'push', 'origin', 'HEAD:%s' % git_push_branch])
-        if git_remote_url:
-            check_call(['git', 'remote', 'set-url', 'origin', old_origin])
-            click.echo('Restore remote origin ...')
+def cmd_push(remote=None, branch=None):
+    if not branch:
+        branch = check_output([
+            'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+        ], universal_newlines=True,)
+        branch = branch.strip('\n')
+    if not remote:
+        remote = 'origin'
+
+    check_call([
+        'git',
+        'pull',
+        '--no-ff',
+        remote,
+        branch,
+    ])
+
+    command = [
+        'git',
+        'push',
+    ]
+    if remote:
+        command.append(remote)
+    if branch:
+        command.append(branch)
+
+    check_call(command)
 
 
 def cmd_string(cmd):
