@@ -7,6 +7,7 @@ import click
 from .main import main
 from .manifest import get_installable_addons
 from .addons_makepot import do_makepot
+from .click_option import RequiredDepends
 from .config import AcsooConfig
 
 
@@ -92,8 +93,12 @@ addons.add_command(addons_list_depends, 'list-depends')
          "file doesn't exists, it will be created. If --languages is not "
          "specified, the merge with the .pot will be done with all existing "
          "PO files in the i18n folder.")
-@click.option('--git-push-branch', 'git_push_branch')
-@click.option('--git-push-remote', 'git_push_remote')
+@click.option('--git-push-repository', 'git_push_repository')
+@click.option(
+    '--git-push-refspec', 'git_push_refspec',
+    cls=RequiredDepends,
+    required_depends=['git_push_repository'],
+)
 @click.option('--addons-regex')
 @click.pass_context
 def makepot(ctx, database, odoo_bin, odoo_config, git_commit, git_push,

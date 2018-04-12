@@ -86,6 +86,8 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
         cmd_commit(files_to_commit, "Update translation files")
         if git_push:
             cmd_push(
+                repository=git_push_repository,
+                refspec=git_push_refspec,
                 remote=git_push_remote,
                 branch=git_push_branch,
             )

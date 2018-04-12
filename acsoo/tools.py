@@ -51,32 +51,16 @@ def cmd_commit(paths_to_commit, message, skip_ci=True):
         click.echo('Nothing to commit')
 
 
-def cmd_push(remote=None, branch=None):
-    if not branch:
-        branch = check_output([
-            'git', 'rev-parse', '--abbrev-ref', 'HEAD'
-        ], universal_newlines=True,)
-        branch = branch.strip('\n')
-    if not remote:
-        remote = 'origin'
-
-    check_call([
-        'git',
-        'pull',
-        '--no-ff',
-        remote,
-        branch,
-    ])
-
-    command = [
-        'git',
-        'push',
-    ]
-    if remote:
-        command.append(remote)
-    if branch:
-        command.append(branch)
-
+def cmd_push(repository=None, refspec=None):
+    if refspec and not repository:
+        _logger.warning(
+            "Can't specify a refspec without a repository. Not going to push.")
+        return
+    command = ['git', 'push']
+    if repository:
+        command.append(repository)
+    if refspec:
+        command.append(refspec)
     check_call(command)
 
 
