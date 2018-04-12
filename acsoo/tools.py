@@ -59,8 +59,8 @@ def cmd_push(repository=None, refspec=None):
     command = ['git', 'push']
     if repository:
         command.append(repository)
-    if refspec:
-        command.append(refspec)
+        if refspec:
+            command.append(refspec)
     check_call(command)
 
 
