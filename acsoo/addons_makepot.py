@@ -94,6 +94,11 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
         if not os.path.exists(file_to_commit):
             file_to_remove.add(file_to_commit)
             continue
+        is_untracked_file = not bool(subprocess.check_output([
+            'git', 'ls-files', file_to_commit
+        ], universal_newlines=True).strip())
+        if is_untracked_file:
+            continue
         out = subprocess.check_output([
             'git', 'diff', '--shortstat', file_to_commit
         ], universal_newlines=True).strip()
@@ -108,6 +113,4 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
             cmd_push(
                 repository=git_push_repository,
                 refspec=git_push_refspec,
-                remote=git_push_remote,
-                branch=git_push_branch,
             )
