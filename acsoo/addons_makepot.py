@@ -6,13 +6,17 @@ import os
 import subprocess
 import click
 import re
+from os.path import isfile, join
 from .tools import cmd_commit, cmd_push, tempinput
 from .checklog import do_checklog
 
 
+PO_FILE_EXT = '.po'
+
+
 def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
-               git_push, languages, git_push_branch, git_push_remote,
-               addons_regex):
+               git_push, create_languages, git_push_repository,
+               git_push_refspec, addons_regex):
     odoo_shell_cmd = [
         odoo_bin,
         'shell',
@@ -44,18 +48,34 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
         i18n_path = os.path.join(addon_dir, 'i18n')
         file_name = '%s.pot' % addon_name
         pot_file_path = os.path.join(i18n_path, file_name)
+
+        module_languages = set()
+        for filename in os.listdir(i18n_path):
+            is_po_file = filename.endswith(PO_FILE_EXT)
+            is_extension_po_file = is_po_file and '_' in filename
+            skip_file = (
+                not is_po_file or
+                not isfile(join(i18n_path, filename)) or
+                is_extension_po_file)
+            if skip_file:
+                continue
+            language = filename.replace(PO_FILE_EXT, '')
+            module_languages.add(language)
+
+        module_languages |= create_languages
         kwargs = {
             'module_name': addon_name,
             'pot_file_path': pot_file_path,
-            'languages': languages,
+            'languages': module_languages,
             'i18n_path': i18n_path,
         }
         module_cmd = script_cmd % kwargs
         proc.stdin.write(module_cmd)
         files_to_commit.append(pot_file_path)
-        for lang in languages:
+        for lang in module_languages:
             lang_file_path = os.path.join(i18n_path, '%s.po' % lang)
             files_to_commit.append(lang_file_path)
+
     proc.stdin.close()
     out = proc.stdout.read()
     proc.wait()

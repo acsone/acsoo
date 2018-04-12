@@ -6,15 +6,14 @@ import base64
 import os
 import re
 import subprocess
-from os.path import isfile, join
 
+PO_FILE_EXT = '.po'
 
 LINE_PATTERNS_TO_REMOVE = [
     r'"POT-Creation-Date:.*?"[\n\r]',
     r'"PO-Revision-Date:.*?"[\n\r]',
 ]
 
-PO_FILE_EXT = '.po'
 
 module_name = "%(module_name)s"
 pot_file_path = "%(pot_file_path)s"
@@ -40,19 +39,8 @@ if module:
             file_content = re.sub(
                 pattern, '', file_content, flags=re.MULTILINE)
         pot_file.write(bytes(file_content, 'utf-8'))
-    FNULL = open(os.devnull, 'w')
-    module_languages = languages or []
-    if not module_languages:
-        for filename in os.listdir(i18n_path):
-            is_po_file = filename.endswith(PO_FILE_EXT)
-            if not is_po_file or not isfile(join(i18n_path, filename)):
-                continue
-            language = filename.replace(PO_FILE_EXT, '')
-            module_languages.append(language)
-    for lang in module_languages:
-        if lang == '__new__':
-            continue
-        lang_file_name = lang + ".po"
+    for lang in languages:
+        lang_file_name = lang + PO_FILE_EXT
         lang_file_path = os.path.join(i18n_path, lang_file_name)
         if not os.path.isfile(lang_file_path):
             with open(lang_file_path, 'w') as lang_file:
