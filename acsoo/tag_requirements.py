@@ -23,19 +23,17 @@ NOTAG_RE = re.compile(r"([a-zA-Z0-9-_\.]+==)|"
 GIT_URL_RE = re.compile(r"(?P<scheme>ssh|http|https)://"
                         r"(?P<user>git@)?(?P<host>.*?)/"
                         r"(?P<org>.*?)/(?P<rest>.*)")
-PUSHABLE = [
-    ('github.com', 'acsone'),
-]
 
 
-def _make_push_url(url):
+def _make_push_url(config, url):
     mo = GIT_URL_RE.match(url)
     if not mo:
         return False
     groups = mo.groupdict()
     if groups['scheme'] == 'ssh':
         return url
-    if (groups['host'].lower(), groups['org'].lower()) not in PUSHABLE:
+    pushkey = groups['host'].lower() + ':' + groups['org'].lower()
+    if pushkey not in config.pushable:
         return False
     return 'ssh://git@{host}/{org}/{rest}'.format(**groups)
 
@@ -66,7 +64,7 @@ def _is_committed(requirement):
     return r == 0
 
 
-def do_tag_requirements(config, force, src, requirement, yes):
+def do_tag_requirements(config, force, src, requirement, yes, dry_run=False):
     if not _is_committed(requirement):
         raise click.ClickException("Please commit %s first." % (requirement, ))
     requirement_sha = _get_last_sha(requirement)
@@ -96,7 +94,7 @@ def do_tag_requirements(config, force, src, requirement, yes):
         if not editable:
             _logger.warning("Cannot tag %s (non editable)", req)
             continue
-        push_url = _make_push_url(url)
+        push_url = _make_push_url(config, url)
         if not push_url:
             _logger.warning("Cannot tag %s (not pushable)", req)
             continue
@@ -125,13 +123,15 @@ def do_tag_requirements(config, force, src, requirement, yes):
             eggtag = base_tag + '-' + egg
             click.echo('placing tag {eggtag} on {push_url}@{sha}'.
                        format(**locals()))
-            check_call(['git', 'tag'] + force_cmd + [eggtag, sha])
-            try:
-                check_call(['git', 'push'] + force_cmd + [push_url, eggtag])
-            except:  # noqa
-                # if push failed, delete local tag
-                call(['git', 'tag', '-d', eggtag])
-                raise
+            if not dry_run:
+                check_call(['git', 'tag'] + force_cmd + [eggtag, sha])
+                try:
+                    check_call(
+                        ['git', 'push'] + force_cmd + [push_url, eggtag])
+                except:  # noqa
+                    # if push failed, delete local tag
+                    call(['git', 'tag', '-d', eggtag])
+                    raise
 
 
 @click.command()
@@ -144,8 +144,9 @@ def do_tag_requirements(config, force, src, requirement, yes):
               type=click.Path(dir_okay=False, exists=True),
               help='Requirements file to use (default=requirements.txt)')
 @click.option('-y', '--yes', is_flag=True, default=False)
+@click.option('--dry-run', is_flag=True, default=False)
 @click.pass_context
-def tag_requirements(ctx, force, src, requirement, yes):
+def tag_requirements(ctx, force, src, requirement, yes, dry_run):
     """ Tag all VCS requirements found in requirements.txt.
 
     This is important to avoid that commits referenced in requirements.txt
@@ -154,7 +155,7 @@ def tag_requirements(ctx, force, src, requirement, yes):
     Only git is supported for now.
     """
     do_tag_requirements(
-        ctx.obj['config'], force, src, requirement, yes)
+        ctx.obj['config'], force, src, requirement, yes, dry_run)
 
 
 main.add_command(tag_requirements)

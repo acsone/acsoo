@@ -9,7 +9,7 @@ from .tools import check_call, call, check_output
 from .tag_requirements import do_tag_requirements
 
 
-def do_tag(config, force, src, requirement, yes):
+def do_tag(config, force, src, requirement, yes, dry_run=False):
     tag = config.version
     if not yes:
         click.confirm('Tag project with {}?'.format(tag), abort=True)
@@ -26,9 +26,12 @@ def do_tag(config, force, src, requirement, yes):
     if out:
         click.echo(out)
         raise click.ClickException("Please commit first.")
-    do_tag_requirements(config, force, src, requirement, yes=True)
-    check_call(['git', 'tag'] + force_cmd + [tag])
-    check_call(['git', 'push', '-q'] + force_cmd + ['origin', 'tag', tag])
+    do_tag_requirements(
+        config, force, src, requirement, yes=True, dry_run=dry_run)
+    click.echo('placing tag {tag} on origin'.format(**locals()))
+    if not dry_run:
+        check_call(['git', 'tag'] + force_cmd + [tag])
+        check_call(['git', 'push', '-q'] + force_cmd + ['origin', 'tag', tag])
 
 
 @click.command(help='Tag the current project after ensuring '
@@ -42,14 +45,15 @@ def do_tag(config, force, src, requirement, yes):
 @click.option('-f', '--force', is_flag=True,
               help='Replace an existing tag (instead of failing)')
 @click.option('-y', '--yes', is_flag=True, default=False)
+@click.option('--dry-run', is_flag=True, default=False)
 @click.pass_context
-def tag(ctx, force, src, requirement, yes):
+def tag(ctx, force, src, requirement, yes, dry_run):
     """ Tag the current project and its VCS requirements.
 
     This command verifies everything has been committed, then
     performs git tag, git push and acsoo tag_requirements.
     """
-    do_tag(ctx.obj['config'], force, src, requirement, yes)
+    do_tag(ctx.obj['config'], force, src, requirement, yes, dry_run)
 
 
 main.add_command(tag)
