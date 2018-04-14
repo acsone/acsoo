@@ -153,6 +153,25 @@ def tag_requirements(ctx, force, src, requirement, yes, dry_run):
     are lost in case of VCS garbage collection.
 
     Only git is supported for now.
+
+    Tags created have the form {series}-{trigram}-{sha1}, where series and
+    trigram come from acsoo.cfg, and sha1 is the short sha of the project
+    at the time when we create the tag. At the end of the day, this tag
+    structure does not really matter, as it is only meant to avoid git
+    garbage collection of commits referenced in requirements.txt,
+    and not to be retrieved manually.
+
+    Tags created are pushed to the corresponding repository.
+    The list of repositories/organizations where we can push can be configured
+    in acsoo.cfg like this (the default is github.com:acsone):
+
+    \b
+    [acsoo]
+    trigram=xyz
+    series=10.0
+    pushable =
+      github.com:acsone
+      github.com:mozaik
     """
     do_tag_requirements(
         ctx.obj['config'], force, src, requirement, yes, dry_run)

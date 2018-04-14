@@ -169,7 +169,9 @@ See the bumpversion `documentation <https://pypi.python.org/pypi/bumpversion>`_ 
 acsoo.cfg
 ~~~~~~~~~
 
-A file named ``acsoo.cfg`` at the project root helps you set sensible defaults. Here is a minimal one:
+A file named ``acsoo.cfg`` at the project root helps you set sensible defaults. 
+
+Here is a minimal example:
 
   .. code:: ini
 
