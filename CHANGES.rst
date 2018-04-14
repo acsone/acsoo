@@ -11,8 +11,11 @@ Changes
 - [IMP] project template: build stage in gitlab-ci
 - [IMP] project template: new style deploy / upgrade 
   (using checksum upgrades and click-odoo-upgrade script)
-- [IMP] enforce odoo-autodiscover>=2 and do not use it
+- [IMP] project template: enforce odoo-autodiscover>=2 and do not use it
   for Odoo >= 11
+- [IMP] add --dry-run option to acsoo tag and tag_requirements
+- [IMP] make the list of places where tag_requirements can push
+  configurable
 
 1.6.0 (2018-02-16)
 ------------------
