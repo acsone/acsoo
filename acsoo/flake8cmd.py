@@ -47,7 +47,7 @@ def flake8(ctx, config, flake8_options):
 
     \b
     [flake8]
-    pylint-options=
+    flake8-options=
       --append-config=flake8.cfg
 
     The above configuration file is equivalent to:

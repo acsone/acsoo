@@ -166,6 +166,40 @@ Where part is 'major', 'minor' or 'patch' (see `semantic versioning <http://semv
 Configure bumpversion by editing the .bumpversion.cfg config file at the root of your project.
 See the bumpversion `documentation <https://pypi.python.org/pypi/bumpversion>`_ to go further (automatic commit, tag, customisation...).
 
+acsoo.cfg
+~~~~~~~~~
+
+A file named ``acsoo.cfg`` at the project root helps you set sensible defaults. Here is a minimal one:
+
+  .. code:: ini
+
+    [acsoo]
+    trigram=xyz
+    series=10.0
+    version=1.5.0
+
+And a more elaborate example:
+
+  .. code:: ini
+
+    [acsoo]
+    trigram=xyz
+    series=11.0
+    version=1.5.2
+    pushable=
+      github.com:acsone
+      github.com:mozaik
+
+    [checklog]
+    ignore=
+      WARNING .* module .*: description is empty !
+      WARNING: unable to set column .* of table account_analytic_account not null 
+
+    [pylint]
+    expected=manifest-required-author:1
+    pylint-options=
+      --disable=deprecated-data-xml-node
+
 Ideas
 ~~~~~
 
