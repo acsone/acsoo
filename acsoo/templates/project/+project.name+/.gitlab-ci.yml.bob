@@ -20,7 +20,7 @@ before_script:
 after_script:
   # important to cleanup after ourselves to avoid
   # leaving ssh agents running on the shell executor
-  - kill $(cat ssh-agent.pid)
+  - if [ -f ssh-agent.pid ] ; then kill $(cat ssh-agent.pid) ; fi
   - dropdb --if-exists ${DB_NAME}
   - rm -fr ${HOME}/.local/share/Odoo/filestore/${DB_NAME}
 
