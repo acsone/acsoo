@@ -36,6 +36,7 @@ build:
     expire_in: 1 week
     paths:
       - release/
+    name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-build"
 
 pylint:
   stage: code quality
