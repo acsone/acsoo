@@ -27,22 +27,6 @@ after_script:
 variables:
   DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
 
-build:
-  stage: build
-  # use odoo-{{{ odoo.series }}} runner so we have the pre-cloned odoo
-  # except for that optimization, we don't need odoo dependencies for this job
-  tags:
-    - odoo-{{{ odoo.series }}}
-  script:
-    - install_acsoo
-    - start_ssh_agent
-    - ./acsoo wheel
-  artifacts:
-    expire_in: 1 week
-    paths:
-      - release/
-    name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-build"
-
 pylint:
   stage: code quality
   tags:
@@ -58,6 +42,22 @@ flake8:
   script:
     - install_acsoo
     - ./acsoo flake8
+
+build:
+  stage: build
+  # use odoo-{{{ odoo.series }}} runner so we have the pre-cloned odoo
+  # except for that optimization, we don't need odoo dependencies for this job
+  tags:
+    - odoo-{{{ odoo.series }}}
+  script:
+    - install_acsoo
+    - start_ssh_agent
+    - ./acsoo wheel
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - release/
+    name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-build"
 
 {{% if odoo.series in ['8.0', '9.0'] %}}
 {{% set odoocmd = 'openerp-server' %}}
