@@ -16,6 +16,7 @@ Changes
 - [IMP] add --dry-run option to acsoo tag and tag_requirements
 - [IMP] make the list of places where tag_requirements can push
   configurable
+- [IMP] project template: on demand installation of acsoo and ssh-agent
 
 1.6.0 (2018-02-16)
 ------------------

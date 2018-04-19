@@ -5,24 +5,43 @@ stages:
   - deploy
 
 before_script:
-  # install acsoo
-  - virtualenv --python=$(which {{{ python_version }}}) venv-acsoo
-  - venv-acsoo/bin/pip install acsoo
-  - ln -s venv-acsoo/bin/acsoo
-  # ssh-agent
-  - eval $(ssh-agent -s)
-  - ssh-add <(echo "$SSH_DEPLOY_KEY")
-  - echo "${SSH_AGENT_PID}" > ssh-agent.pid
+  - |
+    function install_acsoo {
+        virtualenv --python=$(which {{{ python_version }}}) venv-acsoo
+        venv-acsoo/bin/pip install acsoo
+        ln -s venv-acsoo/bin/acsoo
+    }
+    function start_ssh_agent {
+        eval $(ssh-agent -s)
+        ssh-add <(echo "$SSH_DEPLOY_KEY")
+        echo "${SSH_AGENT_PID}" > ssh-agent.pid
+    }
 
 after_script:
   # important to cleanup after ourselves to avoid
   # leaving ssh agents running on the shell executor
-  - kill $(cat ssh-agent.pid)
+  - if [ -f ssh-agent.pid ] ; then kill $(cat ssh-agent.pid) ; fi
   - dropdb --if-exists ${DB_NAME}
   - rm -fr ${HOME}/.local/share/Odoo/filestore/${DB_NAME}
 
 variables:
   DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
+
+pylint:
+  stage: code quality
+  tags:
+    - python
+  script:
+    - install_acsoo
+    - ./acsoo pylint
+
+flake8:
+  stage: code quality
+  tags:
+    - python
+  script:
+    - install_acsoo
+    - ./acsoo flake8
 
 build:
   stage: build
@@ -31,26 +50,14 @@ build:
   tags:
     - odoo-{{{ odoo.series }}}
   script:
+    - install_acsoo
+    - start_ssh_agent
     - ./acsoo wheel
   artifacts:
     expire_in: 1 week
     paths:
       - release/
     name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-build"
-
-pylint:
-  stage: code quality
-  tags:
-    - python
-  script:
-    - ./acsoo pylint
-
-flake8:
-  stage: code quality
-  tags:
-    - python
-  script:
-    - ./acsoo flake8
 
 {{% if odoo.series in ['8.0', '9.0'] %}}
 {{% set odoocmd = 'openerp-server' %}}
@@ -62,6 +69,7 @@ test:
   tags:
     - odoo-{{{ odoo.series }}}
   script:
+    - install_acsoo
     - virtualenv --python=$(which {{{ python_version }}}) venv
     - venv/bin/pip install coverage
     # use --no-index so missing dependencies that would not be in *.whl are detected
@@ -85,6 +93,7 @@ test:
 deploy-test:
   stage: deploy
   script:
+    - start_ssh_agent
     - ./deploy-test
   environment:
     name: test
