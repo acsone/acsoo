@@ -50,6 +50,10 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
         pot_file_path = os.path.join(i18n_path, file_name)
 
         module_languages = set()
+
+        if not os.path.exists(i18n_path):
+            os.mkdir(i18n_path)
+
         for filename in os.listdir(i18n_path):
             is_po_file = filename.endswith(PO_FILE_EXT)
             is_extension_po_file = is_po_file and '_' in filename
