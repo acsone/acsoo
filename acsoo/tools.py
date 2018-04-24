@@ -51,19 +51,6 @@ def cmd_commit(paths_to_commit, message, skip_ci=True):
         click.echo('Nothing to commit')
 
 
-def cmd_push(repository=None, refspec=None):
-    if refspec and not repository:
-        _logger.warning(
-            "Can't specify a refspec without a repository. Not going to push.")
-        return
-    command = ['git', 'push']
-    if repository:
-        command.append(repository)
-        if refspec:
-            command.append(refspec)
-    check_call(command)
-
-
 def cmd_string(cmd):
     return " ".join([_escape(s) for s in cmd])
 

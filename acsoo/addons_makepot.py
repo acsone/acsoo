@@ -7,7 +7,7 @@ import subprocess
 import click
 import re
 from os.path import isfile, join
-from .tools import cmd_commit, cmd_push, tempinput
+from .tools import cmd_commit, tempinput
 from .checklog import do_checklog
 
 
@@ -15,8 +15,7 @@ PO_FILE_EXT = '.po'
 
 
 def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
-               git_push, create_languages, git_push_repository,
-               git_push_refspec, addons_regex):
+               create_languages, addons_regex):
     odoo_shell_cmd = [
         odoo_bin,
         'shell',
@@ -111,10 +110,5 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
             continue
     files_to_commit = set(files_to_commit) - file_to_remove
 
-    if git_commit or git_push and files_to_commit:
+    if git_commit and files_to_commit:
         cmd_commit(files_to_commit, "Update translation files")
-        if git_push:
-            cmd_push(
-                repository=git_push_repository,
-                refspec=git_push_refspec,
-            )
