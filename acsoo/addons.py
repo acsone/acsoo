@@ -7,6 +7,7 @@ import click
 from .main import main
 from .manifest import get_installable_addons
 from .addons_makepot import do_makepot
+from .click_option import RequiredDepends
 from .config import AcsooConfig
 
 
@@ -80,31 +81,22 @@ addons.add_command(addons_list_depends, 'list-depends')
 
 @click.command()
 @click.option('--database')
-@click.option('--odoo-bin', 'odoo_bin', default=None)
+@click.option('--odoo-bin', 'odoo_bin', default='odoo')
 @click.option('--odoo-config', 'odoo_config',
               type=click.Path(dir_okay=False, exists=True))
 @click.option('--git-commit', 'git_commit', is_flag=True, default=False)
-@click.option('--languages', default='')
-@click.option('--git-push', 'git_push', is_flag=True, default=False)
-@click.option('--languages', default='')
-@click.option('--git-push-branch', 'git_push_branch')
-@click.option('--git-remote-url', 'git_remote_url')
+@click.option(
+    '--create-languages', default='',
+    help="Comma separated list of languages for which the .po files will "
+         "be created if not present.")
 @click.option('--addons-regex')
 @click.pass_context
-def makepot(ctx, database, odoo_bin, odoo_config, git_commit, git_push,
-            languages, git_push_branch, git_remote_url, addons_regex):
-    config = ctx.obj['config']
-    if not odoo_bin:
-        bin = {
-            '10.0': 'odoo'
-        }
-        odoo_bin = bin.get(config.series, None)
+def makepot(ctx, database, odoo_bin, odoo_config, git_commit,
+            create_languages, addons_regex):
     addons = ctx.obj['addons']
-    if not languages:
-        languages = config.get('acsoo', 'languages', '__new__')
-    languages = _split_set(languages)
-    do_makepot(database, odoo_bin, addons, odoo_config, git_commit, git_push,
-               languages, git_push_branch, git_remote_url, addons_regex)
+    create_languages = _split_set(create_languages)
+    do_makepot(database, odoo_bin, addons, odoo_config, git_commit,
+               create_languages, addons_regex)
 
 
 addons.add_command(makepot)

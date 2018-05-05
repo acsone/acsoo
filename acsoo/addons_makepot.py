@@ -6,15 +6,16 @@ import os
 import subprocess
 import click
 import re
-from .tools import cmd_commit, cmd_push, tempinput
+from os.path import isfile, join
+from .tools import cmd_commit, tempinput
 from .checklog import do_checklog
 
-NEW_LANGUAGE = '__new__'
+
+PO_FILE_EXT = '.po'
 
 
 def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
-               git_push, languages, git_push_branch, git_remote_url,
-               addons_regex):
+               create_languages, addons_regex):
     odoo_shell_cmd = [
         odoo_bin,
         'shell',
@@ -46,18 +47,38 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
         i18n_path = os.path.join(addon_dir, 'i18n')
         file_name = '%s.pot' % addon_name
         pot_file_path = os.path.join(i18n_path, file_name)
+
+        module_languages = set()
+
+        if not os.path.exists(i18n_path):
+            os.mkdir(i18n_path)
+
+        for filename in os.listdir(i18n_path):
+            is_po_file = filename.endswith(PO_FILE_EXT)
+            is_extension_po_file = is_po_file and '_' in filename
+            skip_file = (
+                not is_po_file or
+                not isfile(join(i18n_path, filename)) or
+                is_extension_po_file)
+            if skip_file:
+                continue
+            language = filename.replace(PO_FILE_EXT, '')
+            module_languages.add(language)
+
+        module_languages |= create_languages
         kwargs = {
             'module_name': addon_name,
             'pot_file_path': pot_file_path,
-            'languages': languages,
+            'languages': module_languages,
             'i18n_path': i18n_path,
         }
         module_cmd = script_cmd % kwargs
         proc.stdin.write(module_cmd)
         files_to_commit.append(pot_file_path)
-        for lang in languages:
+        for lang in module_languages:
             lang_file_path = os.path.join(i18n_path, '%s.po' % lang)
             files_to_commit.append(lang_file_path)
+
     proc.stdin.close()
     out = proc.stdout.read()
     proc.wait()
@@ -72,20 +93,22 @@ def do_makepot(database, odoo_bin, installable_addons, odoo_config, git_commit,
                 else:
                     raise e
     file_to_remove = set([])
-    for file in files_to_commit:
-        if not os.path.exists(file):
-            file_to_remove.add(file)
+    for file_to_commit in files_to_commit:
+        if not os.path.exists(file_to_commit):
+            file_to_remove.add(file_to_commit)
+            continue
+        is_untracked_file = not bool(subprocess.check_output([
+            'git', 'ls-files', file_to_commit
+        ], universal_newlines=True).strip())
+        if is_untracked_file:
             continue
         out = subprocess.check_output([
-            'git', 'diff', '--shortstat', file
+            'git', 'diff', '--shortstat', file_to_commit
         ], universal_newlines=True).strip()
         if not out:
-            file_to_remove.add(file)
+            file_to_remove.add(file_to_commit)
             continue
     files_to_commit = set(files_to_commit) - file_to_remove
-    if git_commit or git_push:
-        cmd_commit(files_to_commit, "Update translation files")
 
-        if git_push:
-            cmd_push(git_push_branch=git_push_branch,
-                     git_remote_url=git_remote_url)
+    if git_commit and files_to_commit:
+        cmd_commit(files_to_commit, "Update translation files")
