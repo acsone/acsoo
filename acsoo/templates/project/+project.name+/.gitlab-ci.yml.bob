@@ -78,7 +78,7 @@ test:
     - venv/bin/pip install --no-index -e .
     - ADDONS_INIT=$(./acsoo addons list-depends)
     - echo Installing ${ADDONS_INIT}
-    - unbuffer venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_INIT} | ./acsoo checklog
+    - unbuffer venv/bin/click-odoo-initdb -c odoo-ci.cfg --new-database ${DB_NAME} --cache-prefix {{{ project.trigram }}} -m ${ADDONS_INIT} | ./acsoo checklog
     # do not test server_environment_files because server_environment depends on it,
     # so testing server_environment_files implies testing server_environment,
     # and the server_environment tests require a very specific server_environment_files

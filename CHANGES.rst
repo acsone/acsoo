@@ -17,6 +17,7 @@ Changes
 - [IMP] make the list of places where tag_requirements can push
   configurable
 - [IMP] project template: on demand installation of acsoo and ssh-agent
+- [IMP] project template: use click-odoo-initdb in gitlab-ci
 
 1.6.0 (2018-02-16)
 ------------------
