@@ -5,7 +5,7 @@ Changes
 .. ----------
 .. -
 
-1.7.0 (unreleased)
+1.7.0 (2018-06-04)
 ------------------
 - [IMP] more python 3 and Odoo 11 support
 - [IMP] project template: build stage in gitlab-ci
