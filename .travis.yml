@@ -26,3 +26,4 @@ deploy:
     repo: acsone/acsoo
     branch: master
     tags: true
+    python: 2.7
