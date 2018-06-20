@@ -6,6 +6,9 @@ import click
 
 from .main import main
 from .manifest import get_installable_addons
+from .addons_makepot import do_makepot
+from .click_option import RequiredDepends
+from .config import AcsooConfig
 
 
 def _split_set(csv):
@@ -74,3 +77,38 @@ def addons_list_depends(ctx, exclude):
 
 
 addons.add_command(addons_list_depends, 'list-depends')
+
+
+@click.command()
+@click.option('--database')
+@click.option('--odoo-bin', 'odoo_bin', default='odoo')
+@click.option('--odoo-config', 'odoo_config',
+              type=click.Path(dir_okay=False, exists=True))
+@click.option('--git-commit', 'git_commit', is_flag=True, default=False)
+@click.option(
+    '--create-languages', default='',
+    help="Comma separated list of languages for which the .po files will "
+         "be created if not present.")
+@click.option('--addons-regex')
+@click.pass_context
+def makepot(ctx, database, odoo_bin, odoo_config, git_commit,
+            create_languages, addons_regex):
+    addons = ctx.obj['addons']
+    create_languages = _split_set(create_languages)
+    do_makepot(database, odoo_bin, addons, odoo_config, git_commit,
+               create_languages, addons_regex)
+
+
+addons.add_command(makepot)
+
+
+def _read_defaults(config):
+    section = 'acsoo'
+    defaults = dict(
+        languages=config.get(
+            section, 'languages', default='__new__'),
+    )
+    return dict(addons=defaults)
+
+
+AcsooConfig.add_default_map_reader(_read_defaults)

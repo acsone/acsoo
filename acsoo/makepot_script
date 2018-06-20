@@ -1,0 +1,54 @@
+# -*- coding: utf-8 -*-
+# Copyright 2018 ACSONE SA/NV (<http://acsone.eu>)
+# License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
+
+import base64
+import os
+import re
+import subprocess
+
+PO_FILE_EXT = '.po'
+
+LINE_PATTERNS_TO_REMOVE = [
+    r'"POT-Creation-Date:.*?"[\n\r]',
+    r'"PO-Revision-Date:.*?"[\n\r]',
+]
+
+
+module_name = "%(module_name)s"
+pot_file_path = "%(pot_file_path)s"
+languages = %(languages)s
+i18n_path = "%(i18n_path)s"
+module = self.env['ir.module.module'].search([
+    ('name', '=', module_name),
+    ('state', '=', 'installed'),
+])
+
+if module:
+    lang_export = self.env['base.language.export'].create({
+        'lang': '__new__',
+        'format': 'po',
+        'modules': [(6, 0, [module.id])],
+    })
+    lang_export.act_getfile()
+    if not os.path.isdir(i18n_path):
+        os.makedirs(i18n_path)
+    with open(pot_file_path, 'wb') as pot_file:
+        file_content = base64.decodestring(lang_export.data).decode('utf-8')
+        for pattern in LINE_PATTERNS_TO_REMOVE:
+            file_content = re.sub(
+                pattern, '', file_content, flags=re.MULTILINE)
+        pot_file.write(bytes(file_content, 'utf-8'))
+    for lang in languages:
+        lang_file_name = lang + PO_FILE_EXT
+        lang_file_path = os.path.join(i18n_path, lang_file_name)
+        if not os.path.isfile(lang_file_path):
+            with open(lang_file_path, 'w') as lang_file:
+                pass
+        res = subprocess.check_call([
+            "msgmerge",
+            "--quiet",
+            "-U",
+            lang_file_path,
+            pot_file_path,
+        ])

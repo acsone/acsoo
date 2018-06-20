@@ -7,6 +7,8 @@ import logging
 import os
 import subprocess
 import sys
+import tempfile
+from contextlib import contextmanager
 from distutils.spawn import find_executable as _fe
 
 import click
@@ -24,6 +26,29 @@ def _escape(s):
     s = s.replace('<', '\\<')
     s = s.replace(' ', '\\ ')
     return s
+
+
+@contextmanager
+def tempinput(data):
+    temp = tempfile.NamedTemporaryFile(mode="w", delete=False)
+    temp.write(data)
+    temp.close()
+    try:
+        yield temp.name
+    finally:
+        os.unlink(temp.name)
+
+
+def cmd_commit(paths_to_commit, message, skip_ci=True):
+    if paths_to_commit:
+        add_cmd = ['git', 'add']
+        add_cmd.extend(paths_to_commit)
+        check_call(add_cmd)
+        if skip_ci:
+            message = "%s [ci skip]" % message
+        check_call(['git', 'commit', '-m', message])
+    else:
+        click.echo('Nothing to commit')
 
 
 def cmd_string(cmd):
