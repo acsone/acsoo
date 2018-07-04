@@ -16,6 +16,10 @@ before_script:
         ssh-add <(echo "$SSH_DEPLOY_KEY")
         echo "${SSH_AGENT_PID}" > ssh-agent.pid
     }
+    function makepot {
+        venv/bin/click-odoo-makepot -c odoo-ci.cfg -d ${DB_NAME} --commit --msgmerge --addons-dir=$(pwd)/odoo/addons
+        git push "git@gitlab.acsone.eu:acsone/odoo-brainbox.git" "HEAD:${CI_COMMIT_REF_NAME}"
+    }
 
 after_script:
   # important to cleanup after ourselves to avoid
@@ -70,6 +74,7 @@ test:
     - odoo-{{{ odoo.series }}}
   script:
     - install_acsoo
+    - start_ssh_agent  # for pushing translations
     - virtualenv --python=$(which {{{ python_version }}}) venv
     - venv/bin/pip install coverage
     # use --no-index so missing dependencies that would not be in *.whl are detected
@@ -86,6 +91,7 @@ test:
     - echo Testing ${ADDONS_TEST}
     - unbuffer venv/bin/coverage run venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_TEST} --test-enable | ./acsoo checklog
     - venv/bin/coverage report
+    - if [ "${CI_COMMIT_REF_NAME}" = "master" ] ; then makepot ; fi
   coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+\%)/'
   dependencies:
     - build
