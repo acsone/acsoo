@@ -18,7 +18,7 @@ before_script:
     }
     function makepot {
         venv/bin/click-odoo-makepot -c odoo-ci.cfg -d ${DB_NAME} --commit --msgmerge --addons-dir=$(pwd)/odoo/addons
-        git push "git@gitlab.acsone.eu:acsone/odoo-brainbox.git" "HEAD:${CI_COMMIT_REF_NAME}"
+        git push "git@gitlab.acsone.eu:${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}.git" "HEAD:${CI_COMMIT_REF_NAME}"
     }
 
 after_script:
