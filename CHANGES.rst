@@ -5,6 +5,10 @@ Changes
 .. ----------
 .. -
 
+1.7.x (unreleased)
+------------------
+- [IMP] project template: add makepot in .gitlab-ci.yml
+
 1.7.0 (2018-06-04)
 ------------------
 - [IMP] more python 3 and Odoo 11 support
