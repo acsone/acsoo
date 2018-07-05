@@ -17,8 +17,9 @@ before_script:
         echo "${SSH_AGENT_PID}" > ssh-agent.pid
     }
     function makepot {
+        # if you use weblate, remove --msgmerge here and install the msgmerge addon on weblate
         venv/bin/click-odoo-makepot -c odoo-ci.cfg -d ${DB_NAME} --commit --msgmerge --addons-dir=$(pwd)/odoo/addons
-        git push "git@gitlab.acsone.eu:${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}.git" "HEAD:${CI_COMMIT_REF_NAME}"
+        git push "git@gitlab.acsone.eu:${CI_PROJECT_PATH}" "HEAD:${CI_COMMIT_REF_NAME}"
     }
 
 after_script:
