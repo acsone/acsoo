@@ -5,7 +5,7 @@ Changes
 .. ----------
 .. -
 
-1.7.x (unreleased)
+1.7.1 (2018-07-15)
 ------------------
 - [IMP] project template: add makepot in .gitlab-ci.yml
 - [IMP] pylint: whitelist lxml c library
