@@ -5,6 +5,9 @@ Changes
 .. ----------
 .. -
 
+- [IMP] acsoo wheel: add --no-deps, so we can build requirements.txt without
+  fetching dependencies, and later install the project with --no-index and
+  --find-links=release/ so as to detect missing dependencies (#38)
 - [IMP] flake8: ignore W503 and W504 by default (line break around logical
   operators)
 

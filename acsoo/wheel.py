@@ -14,7 +14,7 @@ from .tools import check_call, working_directory
 _logger = logging.getLogger(__name__)
 
 
-def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index):
+def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps):
     if os.path.exists(wheel_dir):
         _logger.debug('Removing all wheels in %s.', wheel_dir)
         with working_directory(wheel_dir):
@@ -26,6 +26,8 @@ def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index):
         opts.append('--no-cache-dir')
     if no_index:
         opts.append('--no-index')
+    if no_deps:
+        opts.append('--no-deps')
     check_call(['pip', 'wheel', '--src', src, '-r', 'requirements.txt',
                 '--wheel-dir', wheel_dir] + opts)
     # TODO 'pip wheel .' is slower and sometimes buggy because of
@@ -54,8 +56,10 @@ def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index):
 @click.option('--no-index', is_flag=True,
               help='Ignore package index '
                    '(only looking at --find-links URLs instead)')
-def wheel(src, requirement, wheel_dir, no_cache_dir, no_index):
-    do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index)
+@click.option('--no-deps', is_flag=True,
+              help='Don\'t look for package dependencies.')
+def wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps):
+    do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps)
 
 
 main.add_command(wheel)
