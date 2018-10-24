@@ -1,10 +1,13 @@
 /src
-release
+/release
+/.project
+/.settings
+/.pydevproject
+/dist
+/build
+/odoo.cfg
+
 *.swp
-.project
-.settings
-.pydevproject
-dist
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
