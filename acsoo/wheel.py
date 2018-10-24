@@ -14,7 +14,8 @@ from .tools import check_call, working_directory
 _logger = logging.getLogger(__name__)
 
 
-def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps):
+def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
+             exclude_project=False):
     if os.path.exists(wheel_dir):
         _logger.debug('Removing all wheels in %s.', wheel_dir)
         with working_directory(wheel_dir):
@@ -30,12 +31,13 @@ def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps):
         opts.append('--no-deps')
     check_call(['pip', 'wheel', '--src', src, '-r', 'requirements.txt',
                 '--wheel-dir', wheel_dir] + opts)
-    # TODO 'pip wheel .' is slower and sometimes buggy because of
-    #      https://github.com/pypa/pip/issues/3499
-    if os.path.exists('build'):
-        shutil.rmtree('build')
-    check_call(['python', 'setup.py', 'bdist_wheel',
-                '--dist-dir', wheel_dir] + opts)
+    if not exclude_project:
+        # TODO 'pip wheel .' is slower and sometimes buggy because of
+        #      https://github.com/pypa/pip/issues/3499
+        if os.path.exists('build'):
+            shutil.rmtree('build')
+        check_call(['python', 'setup.py', 'bdist_wheel',
+                    '--dist-dir', wheel_dir] + opts)
 
 
 @click.command(help='Build wheels for all dependencies found in '
@@ -58,8 +60,12 @@ def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps):
                    '(only looking at --find-links URLs instead)')
 @click.option('--no-deps', is_flag=True,
               help='Don\'t look for package dependencies.')
-def wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps):
-    do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps)
+@click.option('--exclude-project', is_flag=True,
+              help='Do not build current project')
+def wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
+          exclude_project=False):
+    do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
+             exclude_project)
 
 
 main.add_command(wheel)
