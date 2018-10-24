@@ -6,7 +6,7 @@ def pre_render_project(configurator):
     variables = configurator.variables
     odoo_series = variables['odoo.series']
 
-    if odoo_series in ('11.0',):
+    if odoo_series in ('11.0', '12.0'):
         python_version = 'python3'
     else:
         python_version = 'python'

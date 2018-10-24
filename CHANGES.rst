@@ -7,6 +7,7 @@ Changes
 
 - [IMP] flake8: ignore W503 and W504 by default (line break around logical
   operators)
+- [IMP] project template: Odoo 12 support
 
 1.7.1 (2018-07-15)
 ------------------
