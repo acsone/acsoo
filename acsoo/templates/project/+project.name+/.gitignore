@@ -6,6 +6,7 @@
 /dist
 /build
 /odoo.cfg
+/tmp
 
 *.swp
 
