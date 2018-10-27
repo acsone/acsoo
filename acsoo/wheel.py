@@ -1,43 +1,116 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
+# Copyright 2016-2018 ACSONE SA/NV (<http://acsone.eu>)
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
+from __future__ import print_function
+from contextlib import contextmanager
 import logging
 import os
+import re
 import shutil
+import sys
+import tempfile
 
 import click
 
+from .cache import Cache
 from .main import main
 from .tools import check_call, working_directory
 
 _logger = logging.getLogger(__name__)
 
 
-def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
-             exclude_project=False):
+def _prepare_wheel_dir(wheel_dir):
     if os.path.exists(wheel_dir):
         _logger.debug('Removing all wheels in %s.', wheel_dir)
         with working_directory(wheel_dir):
             for f in os.listdir('.'):
                 if f.endswith('.whl'):
                     os.remove(f)
-    opts = []
+    else:
+        os.makedirs(wheel_dir)
+
+
+@contextmanager
+def _get_git_reqs_from_cache(src, requirement, wheel_dir):
+    """ Parse a requirement file and fetch git references from cache.
+
+    Yield a temporary requirement file where git references
+    that could be fetched from cache are removed.
+    """
+    GITREF_RE = re.compile("^-e git.*?@([a-f0-9]{40}).*egg=(?P<egg>[^#& ]+)")
+    cache = Cache("acsoo-wheel")
+    with tempfile.NamedTemporaryFile() as tmpreq_file:
+        for req_line in requirement:
+            req_line = req_line.strip()
+            mo = GITREF_RE.match(req_line)
+            if mo:
+                filename = cache.get(req_line, wheel_dir)
+                if not filename:
+                    # not found in cache
+                    tmpdir = tempfile.mkdtemp()
+                    try:
+                        check_call([
+                            "pip",
+                            "wheel",
+                            "--wheel-dir",
+                            tmpdir,
+                            "--src",
+                            src,
+                            "--no-deps",
+                        ] + req_line.split())
+                        wheelfile = os.path.join(tmpdir, os.listdir(tmpdir)[0])
+                        assert wheelfile.endswith(".whl")
+                        cache.put(req_line, wheelfile)
+                        shutil.move(wheelfile, wheel_dir)
+                    finally:
+                        shutil.rmtree(tmpdir)
+                else:
+                    # found in cache nothing to do
+                    print(
+                        "Obtained {} from acsoo wheel cache as {}".
+                        format(req_line, filename),
+                        file=sys.stderr,
+                    )
+            else:
+                tmpreq_file.write(req_line)
+                tmpreq_file.write("\n")
+        tmpreq_file.flush()
+        yield tmpreq_file
+
+
+def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
+             exclude_project=False):
+    # pip/setup.py options
+    pip_opts = []
+    setup_opts = []
     if no_cache_dir:
-        opts.append('--no-cache-dir')
+        pip_opts.append('--no-cache-dir')
+        setup_opts.append('--no-cache-dir')
     if no_index:
-        opts.append('--no-index')
+        pip_opts.append('--no-index')
+        setup_opts.append('--no-index')
     if no_deps:
-        opts.append('--no-deps')
-    check_call(['pip', 'wheel', '--src', src, '-r', 'requirements.txt',
-                '--wheel-dir', wheel_dir] + opts)
+        pip_opts.append('--no-deps')
+    # prepare and clean wheel directory
+    _prepare_wheel_dir(wheel_dir)
+    # build requirements.txt
+    if not no_cache_dir and no_deps:
+        with _get_git_reqs_from_cache(src, requirement, wheel_dir) as tmp_req:
+            check_call(['pip', 'wheel', '--src', src,
+                        '-r', tmp_req.name,
+                        '--wheel-dir', wheel_dir] + pip_opts)
+    else:
+        check_call(['pip', 'wheel', '--src', src, '-r', requirement.name,
+                    '--wheel-dir', wheel_dir] + pip_opts)
+    # build project
     if not exclude_project:
         # TODO 'pip wheel .' is slower and sometimes buggy because of
         #      https://github.com/pypa/pip/issues/3499
         if os.path.exists('build'):
             shutil.rmtree('build')
         check_call(['python', 'setup.py', 'bdist_wheel',
-                    '--dist-dir', wheel_dir] + opts)
+                    '--dist-dir', wheel_dir] + setup_opts)
 
 
 @click.command(help='Build wheels for all dependencies found in '
