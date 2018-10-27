@@ -10,13 +10,13 @@ from .tag import do_tag
 
 
 def do_release(config, force, src, requirement, wheel_dir, yes,
-               no_cache_dir, no_index):
+               no_cache_dir, no_index, no_deps):
     if not yes:
         click.confirm('Tag and release version {}?'.format(config.version),
                       abort=True)
         yes = True
     do_tag(config, force, src, requirement, yes)
-    do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index)
+    do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps)
 
 
 @click.command(help='Perform acsoo tag, and acsoo wheel')
@@ -37,11 +37,13 @@ def do_release(config, force, src, requirement, wheel_dir, yes,
 @click.option('--no-index', is_flag=True,
               help='Ignore package index '
                    '(only looking at --find-links URLs instead)')
+@click.option('--no-deps', is_flag=True,
+              help='Don\'t look for package dependencies.')
 @click.pass_context
 def release(ctx, force, src, requirement, wheel_dir, yes,
-            no_cache_dir, no_index):
+            no_cache_dir, no_index, no_deps):
     do_release(ctx.obj['config'], force, src, requirement, wheel_dir, yes,
-               no_cache_dir, no_index)
+               no_cache_dir, no_index, no_deps)
 
 
 main.add_command(release)
