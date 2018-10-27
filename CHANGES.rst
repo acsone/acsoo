@@ -14,6 +14,9 @@ Changes
   operators)
 - [IMP] project template: Odoo 12 support
 - [IMP] project template: pin acsoo version
+- [IMP] project template: acsoo wheel --no-deps, so, combined with
+  pip install --no-index in the test stage, it verifies that all dependencies
+  are included in requirements.txt
 
 1.7.1 (2018-07-15)
 ------------------
