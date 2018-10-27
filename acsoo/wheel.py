@@ -82,35 +82,30 @@ def _get_git_reqs_from_cache(src, requirement, wheel_dir):
 def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
              exclude_project=False):
     # pip/setup.py options
-    pip_opts = []
-    setup_opts = []
+    pip_cmd = [
+        "pip",
+        "wheel",
+        "--src",
+        src,
+        "--wheel-dir",
+        wheel_dir,
+    ]
     if no_cache_dir:
-        pip_opts.append('--no-cache-dir')
-        setup_opts.append('--no-cache-dir')
+        pip_cmd.append('--no-cache-dir')
     if no_index:
-        pip_opts.append('--no-index')
-        setup_opts.append('--no-index')
+        pip_cmd.append('--no-index')
     if no_deps:
-        pip_opts.append('--no-deps')
+        pip_cmd.append('--no-deps')
+    if not exclude_project:
+        pip_cmd.extend(["-e", "."])
     # prepare and clean wheel directory
     _prepare_wheel_dir(wheel_dir)
-    # build requirements.txt
+    # pip wheel
     if not no_cache_dir and no_deps:
         with _get_git_reqs_from_cache(src, requirement, wheel_dir) as tmpreq:
-            check_call(['pip', 'wheel', '--src', src,
-                        '-r', tmpreq.name,
-                        '--wheel-dir', wheel_dir] + pip_opts)
+            check_call(pip_cmd + ["-r", tmpreq.name])
     else:
-        check_call(['pip', 'wheel', '--src', src, '-r', requirement.name,
-                    '--wheel-dir', wheel_dir] + pip_opts)
-    # build project
-    if not exclude_project:
-        # TODO 'pip wheel .' is slower and sometimes buggy because of
-        #      https://github.com/pypa/pip/issues/3499
-        if os.path.exists('build'):
-            shutil.rmtree('build')
-        check_call(['python', 'setup.py', 'bdist_wheel',
-                    '--dist-dir', wheel_dir] + setup_opts)
+        check_call(pip_cmd + ["-r", requirement.name])
 
 
 @click.command()
