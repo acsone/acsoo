@@ -113,19 +113,16 @@ def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
                     '--dist-dir', wheel_dir] + setup_opts)
 
 
-@click.command(help='Build wheels for all dependencies found in '
-                    'requirements.txt, plus the project in the current '
-                    'directory. CAUTION: all wheel files are removed from '
-                    'the target directory before building')
+@click.command()
 @click.option('--src', default='src', envvar='PIP_SRC',
-              type=click.Path(file_okay=False),
+              type=click.Path(file_okay=False), show_default=True,
               help='Directory where editable requirements are checked out')
 @click.option('-r', '--requirement', default='requirements.txt',
-              type=click.File(),
-              help='Requirements to build (default=requirements.txt)')
+              type=click.File(), show_default=True,
+              help='Requirements to build')
 @click.option('-w', '--wheel-dir', default='release',
-              type=click.Path(file_okay=False),
-              help='Path where the wheels will be created (default=release')
+              type=click.Path(file_okay=False), show_default=True,
+              help='Path where the wheels will be created')
 @click.option('--no-cache-dir', is_flag=True,
               help='Disable the pip cache')
 @click.option('--no-index', is_flag=True,
@@ -137,6 +134,17 @@ def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
               help='Do not build current project')
 def wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
           exclude_project=False):
+    """Build wheels for all dependencies found in requirements.txt,
+    plus the project in the current directory.
+
+    The main advantage of this command (compared to a regular
+    `pip wheel -r requirements.txt -e . --wheel_dir=release --src src`),
+    is that it maintains a cache of git dependencies that are pinned with
+    a sha1.
+
+    CAUTION: all wheel files are removed from the target directory before
+    building.
+    """
     do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
              exclude_project)
 
