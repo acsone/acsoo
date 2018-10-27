@@ -22,7 +22,8 @@ that can be packaged and installed with pip.
 Criteria for tools to be included here:
 
 * being small wrappers around standard commands (``git``, ``pip``, etc)
-* yet being sufficiently non-trivial to be error-prone or time consuming when done manually
+* yet being sufficiently non-trivial to be error-prone or time consuming when
+  done manually
 * being used across several Acsone Odoo projects
 
 Installation
@@ -125,7 +126,8 @@ The above command succeeds despite having exactly 2 ``api-one-deprecated`` or
 any number of ``line-too-long`` messages being reported.
 
 It is also possible to force failure on messages that are ``expected`` in the
-default configuration, eg to fail on ``fixme`` errors, just expect 0 ``fixme`` messages, like this:
+default configuration, eg to fail on ``fixme`` errors, just expect 0 ``fixme``
+messages, like this:
 
   .. code:: shell
 
@@ -155,21 +157,26 @@ errors based on regular expressions.
 
 bumpversion
 -----------
-Bumpversion is a software automatically installed with acsoo. It allows you to increment or simply change the version of the project in several files at once, including acsoo.cfg.
+Bumpversion is a software automatically installed with acsoo. It allows you to
+increment or simply change the version of the project in several files at once,
+including acsoo.cfg.
 
   .. code:: shell
 
     bumpversion {part}
 
-Where part is 'major', 'minor' or 'patch' (see `semantic versioning <http://semver.org/>`_).
+Where part is 'major', 'minor' or 'patch'
+(see `semantic versioning <http://semver.org/>`_).
 
-Configure bumpversion by editing the .bumpversion.cfg config file at the root of your project.
-See the bumpversion `documentation <https://pypi.python.org/pypi/bumpversion>`_ to go further (automatic commit, tag, customisation...).
+Configure bumpversion by editing the .bumpversion.cfg config file at the root
+of your project. See the bumpversion `documentation
+<https://pypi.python.org/pypi/bumpversion>`_ to go further
+(automatic commit, tag, customisation...).
 
 acsoo.cfg
 ~~~~~~~~~
 
-A file named ``acsoo.cfg`` at the project root helps you set sensible defaults. 
+A file named ``acsoo.cfg`` at the project root helps you set sensible defaults.
 
 Here is a minimal example:
 
@@ -195,7 +202,7 @@ And a more elaborate example:
     [checklog]
     ignore=
       WARNING .* module .*: description is empty !
-      WARNING: unable to set column .* of table account_analytic_account not null 
+      WARNING: unable to set column .* of table account_analytic_account not null
 
     [pylint]
     expected=manifest-required-author:1

@@ -27,7 +27,7 @@ Changes
 ------------------
 - [IMP] more python 3 and Odoo 11 support
 - [IMP] project template: build stage in gitlab-ci
-- [IMP] project template: new style deploy / upgrade 
+- [IMP] project template: new style deploy / upgrade
   (using checksum upgrades and click-odoo-upgrade script)
 - [IMP] project template: enforce odoo-autodiscover>=2 and do not use it
   for Odoo >= 11
@@ -51,7 +51,7 @@ Changes
   trying to write ref with non existent object
 - [IMP] tag: always tag requirements when doing acsoo tag
 - [IMP] tag: tag requirements before tagging project, so if something fails
-  when tagging the requirements the project is not tagged and the release 
+  when tagging the requirements the project is not tagged and the release
   build is not triggered.
 - [ADD] addons: add --separator option (and fix tests that were not testing much)
 - [IMP] addons: consider current dir as addons dir candidate
@@ -106,7 +106,8 @@ Changes
 ------------------
 - [IMP] flake8: read additional ``flake8-options`` in acsoo configuration file.
 - [IMP] template: series-dependent odoo command in ``.gitlab.ci.yml``.
-- [IMP] template: createdb in ``.gitlab-ci.yml`` because Odoo 8 does not do it by itself.
+- [IMP] template: createdb in ``.gitlab-ci.yml`` because Odoo 8 does not do it by
+  itself.
 - [ADD] addons list-depends: ``--exclude`` option
 
 1.2.2 (2017-05-30)
