@@ -62,3 +62,7 @@ class Cache:
         filename = filenames[0]
         shutil.copy(os.path.join(cachepath, filename), dirpath)
         return filename
+
+    def remove(self, key):
+        cachepath = self._cachepath(key)
+        shutil.rmtree(cachepath)

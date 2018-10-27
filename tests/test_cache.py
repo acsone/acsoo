@@ -36,3 +36,6 @@ def tests_cache(tmp_path):
     fname = cache.get("key2", str(outdir))
     assert fname == "f2"
     assert ["f1", "f2"] == sorted([x.name for x in outdir.iterdir()])
+
+    cache.remove("key1")
+    assert not cache.get("key1", str(outdir))
