@@ -36,11 +36,12 @@ setup(
         'GNU General Public License v3 or later (GPLv3+)',
         'Operating System :: POSIX',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Framework :: Odoo',
     ],
     setup_requires=[
-        'setuptools-git',
-        'setuptools-scm',
+        'setuptools_scm',
     ],
     entry_points='''
         [console_scripts]
