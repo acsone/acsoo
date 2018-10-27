@@ -8,7 +8,7 @@ before_script:
   - |
     function install_acsoo {
         virtualenv --python=$(which {{{ python_version }}}) venv-acsoo
-        venv-acsoo/bin/pip install acsoo
+        venv-acsoo/bin/pip install acsoo==x.y.z  # pin acsoo!
         ln -s venv-acsoo/bin/acsoo
     }
     function start_ssh_agent {
