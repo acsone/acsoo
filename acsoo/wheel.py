@@ -40,7 +40,7 @@ def _get_git_reqs_from_cache(src, requirement, wheel_dir):
     """
     GITREF_RE = re.compile("^-e git.*?@([a-f0-9]{40}).*egg=(?P<egg>[^#& ]+)")
     cache = Cache("acsoo-wheel")
-    with tempfile.NamedTemporaryFile() as tmpreq_file:
+    with tempfile.NamedTemporaryFile(mode="w") as tmpreq:
         for req_line in requirement:
             req_line = req_line.strip()
             mo = GITREF_RE.match(req_line)
@@ -73,10 +73,10 @@ def _get_git_reqs_from_cache(src, requirement, wheel_dir):
                         file=sys.stderr,
                     )
             else:
-                tmpreq_file.write(req_line)
-                tmpreq_file.write("\n")
-        tmpreq_file.flush()
-        yield tmpreq_file
+                tmpreq.write(req_line)
+                tmpreq.write("\n")
+        tmpreq.flush()
+        yield tmpreq
 
 
 def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
@@ -96,9 +96,9 @@ def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
     _prepare_wheel_dir(wheel_dir)
     # build requirements.txt
     if not no_cache_dir and no_deps:
-        with _get_git_reqs_from_cache(src, requirement, wheel_dir) as tmp_req:
+        with _get_git_reqs_from_cache(src, requirement, wheel_dir) as tmpreq:
             check_call(['pip', 'wheel', '--src', src,
-                        '-r', tmp_req.name,
+                        '-r', tmpreq.name,
                         '--wheel-dir', wheel_dir] + pip_opts)
     else:
         check_call(['pip', 'wheel', '--src', src, '-r', requirement.name,
