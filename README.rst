@@ -81,8 +81,10 @@ acsoo wheel
 Build wheels for all dependencies found in ``requirements.txt``,
 plus the project in the current directory.
 
-This is actually almost trivial (ie ``pip wheel -r requirements.txt -e .``),
-but works around a pip quirk.
+The main advantage of this command (compared to a regular
+`pip wheel -r requirements.txt -e . --wheel_dir=release --src src`),
+is that it maintains a cache of git dependencies that are pinned with
+a sha1.
 
 acsoo release
 -------------

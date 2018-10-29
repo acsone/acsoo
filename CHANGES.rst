@@ -10,6 +10,7 @@ Changes
   --find-links=release/ so as to detect missing dependencies (#38)
 - [IMP] acsoo wheel: add --exclude-project option (to build requirements.txt
   without the current project), in preparation of #44
+- [IMP] acsoo wheel: use a cache of editable git dependencies
 - [IMP] flake8: ignore W503 and W504 by default (line break around logical
   operators)
 - [IMP] project template: Odoo 12 support
