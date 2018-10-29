@@ -5,12 +5,19 @@ Changes
 .. ----------
 .. -
 
+1.8.0 (2018-10-29)
+------------------
 - [IMP] acsoo wheel: add --no-deps, so we can build requirements.txt without
   fetching dependencies, and later install the project with --no-index and
   --find-links=release/ so as to detect missing dependencies (#38)
 - [IMP] acsoo wheel: add --exclude-project option (to build requirements.txt
   without the current project), in preparation of #44
 - [IMP] acsoo wheel: use a cache of editable git dependencies
+- [IMP] acsoo wheel: use pip wheel -e . to build project instead of
+  setup.py bdist_wheel, since the reason we were doing that has apparently
+  been resolved in recent pip version (pip issue 3499 referred in a comment
+  is apparently unrelated unfortunately, so I'm not sure why we were
+  doing that exactly, probably https://github.com/pypa/pip/issues/3500)
 - [IMP] flake8: ignore W503 and W504 by default (line break around logical
   operators)
 - [IMP] project template: Odoo 12 support
