@@ -7,7 +7,7 @@ stages:
 before_script:
   - |
     function install_acsoo {
-        virtualenv --python=$(which {{{ python_version }}}) venv-acsoo
+        virtualenv --python=$PYTHON venv-acsoo
         venv-acsoo/bin/pip install acsoo==x.y.z  # pin acsoo!
         ln -s venv-acsoo/bin/acsoo
     }
@@ -30,6 +30,7 @@ after_script:
   - rm -fr ${HOME}/.local/share/Odoo/filestore/${DB_NAME}
 
 variables:
+  PYTHON: {{{ python_version }}}
   DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
 
 pylint:
@@ -76,7 +77,7 @@ test:
   script:
     - install_acsoo
     - start_ssh_agent  # for pushing translations
-    - virtualenv --python=$(which {{{ python_version }}}) venv
+    - virtualenv --python=$PYTHON venv
     - venv/bin/pip install coverage
     # use --no-index so missing dependencies that would not be in *.whl are detected
     - venv/bin/pip install --no-index release/*.whl

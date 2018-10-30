@@ -5,6 +5,9 @@ Changes
 .. ----------
 .. -
 
+- [IMP] project template: better way to declare python version
+  in .gitlab-ci.yml
+
 1.8.1 (2018-10-30)
 ------------------
 - [IMP] ignore pylint C0303 (https://github.com/PyCQA/pylint/issues/289)
