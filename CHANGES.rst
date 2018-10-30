@@ -5,6 +5,10 @@ Changes
 .. ----------
 .. -
 
+1.8.1 (2018-10-30)
+------------------
+- [IMP] ignore pylint C0303 (https://github.com/PyCQA/pylint/issues/289)
+
 1.8.0 (2018-10-29)
 ------------------
 - [IMP] acsoo wheel: add --no-deps, so we can build requirements.txt without
