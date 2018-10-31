@@ -12,10 +12,12 @@ jobs:
   include:
     - stage: linting
       python: "3.6"
-      script: tox -e pre_commit
+      script: tox
+      env: TOXENV=pre_commit
     - stage: linting
       python: "3.6"
-      script: tox -e check_readme
+      script: tox
+      env: TOXENV=check_readme
     - stage: test
       python: "2.7"
       script: tox -e py27
