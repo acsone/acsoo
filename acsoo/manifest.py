@@ -5,7 +5,7 @@
 import ast
 import os
 
-MANIFEST_NAMES = ('__openerp__.py', '__manifest__.py', '__terp__.py')
+MANIFEST_NAMES = ("__openerp__.py", "__manifest__.py", "__terp__.py")
 
 
 class NoManifestFound(Exception):
@@ -25,11 +25,7 @@ def parse_manifest(s):
 
 def get_default_addons_dirs():
     addons_dirs = []
-    candidate_addons_dirs = (
-        os.path.join('odoo', 'addons'),
-        'odoo_addons',
-        '.',
-    )
+    candidate_addons_dirs = (os.path.join("odoo", "addons"), "odoo_addons", ".")
     for addons_dir in candidate_addons_dirs:
         if os.path.isdir(addons_dir):
             addons_dirs.append(addons_dir)
@@ -55,7 +51,7 @@ def get_installable_addons(addons_dirs=None):
                 continue
             with open(manifest_path) as f:
                 manifest = parse_manifest(f.read())
-            if not manifest.get('installable', True):
+            if not manifest.get("installable", True):
                 continue
             res[addon_name] = (addon_dir, manifest)
     return res

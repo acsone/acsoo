@@ -23,4 +23,3 @@ commit = False
 
 [bumpversion:file:odoo/addons/server_environment_files/valid/valid.conf]
 {{% endif %}}
-

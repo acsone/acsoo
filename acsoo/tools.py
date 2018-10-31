@@ -15,14 +15,14 @@ _logger = logging.getLogger(__name__)
 
 
 def _escape(s):
-    s = s.replace('\\', '\\\\')
+    s = s.replace("\\", "\\\\")
     s = s.replace('"', '\\"')
-    s = s.replace('\'', '\\\'')
-    s = s.replace('&', '\\&')
-    s = s.replace('|', '\\|')
-    s = s.replace('>', '\\>')
-    s = s.replace('<', '\\<')
-    s = s.replace(' ', '\\ ')
+    s = s.replace("'", "\\'")
+    s = s.replace("&", "\\&")
+    s = s.replace("|", "\\|")
+    s = s.replace(">", "\\>")
+    s = s.replace("<", "\\<")
+    s = s.replace(" ", "\\ ")
     return s
 
 
@@ -34,7 +34,7 @@ def log_cmd(cmd, cwd=None, level=logging.DEBUG, echo=False):
     s = cmd_string(cmd)
     if echo:
         click.echo(click.style(s, bold=True))
-    _logger.log(level, '%s$ %s', cwd or '.', s)
+    _logger.log(level, "%s$ %s", cwd or ".", s)
 
 
 def call(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
@@ -56,13 +56,14 @@ def check_call(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
 
 
 def check_output(
-        cmd, cwd=None, log_level=logging.DEBUG, echo=False,
-        universal_newlines=True):
+    cmd, cwd=None, log_level=logging.DEBUG, echo=False, universal_newlines=True
+):
     _adapt_executable(cmd)
     log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
     try:
         return subprocess.check_output(
-            cmd, cwd=cwd, universal_newlines=universal_newlines)
+            cmd, cwd=cwd, universal_newlines=universal_newlines
+        )
     except subprocess.CalledProcessError:
         raise click.ClickException(cmd_string(cmd))
 
@@ -73,12 +74,12 @@ def working_directory(path):
     path, and then changes it back to its previous value on exit.
     """
     prev_cwd = os.getcwd()
-    _logger.debug('.$ cd %s', _escape(path))
+    _logger.debug(".$ cd %s", _escape(path))
     os.chdir(path)
     try:
         yield
     finally:
-        _logger.debug('.$ cd %s', _escape(prev_cwd))
+        _logger.debug(".$ cd %s", _escape(prev_cwd))
         os.chdir(prev_cwd)
 
 
@@ -94,8 +95,8 @@ def _find_executable(exe):
     exe_path = _fe(exe)
     if exe_path:
         return exe_path
-    raise RuntimeError("%s executable not found" % (exe, ))
+    raise RuntimeError("{} executable not found".format(exe))
 
 
 def cfg_path(filename):
-    return os.path.join(os.path.dirname(__file__), 'cfg', filename)
+    return os.path.join(os.path.dirname(__file__), "cfg", filename)

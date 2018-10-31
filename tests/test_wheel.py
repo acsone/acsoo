@@ -15,11 +15,7 @@ def test_wheel(mocker, tmp_path):
     # mock appdirs.user_cache_dir, so the cache
     # goes to a known place
     cachedir = tmp_path / "cache"
-    mocker.patch.object(
-        appdirs,
-        "user_cache_dir",
-        lambda: str(cachedir),
-    )
+    mocker.patch.object(appdirs, "user_cache_dir", lambda: str(cachedir))
     runner = CliRunner()
     with runner.isolated_filesystem():
         with open("requirements.txt", "w") as f:
@@ -29,10 +25,7 @@ def test_wheel(mocker, tmp_path):
                 "@45e1fb80f7c24d4e13aab4b15b241f24cb07fc23"
                 "#egg=acsoo\n"
             )
-        res = runner.invoke(wheel, [
-            "--no-deps",
-            "--exclude-project",
-        ])
+        res = runner.invoke(wheel, ["--no-deps", "--exclude-project"])
         assert res.exit_code == 0
         # acsoo wheel must be in cache
         cache_content = list(cachedir.glob("**/acsoo*.whl"))
@@ -45,10 +38,7 @@ def test_wheel(mocker, tmp_path):
 
         # run it again
         shutil.rmtree("release")
-        res = runner.invoke(wheel, [
-            "--no-deps",
-            "--exclude-project",
-        ])
+        res = runner.invoke(wheel, ["--no-deps", "--exclude-project"])
         assert res.exit_code == 0
         assert "Obtained -e git+https://github.com/acsone/acsoo" in res.output
         files = sorted(os.listdir("release"))

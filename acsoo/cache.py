@@ -6,7 +6,6 @@ import errno
 import hashlib
 import os
 import shutil
-import textwrap
 
 import appdirs
 
@@ -17,21 +16,16 @@ class Cache:
         if not os.path.exists(self.cachedir):
             os.makedirs(self.cachedir)
             with open(os.path.join(self.cachedir, "CACHEDIR.TAG"), "w") as f:
-                f.write(textwrap.dedent("""\
-                    Signature: 8a477f597d28d172789f06886806bc55
-                    # This file is a cache directory tag created by 'acsoo'.
-                    # For information about cache directory tags, see:
-                    #	http://www.brynosaurus.com/cachedir/
-                """))
+                f.write(
+                    "Signature: 8a477f597d28d172789f06886806bc55\n"
+                    "# This file is a cache directory tag created by 'acsoo'.\n"
+                    "# For information about cache directory tags, see:\n"
+                    "#	http://www.brynosaurus.com/cachedir/\n"
+                )
 
     def _cachepath(self, key):
         hashed = hashlib.sha224(key.encode()).hexdigest()
-        parts = [self.cachedir] + [
-            hashed[:2],
-            hashed[2:4],
-            hashed[4:6],
-            hashed[6:],
-        ]
+        parts = [self.cachedir] + [hashed[:2], hashed[2:4], hashed[4:6], hashed[6:]]
         return os.path.join(*parts)
 
     def put(self, key, filepath):

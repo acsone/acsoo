@@ -3,34 +3,34 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import logging
-from pkg_resources import get_distribution, DistributionNotFound
 
 import click
+from pkg_resources import DistributionNotFound, get_distribution
 
 from .config import AcsooConfig
 
 try:
-    __version__ = get_distribution('acsoo').version
+    __version__ = get_distribution("acsoo").version
 except DistributionNotFound:
     # package is not installed
     pass
 
-__notice__ = '''%(prog)s, version %(version)s
+__notice__ = """%(prog)s, version %(version)s
 
 Acsone Odoo Development Tools.
 
 Copyright 2016-2017 ACSONE SA/NV (<http://acsone.eu>)
-License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).'''
+License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html)."""
 
 
 class ColoredFormatter(logging.Formatter):
 
     COLORS = {
-        'DEBUG': dict(dim=True),
-        'INFO': dict(),
-        'WARNING': dict(fg='yellow'),
-        'ERROR': dict(fg='red'),
-        'CRITICAL': dict(fg='white', bg='red'),
+        "DEBUG": dict(dim=True),
+        "INFO": dict(),
+        "WARNING": dict(fg="yellow"),
+        "ERROR": dict(fg="red"),
+        "CRITICAL": dict(fg="white", bg="red"),
     }
 
     def format(self, record):
@@ -40,9 +40,13 @@ class ColoredFormatter(logging.Formatter):
 
 @click.group()
 @click.version_option(version=__version__, message=__notice__)
-@click.option('-v', '--verbose', count=True)
-@click.option('-c', '--config', type=click.Path(dir_okay=False, exists=True),
-              help="Configuration file (default: ./acsoo.cfg).")
+@click.option("-v", "--verbose", count=True)
+@click.option(
+    "-c",
+    "--config",
+    type=click.Path(dir_okay=False, exists=True),
+    help="Configuration file (default: ./acsoo.cfg).",
+)
 @click.pass_context
 def main(ctx, verbose, config):
     config = AcsooConfig(config)

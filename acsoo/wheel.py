@@ -3,13 +3,14 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 from __future__ import print_function
-from contextlib import contextmanager
+
 import logging
 import os
 import re
 import shutil
 import sys
 import tempfile
+from contextlib import contextmanager
 
 import click
 
@@ -22,10 +23,10 @@ _logger = logging.getLogger(__name__)
 
 def _prepare_wheel_dir(wheel_dir):
     if os.path.exists(wheel_dir):
-        _logger.debug('Removing all wheels in %s.', wheel_dir)
+        _logger.debug("Removing all wheels in %s.", wheel_dir)
         with working_directory(wheel_dir):
-            for f in os.listdir('.'):
-                if f.endswith('.whl'):
+            for f in os.listdir("."):
+                if f.endswith(".whl"):
                     os.remove(f)
     else:
         os.makedirs(wheel_dir)
@@ -50,15 +51,18 @@ def _get_git_reqs_from_cache(src, requirement, wheel_dir):
                     # not found in cache
                     tmpdir = tempfile.mkdtemp()
                     try:
-                        check_call([
-                            "pip",
-                            "wheel",
-                            "--wheel-dir",
-                            tmpdir,
-                            "--src",
-                            src,
-                            "--no-deps",
-                        ] + req_line.split())
+                        check_call(
+                            [
+                                "pip",
+                                "wheel",
+                                "--wheel-dir",
+                                tmpdir,
+                                "--src",
+                                src,
+                                "--no-deps",
+                            ]
+                            + req_line.split()
+                        )
                         wheelfile = os.path.join(tmpdir, os.listdir(tmpdir)[0])
                         assert wheelfile.endswith(".whl")
                         cache.put(req_line, wheelfile)
@@ -68,8 +72,9 @@ def _get_git_reqs_from_cache(src, requirement, wheel_dir):
                 else:
                     # found in cache nothing to do
                     print(
-                        "Obtained {} from acsoo wheel cache as {}".
-                        format(req_line, filename),
+                        "Obtained {} from acsoo wheel cache as {}".format(
+                            req_line, filename
+                        ),
                         file=sys.stderr,
                     )
             else:
@@ -79,23 +84,17 @@ def _get_git_reqs_from_cache(src, requirement, wheel_dir):
         yield tmpreq
 
 
-def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
-             exclude_project=False):
+def do_wheel(
+    src, requirement, wheel_dir, no_cache_dir, no_index, no_deps, exclude_project=False
+):
     # pip/setup.py options
-    pip_cmd = [
-        "pip",
-        "wheel",
-        "--src",
-        src,
-        "--wheel-dir",
-        wheel_dir,
-    ]
+    pip_cmd = ["pip", "wheel", "--src", src, "--wheel-dir", wheel_dir]
     if no_cache_dir:
-        pip_cmd.append('--no-cache-dir')
+        pip_cmd.append("--no-cache-dir")
     if no_index:
-        pip_cmd.append('--no-index')
+        pip_cmd.append("--no-index")
     if no_deps:
-        pip_cmd.append('--no-deps')
+        pip_cmd.append("--no-deps")
     if not exclude_project:
         pip_cmd.extend(["-e", "."])
     # prepare and clean wheel directory
@@ -109,26 +108,41 @@ def do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
 
 
 @click.command()
-@click.option('--src', default='src', envvar='PIP_SRC',
-              type=click.Path(file_okay=False), show_default=True,
-              help='Directory where editable requirements are checked out')
-@click.option('-r', '--requirement', default='requirements.txt',
-              type=click.File(), show_default=True,
-              help='Requirements to build')
-@click.option('-w', '--wheel-dir', default='release',
-              type=click.Path(file_okay=False), show_default=True,
-              help='Path where the wheels will be created')
-@click.option('--no-cache-dir', is_flag=True,
-              help='Disable the pip cache')
-@click.option('--no-index', is_flag=True,
-              help='Ignore package index '
-                   '(only looking at --find-links URLs instead)')
-@click.option('--no-deps', is_flag=True,
-              help='Don\'t look for package dependencies.')
-@click.option('--exclude-project', is_flag=True,
-              help='Do not build current project')
-def wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
-          exclude_project=False):
+@click.option(
+    "--src",
+    default="src",
+    envvar="PIP_SRC",
+    type=click.Path(file_okay=False),
+    show_default=True,
+    help="Directory where editable requirements are checked out",
+)
+@click.option(
+    "-r",
+    "--requirement",
+    default="requirements.txt",
+    type=click.File(),
+    show_default=True,
+    help="Requirements to build",
+)
+@click.option(
+    "-w",
+    "--wheel-dir",
+    default="release",
+    type=click.Path(file_okay=False),
+    show_default=True,
+    help="Path where the wheels will be created",
+)
+@click.option("--no-cache-dir", is_flag=True, help="Disable the pip cache")
+@click.option(
+    "--no-index",
+    is_flag=True,
+    help="Ignore package index " "(only looking at --find-links URLs instead)",
+)
+@click.option("--no-deps", is_flag=True, help="Don't look for package dependencies.")
+@click.option("--exclude-project", is_flag=True, help="Do not build current project")
+def wheel(
+    src, requirement, wheel_dir, no_cache_dir, no_index, no_deps, exclude_project=False
+):
     """Build wheels for all dependencies found in requirements.txt,
     plus the project in the current directory.
 
@@ -140,8 +154,9 @@ def wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
     CAUTION: all wheel files are removed from the target directory before
     building.
     """
-    do_wheel(src, requirement, wheel_dir, no_cache_dir, no_index, no_deps,
-             exclude_project)
+    do_wheel(
+        src, requirement, wheel_dir, no_cache_dir, no_index, no_deps, exclude_project
+    )
 
 
 main.add_command(wheel)

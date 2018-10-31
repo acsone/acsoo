@@ -3,13 +3,12 @@
 # License GPL-3.0 or later (http://www.gnu.org/licenses/gpl.html).
 
 import os
-from configparser import RawConfigParser, NoOptionError, NoSectionError
+from configparser import NoOptionError, NoSectionError, RawConfigParser
 
 import click
 
-
-DEFAULT_CONFIG_FILE = 'acsoo.cfg'
-SECTION = 'acsoo'
+DEFAULT_CONFIG_FILE = "acsoo.cfg"
+SECTION = "acsoo"
 
 
 def _split_multiline(s):
@@ -27,8 +26,9 @@ class AcsooConfig(object):
             filename = DEFAULT_CONFIG_FILE
         if filename:
             if not os.path.isfile(filename):
-                raise click.ClickException("Configuration file {} not found.".
-                                           format(filename))
+                raise click.ClickException(
+                    "Configuration file {} not found.".format(filename)
+                )
             self.__cfgfile = filename
             self.__cfg.read(filename)
 
@@ -44,36 +44,34 @@ class AcsooConfig(object):
 
     @property
     def series(self):
-        r = self.__cfg.get(SECTION, 'series')
+        r = self.__cfg.get(SECTION, "series")
         if not r:
-            raise click.ClickException('Missing series in {}.'.
-                                       format(self.__cfgfile))
-        if r not in ('8.0', '9.0', '10.0', '11.0'):
-            raise click.ClickException('Unsupported series {} in {}.'.
-                                       format(r, self.__cfgfile))
+            raise click.ClickException("Missing series in {}.".format(self.__cfgfile))
+        if r not in ("8.0", "9.0", "10.0", "11.0", "12.0"):
+            raise click.ClickException(
+                "Unsupported series {} in {}.".format(r, self.__cfgfile)
+            )
         return r
 
     @property
     def version(self):
-        r = self.__cfg.get(SECTION, 'version')
+        r = self.__cfg.get(SECTION, "version")
         if not r:
-            raise click.ClickException('Missing version in {}.'.
-                                       format(self.__cfgfile))
+            raise click.ClickException("Missing version in {}.".format(self.__cfgfile))
         return r
 
     @property
     def trigram(self):
-        r = self.__cfg.get(SECTION, 'trigram')
+        r = self.__cfg.get(SECTION, "trigram")
         if not r:
-            raise click.ClickException('Missing trigram in {}.'.
-                                       format(self.__cfgfile))
+            raise click.ClickException("Missing trigram in {}.".format(self.__cfgfile))
         return r
 
     @property
     def pushable(self):
-        r = self.getlist(SECTION, 'pushable')
+        r = self.getlist(SECTION, "pushable")
         if not r:
-            return ['github.com:acsone']
+            return ["github.com:acsone"]
         else:
             return r
 
@@ -81,7 +79,7 @@ class AcsooConfig(object):
         try:
             r = self.__cfg.get(section, option)
             if flatten:
-                r = ''.join(_split_multiline(r))
+                r = "".join(_split_multiline(r))
             return r
         except (NoOptionError, NoSectionError):
             return default
