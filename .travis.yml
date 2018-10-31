@@ -1,29 +1,48 @@
 language: python
 
-python:
-  - "2.7"
-  - "3.5"
-  - "3.6"
+cache: pip
+
+stages:
+  - name: linting
+  - name: test
+  - name: deploy
+    if: tag IS present
+
+jobs:
+  include:
+    - stage: linting
+      python: "3.6"
+      script: tox -e pre_commit
+    - stage: linting
+      python: "3.6"
+      script: tox -e check_readme
+    - stage: test
+      python: "2.7"
+      script: tox -e py27
+    - stage: test
+      python: "3.5"
+      script: tox -e py35
+    - stage: test
+      python: "3.6"
+      script: tox -e py36
+    - stage: deploy
+      script: echo "Deploy to PyPi"
+      deploy:
+        provider: pypi
+        user: acsbidoul
+        password:
+          secure: "jpLR7wBigKzvVqzZOmKffBWrobw59bh97DFImTRcHmVLysLlIiy//BKSH6l9KM/Ef+sjJAzK6HTkkWyLu5WdBDl7Y/j68WrazNnJciFU/pXaDg37vvBXXkxBy23wg1G5gtdC6hbDixPoMeTHFpuJjNwj5bf+9kD+F+BZsCTGI3PhSxUmB3QwdKpwj6r08f5pAz/HlN78yl4W/JlDVg/PbKxpldcfV75KbR7diMjpC6QFCTOsT1h/9BOjhMDp9tWAZ04uhca7tfC9Mz4Z3ejUbv2kNkrIBVdpi0R7p7InW4tGbuYDfdAOB1gCtd+34PmpBtEaoB2rIleXr62IMLNrb2EZ8ErOCGm1gekZzoLFLyelmNv1iwZqQkO9H7FDWv8eOUW2/9vkt3wGPDaAFz4dgPWJDB9qhVk+hmTGvir1FXpr3XYSQ9oRCIfTPUzjCgcVdIVZ2UlC8e3Dn9xKBSVIQIQoq7+tg31k67gIYMadek+Fx2IxyBVA9XKfZXMt5Z270v34Mc1xqx7ZpTXbWnqHUkrFCXjDaXRaGdsbG6O+J5iS/W9vPluNTggRlOeFRZHIAT67tc6pLkNgL6kcK9VGqc9TcjU8/FXCVr1HUi0hEo46m4Y90yS3DWCBNXBncpCyy2vaa2x+LBQhB7v9mzsspOSIgw7ZHFjwUV5Lbmp6A20="
+        distributions: "sdist bdist_wheel"
+        skip_upload_docs: true
+        on:
+          repo: acsone/acsoo
+          branch: master
+          tags: true
+          python: "2.7"
 
 install:
   - pip install tox-travis
   - pip install codecov
 
-script:
-  - tox
-
 after_success:
   - codecov
-
-deploy:
-  provider: pypi
-  user: acsbidoul
-  password:
-    secure: "jpLR7wBigKzvVqzZOmKffBWrobw59bh97DFImTRcHmVLysLlIiy//BKSH6l9KM/Ef+sjJAzK6HTkkWyLu5WdBDl7Y/j68WrazNnJciFU/pXaDg37vvBXXkxBy23wg1G5gtdC6hbDixPoMeTHFpuJjNwj5bf+9kD+F+BZsCTGI3PhSxUmB3QwdKpwj6r08f5pAz/HlN78yl4W/JlDVg/PbKxpldcfV75KbR7diMjpC6QFCTOsT1h/9BOjhMDp9tWAZ04uhca7tfC9Mz4Z3ejUbv2kNkrIBVdpi0R7p7InW4tGbuYDfdAOB1gCtd+34PmpBtEaoB2rIleXr62IMLNrb2EZ8ErOCGm1gekZzoLFLyelmNv1iwZqQkO9H7FDWv8eOUW2/9vkt3wGPDaAFz4dgPWJDB9qhVk+hmTGvir1FXpr3XYSQ9oRCIfTPUzjCgcVdIVZ2UlC8e3Dn9xKBSVIQIQoq7+tg31k67gIYMadek+Fx2IxyBVA9XKfZXMt5Z270v34Mc1xqx7ZpTXbWnqHUkrFCXjDaXRaGdsbG6O+J5iS/W9vPluNTggRlOeFRZHIAT67tc6pLkNgL6kcK9VGqc9TcjU8/FXCVr1HUi0hEo46m4Y90yS3DWCBNXBncpCyy2vaa2x+LBQhB7v9mzsspOSIgw7ZHFjwUV5Lbmp6A20="
-  distributions: "sdist bdist_wheel"
-  skip_upload_docs: true
-  on:
-    repo: acsone/acsoo
-    branch: master
-    tags: true
-    python: 2.7
