@@ -5,8 +5,11 @@ Changes
 .. ----------
 .. -
 
+1.8.2 (2018-11-05)
+------------------
 - [IMP] project template: better way to declare python version
   in .gitlab-ci.yml
+- Fix acsoo tag for Odoo 12
 
 1.8.1 (2018-10-30)
 ------------------
