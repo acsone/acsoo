@@ -27,7 +27,7 @@ subprocess.check_call([
         rm -f venv
         ln -s venv-{VERSION} venv
         for db in $(cat DATABASES) ; do
-            venv/bin/click-odoo-upgrade -c odoo.cfg -d $db --i18n-overwrite 2>&1 | tee upgrade-logs/upgrade-$VERSION-$db.log
+            venv/bin/click-odoo-update -c odoo.cfg -d $db --i18n-overwrite 2>&1 | tee upgrade-logs/upgrade-$VERSION-$db.log
         done
         ./maintenance_stop
         EOF

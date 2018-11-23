@@ -5,6 +5,8 @@ Changes
 .. ----------
 .. -
 
+- [IMP] project template: use click-odoo-update
+
 1.8.2 (2018-11-05)
 ------------------
 - [IMP] project template: better way to declare python version
