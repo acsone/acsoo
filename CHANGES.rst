@@ -5,6 +5,8 @@ Changes
 .. ----------
 .. -
 
+1.8.3 (2019-01-22)
+------------------
 - [FIX] acsoo pytlint: Adapt config to also work with pytlint-odoo 2.0.1
 - [IMP] project template: use click-odoo-update
 
