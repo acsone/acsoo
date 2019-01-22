@@ -5,6 +5,7 @@ Changes
 .. ----------
 .. -
 
+- [FIX] acsoo pytlint: Adapt config to also work with pytlint-odoo 2.0.1
 - [IMP] project template: use click-odoo-update
 
 1.8.2 (2018-11-05)
