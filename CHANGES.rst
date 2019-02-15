@@ -5,6 +5,11 @@ Changes
 .. ----------
 .. -
 
+1.9.0 (unreleased)
+------------------
+
+- [IMP] project template: use pre-commit (black, isort, flake8)
+
 1.8.3 (2019-01-22)
 ------------------
 - [FIX] acsoo pytlint: Adapt config to also work with pytlint-odoo 2.0.1

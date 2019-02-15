@@ -11,6 +11,11 @@ before_script:
         venv-acsoo/bin/pip install acsoo==x.y.z  # pin acsoo!
         ln -s venv-acsoo/bin/acsoo
     }
+    function install_pre_commit {
+        virtualenv --python=$PYTHON venv-pre-commit
+        venv-pre-commit/bin/pip install pre-commit
+        ln -s venv-pre-commit/bin/pre-commit
+    }
     function start_ssh_agent {
         eval $(ssh-agent -s)
         ssh-add <(echo "$SSH_DEPLOY_KEY")
@@ -41,13 +46,13 @@ pylint:
     - install_acsoo
     - ./acsoo pylint
 
-flake8:
+pre-commit:
   stage: code quality
   tags:
     - python
   script:
-    - install_acsoo
-    - ./acsoo flake8
+    - install_pre_commit
+    - ./pre-commit run --all-files
 
 build:
   stage: build
