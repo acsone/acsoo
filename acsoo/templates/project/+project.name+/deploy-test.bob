@@ -20,7 +20,7 @@ subprocess.check_call([
     'ssh', HOST,
     textwrap.dedent("""\
         sudo -u {USER} -H -s <<'EOF'
-        set -ex
+        set -ex -o pipefail
         cd /home/{USER}/instance
         ./installvenv {VERSION}
         ./maintenance_start
