@@ -4,11 +4,11 @@
 
 import logging
 import sys
+from configparser import ConfigParser
 
 import click
 import pkg_resources
 import pylint.lint
-from configparser import ConfigParser
 
 from .config import AcsooConfig
 from .main import main
