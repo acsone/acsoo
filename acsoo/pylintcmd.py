@@ -7,6 +7,7 @@ import sys
 from configparser import ConfigParser
 
 import click
+import pkg_resources
 import pylint.lint
 
 from .config import AcsooConfig
@@ -93,7 +94,12 @@ def do_pylintcmd(load_plugins, rcfile, module, expected, pylint_options):
         + list(module)
     )
     log_cmd(["pylint"] + cmd, level=logging.INFO)
-    lint_res = pylint.lint.Run(cmd[:], exit=False)
+    if pkg_resources.get_distribution(
+        "pylint"
+    ).parsed_version >= pkg_resources.parse_version("2.0"):
+        lint_res = pylint.lint.Run(cmd[:], do_exit=False)  # pylint2
+    else:
+        lint_res = pylint.lint.Run(cmd[:], exit=False)  # pylint1
     sys.stdout.flush()
     sys.stderr.flush()
     expected = _consolidate_expected(rcfile, expected)
