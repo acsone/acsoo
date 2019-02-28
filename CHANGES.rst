@@ -5,14 +5,17 @@ Changes
 .. ----------
 .. -
 
-1.9.0 (unreleased)
+1.9.0 (2019-02-28)
 ------------------
 
 - [IMP] project template: use pre-commit (black, isort, flake8)
+- [FIX] project template: fail on click-odoo-update error
+- [FIX] project template: fix deploy log file
+- [FIX] acsoo pylint: compatibility with pylint 2
 
 1.8.3 (2019-01-22)
 ------------------
-- [FIX] acsoo pytlint: Adapt config to also work with pytlint-odoo 2.0.1
+- [FIX] acsoo pylint: Adapt config to also work with pytlint-odoo 2.0.1
 - [IMP] project template: use click-odoo-update
 
 1.8.2 (2018-11-05)
