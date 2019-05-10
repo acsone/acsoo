@@ -24,7 +24,7 @@ Install everything
    pip install --src src -r requirements.txt -e .
 
 Only when there is a need to refresh the frozen dependencies,
-review ``gitaggregate.yaml`` and ``requirements-dev.txt``, then
+review ``gitaggregate.yaml`` and ``requirements.txt.in``, then
 run:
 
 .. code:: bash
@@ -32,7 +32,7 @@ run:
    gitaggregate -c gitaggregate.yaml -p
    rmvirtualenv odoo-{{{ project.name }}}
    mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which {{{ python_version }}})
-   pip install --src src --pre -r requirements-dev.txt
+   pip install --src src --pre -r requirements.txt.in
    ./freeze.sh
    git commit requirements.txt
 
