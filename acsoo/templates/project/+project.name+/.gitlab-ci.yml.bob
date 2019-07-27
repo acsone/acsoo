@@ -42,9 +42,13 @@ pre-commit:
   stage: code quality
   tags:
     - python
+  cache:
+    key: pre-commit
+    paths:
+    - .pre-commit
   script:
     - install_pre_commit
-    - ./pre-commit run --all-files
+    - PRE_COMMIT_HOME=$PWD/.pre-commit ./pre-commit run --all-files
 
 build:
   stage: build
