@@ -38,14 +38,6 @@ variables:
   PYTHON: {{{ python_version }}}
   DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
 
-pylint:
-  stage: code quality
-  tags:
-    - python
-  script:
-    - install_acsoo
-    - ./acsoo pylint
-
 pre-commit:
   stage: code quality
   tags:

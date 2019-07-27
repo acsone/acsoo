@@ -95,6 +95,9 @@ Perform ``acsoo tag``, ``acsoo tag_requirements`` and
 acsoo flake8
 ------------
 
+**This command is deprecated, use a .flake8 file in your project,
+in combination with pre-commit. See the project template for a reasonable default.**
+
 Run `flake8 <https://pypi.python.org/pypi/flake8>`_ with sensible default for Odoo code.
 
 It is possible to pass additional options to the ``flake8`` command, eg:
@@ -105,6 +108,9 @@ It is possible to pass additional options to the ``flake8`` command, eg:
 
 acsoo pylint
 ------------
+
+**This command is deprecated, use a .pylintrc file in your project,
+in combination with pre-commit. See the project template for a reasonable default.**
 
 Run `pylint <https://pypi.python.org/pypi/pylint>`_ on detected Odoo addons in odoo/addons,
 odoo_addons or the current directory.
@@ -159,6 +165,7 @@ errors based on regular expressions.
 
 bumpversion
 -----------
+
 Bumpversion is a software automatically installed with acsoo. It allows you to
 increment or simply change the version of the project in several files at once,
 including acsoo.cfg.
