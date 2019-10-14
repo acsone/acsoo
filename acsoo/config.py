@@ -47,7 +47,7 @@ class AcsooConfig(object):
         r = self.__cfg.get(SECTION, "series")
         if not r:
             raise click.ClickException("Missing series in {}.".format(self.__cfgfile))
-        if r not in ("8.0", "9.0", "10.0", "11.0", "12.0"):
+        if r not in ("8.0", "9.0", "10.0", "11.0", "12.0", "13.0"):
             raise click.ClickException(
                 "Unsupported series {} in {}.".format(r, self.__cfgfile)
             )
