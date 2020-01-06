@@ -38,21 +38,17 @@ variables:
   PYTHON: {{{ python_version }}}
   DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
 
-pylint:
-  stage: code quality
-  tags:
-    - python
-  script:
-    - install_acsoo
-    - ./acsoo pylint
-
 pre-commit:
   stage: code quality
   tags:
     - python
+  cache:
+    key: pre-commit
+    paths:
+    - .pre-commit
   script:
     - install_pre_commit
-    - ./pre-commit run --all-files
+    - PRE_COMMIT_HOME=$PWD/.pre-commit ./pre-commit run --all-files
 
 build:
   stage: build
@@ -96,10 +92,16 @@ test:
     # and the server_environment tests require a very specific server_environment_files
     - ADDONS_TEST=$(./acsoo addons --exclude server_environment_files list)
     - echo Testing ${ADDONS_TEST}
-    - unbuffer venv/bin/coverage run venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_TEST} --test-enable | ./acsoo checklog
+    - unbuffer venv/bin/coverage run --branch venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_TEST} --test-enable | ./acsoo checklog
+    - venv/bin/coverage html
     - venv/bin/coverage report
     - if [ "${CI_COMMIT_REF_NAME}" = "master" ] ; then makepot ; fi
-  coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+\%)/'
+  coverage: '/TOTAL\s+\d+\s+\d+\s+\d+\s+\d+\s+(\d+\%)/'
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - htmlcov/
+    name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-coverage-html"
   dependencies:
     - build
 

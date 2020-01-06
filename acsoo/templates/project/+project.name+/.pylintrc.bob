@@ -1,0 +1,109 @@
+[MASTER]
+
+load-plugins=pylint_odoo
+
+ignore=
+
+[MESSAGES CONTROL]
+
+# Only show warnings with the listed confidence levels. Leave empty to show
+# all. Valid levels: HIGH, INFERENCE, INFERENCE_FAILURE, UNDEFINED
+confidence=
+
+# Enable the message, report, category or checker with the given id(s). You can
+# either give multiple identifier separated by comma (,) or put this option
+# multiple time. See also the "--disable" option for examples.
+enable=all
+
+# Disable the message, report, category or checker with the given id(s). You
+# can either give multiple identifiers separated by comma (,) or put this
+# option multiple times (only on the command line, not in the configuration
+# file where it should appear only once).You can also use "--disable=all" to
+# disable everything first and then reenable specific checks. For example, if
+# you want to run only the similarities checker, you can use "--disable=all
+# --enable=similarities". If you want to run only the classes checker, but have
+# no Warning level messages displayed, use"--disable=all --enable=classes
+# --disable=W"
+disable=
+  access-member-before-definition,
+  attribute-defined-outside-init,
+  bare-except,
+  duplicate-code,
+  import-error,
+  invalid-name,
+  missing-docstring,
+  missing-newline-extrafiles,
+  missing-readme,
+  no-init,
+  no-member,
+  no-name-in-module,
+  no-self-use,
+  protected-access,
+  suppressed-message,
+  too-few-public-methods,
+  too-many-arguments,
+  too-many-boolean-expressions,
+  too-many-branches,
+  too-many-function-args,
+  too-many-instance-attributes,
+  too-many-lines,
+  too-many-locals,
+  too-many-nested-blocks,
+  too-many-public-methods,
+  too-many-return-statements,
+  too-many-statements,
+  unused-argument,
+  C0330,
+  attribute-string-redundant,
+  fixme,
+  locally-disabled,
+
+extension-pkg-whitelist=lxml
+
+[REPORTS]
+
+# Set the output format. Available formats are text, parseable, colorized, msvs
+# (visual studio) and html. You can also give a reporter class, eg
+# mypackage.mymodule.MyReporterClass.
+output-format=colorized
+
+# Tells whether to display a full report or only the messages
+reports=no
+
+# Template used to display messages. This is a python new-style format string
+# used to format the message information. See doc for all details
+msg-template={path}:{line}:{column}: {msg_id} {msg} ({symbol})
+
+[ODOOLINT]
+
+valid_odoo_versions={{{ odoo.series }}}
+
+# URL of README.rst template file
+readme_template_url=https://github.com/OCA/maintainer-tools/blob/master/template/module/README.rst
+
+# List of extension files to check separated by a comma.
+extfiles_to_lint=xml,csv,po,js,mako
+
+# Name of author required in manifest file.
+manifest_required_authors=ACSONE SA/NV
+
+# List of keys required in manifest file, separated by a comma.
+manifest_required_keys=license,author
+
+# List of keys deprecated in manifest file, separated by a comma.
+manifest_deprecated_keys=
+
+# List of license allowed in manifest file, separated by a comma.
+license_allowed=AGPL-3,LGPL-3,Other proprietary
+
+# List of attributes deprecated, separated by a comma.
+attribute_deprecated=_columns,_defaults
+
+# List of methods where call to `super` is required.separated by a comma.
+method_required_super=create,write,read,unlink,copy,setUp,setUpClass,tearDown,default_get
+
+# Regex to check version format in manifest file
+manifest_version_format=(\d+.\d+.\d+.\d+.\d+)
+
+# List of cursor expr separated by a comma.
+cursor_expr=self.env.cr,self._cr,self.cr,cr
