@@ -5,6 +5,17 @@ Changes
 .. ----------
 .. -
 
+- [IMP] project template: publish html coverage in gitlab-ci
+- [IMP] project template: branch coverage in gitlab-ci
+- [IMP] project template: pre-commit cache in gitlab-ci
+- [DEL] deprecate acsoo pylint in favor of pre-commit and per project .pylintrc
+- [IMP] Odoo 13 support
+- [IMP] project template: rename requirements-dev.txt to requirements.txt.in,
+  better reflecting that these are input requirements and not requirements
+  for the development environment
+- [IMP] project template: update copyright year
+- [IMP] project template: remove module_auto_update, use click-odoo-update instead
+
 1.9.0 (2019-02-28)
 ------------------
 
