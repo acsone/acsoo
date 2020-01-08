@@ -51,7 +51,7 @@ Release
 First make sure you have been testing using the correct dependencies by
 running ``./freeze.sh`` and checking there is no change in ``requirements.txt``.
 
-To relase using gitlab-ci
+To release using gitlab-ci
 .........................
 
 - run acsoo tag, the deploy to the test environment will be automatic, and
