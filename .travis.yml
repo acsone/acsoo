@@ -29,6 +29,7 @@ jobs:
       script: tox -e py36
     - stage: deploy
       script: echo "Deploy to PyPi"
+      python: "3.7"
       deploy:
         provider: pypi
         user: acsbidoul
@@ -40,7 +41,6 @@ jobs:
           repo: acsone/acsoo
           branch: master
           tags: true
-          python: "2.7"
 
 install:
   - pip install tox-travis
