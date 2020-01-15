@@ -5,6 +5,9 @@ Changes
 .. ----------
 .. -
 
+2.0.0 (2020-01-15)
+------------------
+
 - [IMP] project template: publish html coverage in gitlab-ci
 - [IMP] project template: branch coverage in gitlab-ci
 - [IMP] project template: pre-commit cache in gitlab-ci
