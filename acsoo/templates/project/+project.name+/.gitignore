@@ -3,6 +3,8 @@
 /.project
 /.settings
 /.pydevproject
+/.idea/
+/.ropeproject/
 /.vscode
 /dist
 /build
