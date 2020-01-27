@@ -2,3 +2,4 @@
 omit=
   venv*
   src*
+dynamic_context = test_function

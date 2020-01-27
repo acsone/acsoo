@@ -79,8 +79,8 @@ test:
     - ADDONS_TEST=$(./acsoo addons list)
     - echo Testing ${ADDONS_TEST}
     - unbuffer venv/bin/coverage run --branch venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_TEST} --test-enable | ./acsoo checklog
-    - venv/bin/coverage html
-    - venv/bin/coverage report
+    - venv/bin/coverage html --skip-empty --show-contexts
+    - venv/bin/coverage report --skip-empty
     - if [ "${CI_COMMIT_REF_NAME}" = "master" ] ; then makepot ; fi
   coverage: '/TOTAL\s+\d+\s+\d+\s+\d+\s+\d+\s+(\d+\%)/'
   artifacts:
