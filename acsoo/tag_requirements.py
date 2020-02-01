@@ -15,9 +15,11 @@ _logger = logging.getLogger(__name__)
 
 
 RE = re.compile(
-    r"(?P<editable>-e )?(?P<vcs>(git|svn|hg))\+"
+    r"(?P<editable>(-e|--editable) +)?"
+    r"((?P<name>[a-zA-Z0-9-_\.]+)[\[\]a-zA-Z0-9-_\.]* *@ *)?"
+    r"(?P<vcs>(git|svn|hg))\+"
     r"(?P<url>(ssh|http|https)://.*?/.*?)@(?P<sha>[^?#&]+)"
-    r".*?[#?&]egg=(?P<egg>[^?#&]+)"
+    r"(.*?[#?&]egg=(?P<egg>[^?#&]+))?"
 )
 NOTAG_RE = re.compile(
     r"([a-zA-Z0-9-_\.]+==)|" r"(-f )|(--find-links )|" r"(--extra-index-url )"
