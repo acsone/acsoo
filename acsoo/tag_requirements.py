@@ -5,6 +5,7 @@
 import logging
 import os
 import re
+import tempfile
 
 import click
 
@@ -62,7 +63,9 @@ def _has_tag_local(series, trigram, sha, repo_dir):
 def _has_tag_remote(series, trigram, sha, repo_url):
     prefix = "refs/tags/"
     tag_re = re.compile(prefix + series + "[-_]" + trigram + "[-_]")
-    tag_lines = check_output(["git", "ls-remote", repo_url], universal_newlines=True)
+    tag_lines = check_output(
+        ["git", "ls-remote", "-t", repo_url], universal_newlines=True
+    )
     for tag_line in tag_lines.split("\n"):
         if not tag_line:
             continue
@@ -78,6 +81,23 @@ def _is_committed(requirement):
         return False
     r = call(["git", "diff", "--exit-code", requirement])
     return r == 0
+
+
+def _ensure_tag(config, req, sha, repo_url, eggtag, dry_run):
+    ex_tag = _has_tag_remote(config.series, config.trigram, sha, repo_url)
+    if ex_tag:
+        click.echo("tag {ex_tag} already exists on {repo_url}@{sha}".format(**locals()))
+        return
+    push_url = _make_push_url(config, repo_url)
+    if not push_url:
+        _logger.warning("Cannot tag %s (not pushable)", req)
+        return
+    with tempfile.TemporaryDirectory() as repo_dir:
+        check_call(["git", "clone", "--bare", push_url, repo_dir])
+        click.echo("placing tag {eggtag} on {push_url}@{sha}".format(**locals()))
+        if not dry_run:
+            check_call(["git", "tag"] + [eggtag, sha], cwd=repo_dir)
+            check_call(["git", "push"] + [push_url, eggtag], cwd=repo_dir)
 
 
 def do_tag_requirements(config, src, requirement, yes, dry_run=False):
@@ -97,13 +117,14 @@ def do_tag_requirements(config, src, requirement, yes, dry_run=False):
         editable = bool(mo.group("editable"))
         vcs = mo.group("vcs")
         url = mo.group("url")
-        egg = mo.group("egg")
+        egg = mo.group("egg") or mo.group("name")
         sha = mo.group("sha")
+        eggtag = base_tag + "-" + egg
         if vcs != "git":
             _logger.warning("Cannot tag %s (unsupported vcs)", req)
             continue
         if not editable:
-            _logger.warning("Cannot tag %s (non editable)", req)
+            _ensure_tag(config, req, sha, url, eggtag, dry_run)
             continue
         repo_dir = os.path.join(src, egg.replace("_", "-"))
         if not os.path.isdir(os.path.join(repo_dir, ".git")):
@@ -137,7 +158,6 @@ def do_tag_requirements(config, src, requirement, yes, dry_run=False):
         if not push_url:
             _logger.warning("Cannot tag %s (not pushable)", req)
             continue
-        eggtag = base_tag + "-" + egg
         click.echo("placing tag {eggtag} on {push_url}@{sha}".format(**locals()))
         if not dry_run:
             check_call(["git", "tag"] + [eggtag, sha], cwd=repo_dir)

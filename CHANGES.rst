@@ -5,6 +5,7 @@ Changes
 .. ----------
 .. -
 
+- [IMP] support non-editable VCS requirements in tag_requirements command
 - [DEL] remove --force option of tag_requirements command
   as it does nothing useful, since all we want of this command
   is to make sure that a tag is present
