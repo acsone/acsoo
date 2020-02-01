@@ -80,17 +80,13 @@ def _is_committed(requirement):
     return r == 0
 
 
-def do_tag_requirements(config, force, src, requirement, yes, dry_run=False):
+def do_tag_requirements(config, src, requirement, yes, dry_run=False):
     if not _is_committed(requirement):
         raise click.ClickException("Please commit {} first.".format(requirement))
     requirement_sha = _get_last_sha(requirement)
     base_tag = "{}-{}-{}".format(config.series, config.trigram, requirement_sha)
     if not yes:
         click.confirm("Tag dependencies with {}?".format(base_tag), abort=True)
-    if force:
-        force_cmd = ["-f"]
-    else:
-        force_cmd = []
     for req in open(requirement):
         req = req.strip()
         mo = RE.match(req)
@@ -144,11 +140,9 @@ def do_tag_requirements(config, force, src, requirement, yes, dry_run=False):
         eggtag = base_tag + "-" + egg
         click.echo("placing tag {eggtag} on {push_url}@{sha}".format(**locals()))
         if not dry_run:
-            check_call(["git", "tag"] + force_cmd + [eggtag, sha], cwd=repo_dir)
+            check_call(["git", "tag"] + [eggtag, sha], cwd=repo_dir)
             try:
-                check_call(
-                    ["git", "push"] + force_cmd + [push_url, eggtag], cwd=repo_dir
-                )
+                check_call(["git", "push"] + [push_url, eggtag], cwd=repo_dir)
             except:  # noqa
                 # if push failed, delete local tag
                 call(["git", "tag", "-d", eggtag], cwd=repo_dir)
@@ -156,9 +150,6 @@ def do_tag_requirements(config, force, src, requirement, yes, dry_run=False):
 
 
 @click.command()
-@click.option(
-    "-f", "--force", is_flag=True, help="Replace an existing tag (instead of failing)"
-)
 @click.option(
     "--src",
     default="src",
@@ -176,7 +167,7 @@ def do_tag_requirements(config, force, src, requirement, yes, dry_run=False):
 @click.option("-y", "--yes", is_flag=True, default=False)
 @click.option("--dry-run", is_flag=True, default=False)
 @click.pass_context
-def tag_requirements(ctx, force, src, requirement, yes, dry_run):
+def tag_requirements(ctx, src, requirement, yes, dry_run):
     """ Tag all VCS requirements found in requirements.txt.
 
     This is important to avoid that commits referenced in requirements.txt
@@ -203,7 +194,7 @@ def tag_requirements(ctx, force, src, requirement, yes, dry_run):
       github.com:acsone
       github.com:mozaik
     """
-    do_tag_requirements(ctx.obj["config"], force, src, requirement, yes, dry_run)
+    do_tag_requirements(ctx.obj["config"], src, requirement, yes, dry_run)
 
 
 main.add_command(tag_requirements)

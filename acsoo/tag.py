@@ -27,7 +27,7 @@ def do_tag(config, force, src, requirement, yes, dry_run=False):
     if out:
         click.echo(out)
         raise click.ClickException("Please commit first.")
-    do_tag_requirements(config, force, src, requirement, yes=True, dry_run=dry_run)
+    do_tag_requirements(config, src, requirement, yes=True, dry_run=dry_run)
     click.echo("placing tag {tag} on origin".format(**locals()))
     if not dry_run:
         check_call(["git", "tag"] + force_cmd + [tag])
