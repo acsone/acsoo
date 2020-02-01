@@ -59,6 +59,19 @@ def _has_tag(series, trigram, egg, sha, repodir="."):
     return False
 
 
+def _has_tag_remote(series, trigram, sha, repo_url):
+    prefix = "refs/tags/"
+    tag_re = re.compile(prefix + series + "[-_]" + trigram + "[-_]")
+    tag_lines = check_output(["git", "ls-remote", repo_url], universal_newlines=True)
+    for tag_line in tag_lines.split("\n"):
+        if not tag_line:
+            continue
+        remote_sha, ref = tag_line.split()
+        if remote_sha == sha and tag_re.match(ref):
+            return ref[len(prefix) :]
+    return False
+
+
 def _is_committed(requirement):
     out = check_output(["git", "ls-files", requirement])
     if not out:
