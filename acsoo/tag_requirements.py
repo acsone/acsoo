@@ -9,7 +9,7 @@ import re
 import click
 
 from .main import main
-from .tools import call, check_call, check_output, working_directory
+from .tools import call, check_call, check_output
 
 _logger = logging.getLogger(__name__)
 
@@ -49,9 +49,9 @@ def _get_last_sha(filename):
     return check_output(["git", "log", "-n", "1", "--format=%h", filename]).strip()
 
 
-def _has_tag(series, trigram, egg, sha, repodir="."):
-    tag_re = re.compile(series + "[-_]" + trigram + "[-_][a-fA-F0-9]+[-_]" + egg)
-    tags = check_output(["git", "tag", "--points-at", sha], cwd=repodir)
+def _has_tag_local(series, trigram, sha, repo_dir):
+    tag_re = re.compile(series + "[-_]" + trigram + "[-_]")
+    tags = check_output(["git", "tag", "--points-at", sha], cwd=repo_dir)
     for tag in tags.split():
         tag = tag.strip()
         if tag_re.match(tag):
@@ -109,52 +109,50 @@ def do_tag_requirements(config, force, src, requirement, yes, dry_run=False):
         if not editable:
             _logger.warning("Cannot tag %s (non editable)", req)
             continue
+        repo_dir = os.path.join(src, egg.replace("_", "-"))
+        if not os.path.isdir(os.path.join(repo_dir, ".git")):
+            os.makedirs(repo_dir)
+            check_call(["git", "init"], cwd=repo_dir)
+        ex_tag = _has_tag_local(config.series, config.trigram, sha, repo_dir)
+        if ex_tag:
+            # this assumes that if we find the tag locally
+            # it is also present on the remote, in rare situations
+            # this may not be the case, but this is so much more
+            # performant that it's probably worth taking this shortcut.
+            click.echo("tag {ex_tag} already exists on {url}@{sha}".format(**locals()))
+            continue
+        check_call(
+            [
+                "git",
+                "fetch",
+                "-q",
+                "-f",
+                "--tags",
+                url,
+                "+refs/heads/*:refs/remotes/acsoo/*",
+            ],
+            cwd=repo_dir,
+        )
+        ex_tag = _has_tag_local(config.series, config.trigram, sha, repo_dir)
+        if ex_tag:
+            click.echo("tag {ex_tag} already exists on {url}@{sha}".format(**locals()))
+            continue
         push_url = _make_push_url(config, url)
         if not push_url:
             _logger.warning("Cannot tag %s (not pushable)", req)
             continue
-        repodir = os.path.join(src, egg.replace("_", "-"))
-        if not os.path.isdir(os.path.join(repodir, ".git")):
-            os.makedirs(repodir)
-            check_call(["git", "init"], cwd=repodir)
-        with working_directory(repodir):
-            ex_tag = _has_tag(config.series, config.trigram, egg, sha)
-            if ex_tag:
-                # this assumes that if we find the tag locally
-                # it is also present on the remote, in rare situations
-                # this may not be the case, but this is so much more
-                # performant that it's probably worth taking this shortcut.
-                click.echo(
-                    "tag {ex_tag} already exists on {url}@{sha}".format(**locals())
+        eggtag = base_tag + "-" + egg
+        click.echo("placing tag {eggtag} on {push_url}@{sha}".format(**locals()))
+        if not dry_run:
+            check_call(["git", "tag"] + force_cmd + [eggtag, sha], cwd=repo_dir)
+            try:
+                check_call(
+                    ["git", "push"] + force_cmd + [push_url, eggtag], cwd=repo_dir
                 )
-                continue
-            check_call(
-                [
-                    "git",
-                    "fetch",
-                    "-q",
-                    "-f",
-                    "--tags",
-                    url,
-                    "+refs/heads/*:refs/remotes/acsoo/*",
-                ]
-            )
-            ex_tag = _has_tag(config.series, config.trigram, egg, sha)
-            if ex_tag:
-                click.echo(
-                    "tag {ex_tag} already exists on {url}@{sha}".format(**locals())
-                )
-                continue
-            eggtag = base_tag + "-" + egg
-            click.echo("placing tag {eggtag} on {push_url}@{sha}".format(**locals()))
-            if not dry_run:
-                check_call(["git", "tag"] + force_cmd + [eggtag, sha])
-                try:
-                    check_call(["git", "push"] + force_cmd + [push_url, eggtag])
-                except:  # noqa
-                    # if push failed, delete local tag
-                    call(["git", "tag", "-d", eggtag])
-                    raise
+            except:  # noqa
+                # if push failed, delete local tag
+                call(["git", "tag", "-d", eggtag], cwd=repo_dir)
+                raise
 
 
 @click.command()
