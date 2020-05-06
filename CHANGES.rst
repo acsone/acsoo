@@ -5,6 +5,7 @@ Changes
 .. ----------
 .. -
 
+- [IMP] project template: better and simpler isort config
 - [IMP] project template: merge request templates
 - [IMP] support non-editable VCS requirements in tag_requirements command
 - [DEL] remove --force option of tag_requirements command
