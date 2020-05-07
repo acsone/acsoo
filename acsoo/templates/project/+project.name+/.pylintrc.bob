@@ -57,6 +57,7 @@ disable=
   attribute-string-redundant,
   fixme,
   locally-disabled,
+  copy-wo-api-one,
 
 extension-pkg-whitelist=lxml
 
