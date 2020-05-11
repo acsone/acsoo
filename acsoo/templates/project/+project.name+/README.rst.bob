@@ -13,15 +13,14 @@ Initialize virtualenv
 - create and activate virtualenv, using python 3's standard `python -m venv` or possibly with virtualenvwrapper's
   ``mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which {{{ python_version }}})``
 - make sure acsoo [#]_ is installed and in your PATH
-- to save some time copy odoo {{{ odoo.series }}} sources in src/odoo and do ``git clean -ffdx`` in src/odoo
-  or use git-autoshare [#]_
+- to save some time it is recommended to configure git-autoshare [#]_.
 
 Install everything
 ------------------
 
 .. code:: bash
 
-   pip install --src src -r requirements.txt -e .
+   pip install -r requirements.txt -e .
 
 Only when there is a need to refresh the frozen dependencies,
 review ``gitaggregate.yaml`` and ``requirements.txt.in``, then
@@ -32,7 +31,7 @@ run:
    gitaggregate -c gitaggregate.yaml -p
    rmvirtualenv odoo-{{{ project.name }}}
    mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which {{{ python_version }}})
-   pip install --src src --pre -r requirements.txt.in
+   pip install --pre -r requirements.txt.in
    ./freeze.sh
    git commit requirements.txt
 
