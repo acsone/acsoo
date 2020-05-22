@@ -34,8 +34,8 @@ def _get_failures(linter_stats, expected):
 
 
 def _failures_to_str(fails, no_fails):
-    def _r(l):
-        for msg, count, expected_count in l:
+    def _r(results):
+        for msg, count, expected_count in results:
             res.append("  {}: {}".format(msg, count))
             if expected_count is not None:
                 res.append(" (expected {})".format(expected_count))
