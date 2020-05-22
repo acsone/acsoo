@@ -40,4 +40,5 @@ setup(
         [console_scripts]
         acsoo=acsoo.main:main
     """,
+    options={"bdist_wheel": {"universal": "1"}},
 )
