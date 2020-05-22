@@ -36,7 +36,6 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Framework :: Odoo",
     ],
-    setup_requires=["setuptools_scm"],
     entry_points="""
         [console_scripts]
         acsoo=acsoo.main:main
