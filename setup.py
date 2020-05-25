@@ -7,4 +7,5 @@ from setuptools import setup
 setup(
     # this is still required for python setup.py sdist
     setup_requires=["setuptools_scm"],
+    use_scm_version=True,
 )
