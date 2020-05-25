@@ -11,6 +11,11 @@ Changes
 - [DEL] remove --force option of tag_requirements command
   as it does nothing useful, since all we want of this command
   is to make sure that a tag is present
+- [MNT] declarative setuptools configuration
+- [IMP] pin flake8 to version 3.7.9 (reminder: acsoo flake8 is deprecated,
+  use pre-commit instead)
+- [IMP] pin pylint-odoo to version 3.1.0 (reminder: acsoo pylint is deprecated,
+  use pre-commit instead)
 
 2.0.0 (2020-01-15)
 ------------------
