@@ -22,7 +22,7 @@ def test_wheel(mocker, tmp_path):
             f.write(
                 "requests\n"
                 "-e git+https://github.com/acsone/acsoo"
-                "@45e1fb80f7c24d4e13aab4b15b241f24cb07fc23"
+                "@178a896c360ed6059bb76da35af4e99815a8b8de"
                 "#egg=acsoo\n"
             )
         res = runner.invoke(wheel, ["--no-deps", "--exclude-project"])
@@ -33,7 +33,7 @@ def test_wheel(mocker, tmp_path):
         # two wheels must have been generated
         files = sorted(os.listdir("release"))
         assert len(files) == 2
-        assert files[0].startswith("acsoo-1.7.1")
+        assert files[0].startswith("acsoo-2.0.2")
         assert files[1].startswith("requests")
 
         # run it again
@@ -43,5 +43,5 @@ def test_wheel(mocker, tmp_path):
         assert "Obtained -e git+https://github.com/acsone/acsoo" in res.output
         files = sorted(os.listdir("release"))
         assert len(files) == 2
-        assert files[0].startswith("acsoo-1.7.1")
+        assert files[0].startswith("acsoo-2.0.2")
         assert files[1].startswith("requests")
