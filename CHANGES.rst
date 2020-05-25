@@ -5,6 +5,9 @@ Changes
 .. ----------
 .. -
 
+2.1.0 (2020-05-25)
+------------------
+
 - [IMP] project template: better and simpler isort config
 - [IMP] project template: merge request templates
 - [IMP] support non-editable VCS requirements in tag_requirements command
