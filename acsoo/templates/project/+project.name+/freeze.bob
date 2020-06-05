@@ -6,4 +6,4 @@ REQS=requirements.txt
 cat requirements-find-links.txt > $REQS
 
 pip freeze |
-  grep -v -E 'odoo-addons-{{{ project.name }}}|^pkg-resources' >> $REQS
+  grep -v -E 'odoo.addons.{{{ project.name }}}' >> $REQS
