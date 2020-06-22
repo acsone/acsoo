@@ -29,18 +29,25 @@ Criteria for tools to be included here:
 Installation
 ~~~~~~~~~~~~
 
-  .. code:: shell
+.. code:: shell
 
-    pip install acsoo
+   pip install --user acsoo
+
+or
+
+.. code:: shell
+
+   pipx install acsoo
 
 .. note::
 
-   Since ``acsoo`` has a lot of dependencies that are not required at runtime, it
-   is not recommanded to install it in the same virtualenv as your project.
-   A good approach is to install it in it's own virtual env and symlink the ``acsoo``,
-   ``mrbob`` and ``bumpversion`` executables somewhere in your PATH.
-   By the way, `pipsi <https://github.com/mitsuhiko/pipsi>`_ is an interesting way to manage
-   such python scripts without polluting your system.
+   Since ``acsoo`` has a lot of dependencies that are not required at runtime,
+   for your application, it is not recommanded to install it in the same
+   virtualenv as your project. A good approach is to install it in it's own
+   virtual env and symlink the ``acsoo``, ``mrbob`` and ``bumpversion``
+   executables somewhere in your PATH. `pipx <https://pypi.org/project/pipx/>`_
+   is an interesting way to manage such python scripts without polluting your
+   system.
 
 To enable bash completion, add this line in your ``.bashrc``:
 
@@ -69,25 +76,76 @@ acsoo tag
 
 Tag the current project after ensuring everything has been commited to git.
 
-acsoo tag_requirements
+acsoo tag-requirements
 ----------------------
 
 Tag all VCS requirements found in ``requirements.txt``, so
 the referenced commits are not lost in case of VCS garbage collection.
 
+acsoo addons
+------------
+
+A set of commands to print addons lists, useful when running tests.
+
+  .. code:: shell
+
+     acsoo addons list
+     acsoo addons list-depends
+
+acsoo checklog
+--------------
+
+Check if an odoo log file contains error, with the possibility to ignore some
+errors based on regular expressions.
+
+  .. code:: shell
+
+     acsoo checklog odoo.log
+     odoo -d mydb -i base --stop-after-init | acsoo checklog
+     acsoo checklog --ignore "WARNING.*blah" odoo.log
+
+bumpversion
+-----------
+
+Bumpversion is a software automatically installed with acsoo. It allows you to
+increment or simply change the version of the project in several files at once,
+including acsoo.cfg.
+
+  .. code:: shell
+
+    bumpversion {part}
+
+Where part is 'major', 'minor' or 'patch'
+(see `semantic versioning <http://semver.org/>`_).
+
+Configure bumpversion by editing the .bumpversion.cfg config file at the root
+of your project. See the bumpversion `documentation
+<https://pypi.python.org/pypi/bumpversion>`_ to go further
+(automatic commit, tag, customisation...).
+
+Deprecated commands
+~~~~~~~~~~~~~~~~~~~
+
 acsoo wheel
 -----------
+
+**This command is deprecated, use pip >= 20.1 and do not use editable VCS
+dependencies. `pip wheel -e . -r requirements.txt --wheel-dir=release` will
+then give the same result, including caching of pinned VCS dependencies.**
 
 Build wheels for all dependencies found in ``requirements.txt``,
 plus the project in the current directory.
 
 The main advantage of this command (compared to a regular
 `pip wheel -r requirements.txt -e . --wheel_dir=release --src src`),
-is that it maintains a cache of git dependencies that are pinned with
+was that it maintains a cache of git dependencies that are pinned with
 a sha1.
 
 acsoo release
 -------------
+
+**This command is deprecated. Releasing is automated via .gitlab-ci. See
+the `build` stage in the project template.**
 
 Perform ``acsoo tag``, ``acsoo tag_requirements`` and
 ``acsoo wheel`` in one command.
@@ -141,47 +199,6 @@ messages, like this:
 
     acsoo pylint --expected fixme:0
 
-acsoo addons
-------------
-
-A set of commands to print addons lists, useful when running tests.
-
-  .. code:: shell
-
-     acsoo addons list
-     acsoo addons list-depends
-
-acsoo checklog
---------------
-
-Check if an odoo log file contains error, with the possibility to ignore some
-errors based on regular expressions.
-
-  .. code:: shell
-
-     acsoo checklog odoo.log
-     odoo -d mydb -i base --stop-after-init | acsoo checklog
-     acsoo checklog --ignore "WARNING.*blah" odoo.log
-
-bumpversion
------------
-
-Bumpversion is a software automatically installed with acsoo. It allows you to
-increment or simply change the version of the project in several files at once,
-including acsoo.cfg.
-
-  .. code:: shell
-
-    bumpversion {part}
-
-Where part is 'major', 'minor' or 'patch'
-(see `semantic versioning <http://semver.org/>`_).
-
-Configure bumpversion by editing the .bumpversion.cfg config file at the root
-of your project. See the bumpversion `documentation
-<https://pypi.python.org/pypi/bumpversion>`_ to go further
-(automatic commit, tag, customisation...).
-
 acsoo.cfg
 ~~~~~~~~~
 
@@ -212,28 +229,6 @@ And a more elaborate example:
     ignore=
       WARNING .* module .*: description is empty !
       WARNING: unable to set column .* of table account_analytic_account not null
-
-    [pylint]
-    expected=manifest-required-author:1
-    pylint-options=
-      --disable=deprecated-data-xml-node
-
-Ideas
-~~~~~
-
-acsoo freeze
-------------
-
-``pip freeze`` (which works very well as is) with the following additions
-
-* exluding some common dev tools that are not required in production
-  (pudb, ipdb, acsoo, git-aggregator, setuptools-odoo...)
-  and their dependencies unless such dependencies are required by the project
-  (directly or indirectly).
-* excluding the project itself (as usual for python requirements.txt files)
-
-Inspiration to be found in https://pypi.python.org/pypi/pipdeptree, although I don't
-think acsoo should depend on that, as it's only a thin wrapper around the ``pip`` api.
 
 Useful links
 ~~~~~~~~~~~~
