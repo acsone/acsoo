@@ -71,6 +71,12 @@ Initialize a new project
     cd {project name}
     mkvirtualenv {project name} -a .
 
+acsoo freeze
+------------
+
+Just like pip freeze, except it outputs only dependencies of the provided
+distribution name.
+
 acsoo tag
 ---------
 

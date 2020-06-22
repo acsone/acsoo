@@ -11,6 +11,7 @@ from . import addons
 from . import checklog
 from . import flake8cmd
 from . import pr_status
+from . import freeze
 from . import pylintcmd
 from . import release
 from . import tag

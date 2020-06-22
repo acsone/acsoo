@@ -5,6 +5,10 @@ Changes
 .. ----------
 .. -
 
+3.0.0 (unreleased)
+------------------
+
+- [ADD] acsoo freeze
 - [DEL] deprecate ``acsoo wheel`` (now supported by pip natively) and
   ``acsoo release`` (which is automated in GitLab CI).
 
