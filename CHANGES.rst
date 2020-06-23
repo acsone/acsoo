@@ -5,6 +5,9 @@ Changes
 .. ----------
 .. -
 
+- [DEL] deprecate ``acsoo wheel`` (now supported by pip natively) and
+  ``acsoo release`` (which is automated in GitLab CI).
+
 2.1.0 (2020-05-25)
 ------------------
 

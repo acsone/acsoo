@@ -57,9 +57,9 @@ build:
   tags:
     - odoo-{{{ odoo.series }}}
   script:
-    - install_acsoo
     - start_ssh_agent
-    - ./acsoo wheel --no-deps
+    - virtualenv --python=$PYTHON venv
+    - venv/bin/pip wheel --no-deps -r requirements.txt -e . --wheel-dir=release
   artifacts:
     expire_in: 1 week
     paths:
