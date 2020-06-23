@@ -12,14 +12,10 @@ commit = False
 [bumpversion:file:odoo_addons/server_environment_files/dev/dev.conf]
 
 [bumpversion:file:odoo_addons/server_environment_files/test/test.conf]
-
-[bumpversion:file:odoo_addons/server_environment_files/valid/valid.conf]
 {{% else %}}
 [bumpversion:file:odoo/addons/{{{ project.trigram }}}_all/__manifest__.py]
 
 [bumpversion:file:odoo/addons/server_environment_files/dev/dev.conf]
 
 [bumpversion:file:odoo/addons/server_environment_files/test/test.conf]
-
-[bumpversion:file:odoo/addons/server_environment_files/valid/valid.conf]
 {{% endif %}}
