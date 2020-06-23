@@ -17,7 +17,7 @@ def main(project):
             if dep.key in res:
                 continue
             res.add(dep.key)
-            add(d for d in pkg_resources.get_distribution(dep).requires())
+            add(d for d in pkg_resources.get_distribution(dep).requires(dep.extras))
 
     add(d for d in pkg_resources.get_distribution(project).requires())
 
