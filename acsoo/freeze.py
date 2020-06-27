@@ -10,8 +10,8 @@ import click
 from .main import main
 from .tools import check_output, find_python
 
-_EQUAL_RE = re.compile(r"^([A-Za-z-_.]+)\s*[@=]")
-_EGG_RE = re.compile(r"egg=([A-Za-z-_.]+)")
+_EQUAL_RE = re.compile(r"^([A-Za-z0-9-_.]+)\s*[@=]")
+_EGG_RE = re.compile(r"egg=([A-Za-z0-9-_.]+)")
 
 
 def _canonicalize(distribution):
