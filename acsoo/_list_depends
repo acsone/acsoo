@@ -11,11 +11,14 @@ import pkg_resources
 
 def main(project):
     res = set()
+    seen = set()
 
     def add(deps):
         for dep in deps:
-            if dep.key in res:
+            seen_key = (dep.key, dep.extras)
+            if seen_key in seen:
                 continue
+            seen.add(seen_key)
             res.add(dep.key)
             add(d for d in pkg_resources.get_distribution(dep).requires(dep.extras))
 
