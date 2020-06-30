@@ -77,6 +77,12 @@ acsoo freeze
 Just like pip freeze, except it outputs only dependencies of the provided
 distribution name.
 
+acsoo pr-status
+---------------
+
+Look for git references of the form ``refs/pull/NNN/head`` in requirement
+files and print the corresponding GitHub pull request status.
+
 acsoo tag
 ---------
 
