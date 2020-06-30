@@ -21,12 +21,6 @@ jobs:
       script: tox
       env: TOXENV=check_readme
     - stage: test
-      python: "2.7"
-      script: tox -e py27
-    - stage: test
-      python: "3.5"
-      script: tox -e py35
-    - stage: test
       python: "3.6"
       script: tox -e py36
     - stage: test

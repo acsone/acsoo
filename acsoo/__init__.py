@@ -10,6 +10,7 @@ from . import main
 from . import addons
 from . import checklog
 from . import flake8cmd
+from . import pr_status
 from . import pylintcmd
 from . import release
 from . import tag
