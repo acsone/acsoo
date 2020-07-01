@@ -5,8 +5,15 @@ Changes
 .. ----------
 .. -
 
+3.0.0 (unreleased)
+------------------
+
+- [ADD] acsoo freeze to limit pip freeze output to dependencies of a given
+  distribution
+- [ADD] acsoo pr-status to print the status of GitHub pull requests
+  found in requirement files with revision of the form refs/pull/NNN/head
 - [DEL] deprecate ``acsoo wheel`` (now supported by pip natively) and
-  ``acsoo release`` (which is automated in GitLab CI).
+  ``acsoo release`` (which is automated in GitLab CI)
 
 2.1.0 (2020-05-25)
 ------------------

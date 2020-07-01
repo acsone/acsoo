@@ -88,10 +88,21 @@ def _adapt_executable(cmd):
 
 
 def _find_executable(exe):
+    if os.path.isabs(exe):
+        return exe
     python_dir = os.path.dirname(sys.executable)
     exe_path = os.path.join(python_dir, exe)
     if os.path.exists(exe_path):
         return exe_path
+    exe_path = _fe(exe)
+    if exe_path:
+        return exe_path
+    raise RuntimeError("{} executable not found".format(exe))
+
+
+def find_python(exe):
+    if os.path.isabs(exe):
+        return exe
     exe_path = _fe(exe)
     if exe_path:
         return exe_path

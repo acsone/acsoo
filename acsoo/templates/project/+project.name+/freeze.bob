@@ -5,5 +5,4 @@ REQS=requirements.txt
 
 cat requirements-find-links.txt > $REQS
 
-pip freeze |
-  grep -v -E 'odoo.addons.{{{ project.name }}}' >> $REQS
+acsoo freeze {{{ project.name }}} >> $REQS
