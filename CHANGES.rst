@@ -5,6 +5,11 @@ Changes
 .. ----------
 .. -
 
+- [IMP] project template: add OCA wheelhouse in requirements-find-links.txt
+  because it is slightly fresher than PyPI and by using it we don't need
+  to wait a day after ``/ocabot merge`` to remove git references from
+  out requirement files.
+
 3.0.0 (2020-07-01)
 ------------------
 
