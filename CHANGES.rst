@@ -11,6 +11,7 @@ Changes
   out requirement files.
 - [IMP] project template: in freeze, use an indirection to
   ``requirements-find-links.txt`` so it's easier to update and maintain.
+- [IMP] project template: add example reference to shopinvader wheelhouse.
 
 3.0.0 (2020-07-01)
 ------------------
