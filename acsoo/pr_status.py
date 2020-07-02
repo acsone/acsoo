@@ -41,11 +41,8 @@ def display_state(rjson):
         return click.style(state, fg="yellow")
 
 
-@click.command()
-def pr_status():
-    """Show status of PR found in requirement files."""
+def search_prs():
     for reqfile in os.listdir("."):
-        prs = []
         if not looks_like_req_file(reqfile):
             continue
         click.secho("Scanning " + reqfile, dim=True)
@@ -54,14 +51,17 @@ def pr_status():
                 mo = PR_RE.match(line)
                 if not mo:
                     continue
-                prs.append(PR(**mo.groupdict()))
-        for pr in prs:
-            r = httpx.get(
-                f"https://api.github.com/repos/{pr.org}/{pr.repo}/pulls/{pr.pr}"
-            )
-            r.raise_for_status()
-            state = display_state(r.json())
-            click.echo(f"https://github.com/{pr.org}/{pr.repo}/pull/{pr.pr} is {state}")
+                yield PR(**mo.groupdict())
+
+
+@click.command()
+def pr_status():
+    """Show status of PR found in requirement files."""
+    for pr in search_prs():
+        r = httpx.get(f"https://api.github.com/repos/{pr.org}/{pr.repo}/pulls/{pr.pr}")
+        r.raise_for_status()
+        state = display_state(r.json())
+        click.echo(f"https://github.com/{pr.org}/{pr.repo}/pull/{pr.pr} is {state}")
 
 
 main.add_command(pr_status)
