@@ -9,6 +9,8 @@ Changes
   because it is slightly fresher than PyPI and by using it we don't need
   to wait a day after ``/ocabot merge`` to remove git references from
   out requirement files.
+- [IMP] project template: in freeze, use an indirection to
+  ``requirements-find-links.txt`` so it's easier to update and maintain.
 
 3.0.0 (2020-07-01)
 ------------------

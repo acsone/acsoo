@@ -3,6 +3,6 @@ set -e
 
 REQS=requirements.txt
 
-cat requirements-find-links.txt > $REQS
+echo "-r requirements-find-links.txt" > $REQS
 
 acsoo freeze {{{ project.name }}} >> $REQS
