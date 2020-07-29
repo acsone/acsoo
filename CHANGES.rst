@@ -5,6 +5,11 @@ Changes
 .. ----------
 .. -
 
+3.0.1 (2020-07-29)
+------------------
+
+- [REM] Remove mrbob dependency as pip >= 20.2 make install crash
+
 3.0.0 (2020-07-01)
 ------------------
 
