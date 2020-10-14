@@ -5,6 +5,15 @@ Changes
 .. ----------
 .. -
 
+2.1.2 (2020-10-14)
+------------------
+
+- Lift setuptools version restriction.
+  It has https issues with pypi.org since 2020-10-14.
+  his means odoo-autodiscover>=2 must be used
+  on Odoo<=10 projects.
+  See also https://github.com/acsone/setuptools-odoo/issues/10.
+
 2.1.1 (2020-07-29)
 ------------------
 
