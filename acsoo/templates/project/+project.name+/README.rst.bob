@@ -12,28 +12,19 @@ Initialize virtualenv
 
 - create and activate virtualenv, using python 3's standard `python -m venv` or possibly with virtualenvwrapper's
   ``mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which {{{ python_version }}})``
-- make sure acsoo [#]_ is installed and in your PATH
+- make sure acsoo [#]_ and pip-deepfreeze [#]_ are installed and in your PATH
 - to save some time it is recommended to configure git-autoshare [#]_.
 
 Install everything
 ------------------
 
-.. code:: bash
+In an activated python 3.6 virtualenv, run::
 
-   pip install -r requirements.txt -e .
+   pip-df sync
 
-Only when there is a need to refresh the frozen dependencies,
-review ``gitaggregate.yaml`` and ``requirements.txt.in``, then
-run:
-
-.. code:: bash
-
-   gitaggregate -c gitaggregate.yaml -p
-   rmvirtualenv odoo-{{{ project.name }}}
-   mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which {{{ python_version }}})
-   pip install --pre -r requirements.txt.in
-   ./freeze.sh
-   git commit requirements.txt
+When dependencies change, use ``pip-df sync`` again, possibly with
+``--update``. Add unmerged VCS dependencies in ``requirements.txt.in``. See the
+pip-deepfreeze documentation for more information.
 
 Run
 ---
@@ -50,7 +41,7 @@ Copy ``odoo.cfg.template`` to ``odoo.cfg`` and update it as needed, then run::
 Develop
 -------
 
-This project uses Black [#]_ as code formatting convention.
+This project uses Black [#]_ and other code formatters.
 To make sure local coding convention are respected before
 you commit, install pre-commit [#]_ and
 run ``pre-commit install`` after cloning the repository.
@@ -59,25 +50,16 @@ Release
 -------
 
 First make sure you have been testing using the correct dependencies by
-running ``./freeze.sh`` and checking there is no change in ``requirements.txt``.
+running ``pip-df sync`` and checking there is no change in ``requirements.txt``.
 
 To release using gitlab-ci
-.........................
+..........................
 
 - run acsoo tag, the deploy to the test environment will be automatic, and
   gitlab will show a button on the pipeline to deploy to production.
 
-To release manually
-...................
-
-- update version in ``acsoo.cfg`` and ``{{{ project.name }}}_all/__{{% if odoo.series in ['8.0', '9.0'] %}}openerp{{% else %}}manifest{{% endif %}}__.py``
-- commit everything
-- run ``acsoo release``
-
-At that point the resulting wheel files in ``./release`` contain all the
-code to be deployed.
-
 .. [#] https://pypi.python.org/pypi/acsoo/#installation
+.. [#] https://pypi.python.org/pypi/pip-deepfreeze
 .. [#] https://pypi.python.org/pypi/git-autoshare
 .. [#] https://github.com/ambv/black
 .. [#] https://github.com/pre-commit/pre-commit
