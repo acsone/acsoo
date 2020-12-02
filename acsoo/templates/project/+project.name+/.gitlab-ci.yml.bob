@@ -108,7 +108,7 @@ deploy-test:
     - start_ssh_agent
     - ./deploy-test
   environment:
-    name: test
+    name: {{{ project.name }}}-test
     url: https://odoo-{{{ project.name }}}-test.acsone.eu
   only:
     - /^\d+\.\d+\.\d+$/
