@@ -7,7 +7,7 @@ before_script:
   - |
     function install_acsoo {
         virtualenv --python=$PYTHON venv-acsoo
-        venv-acsoo/bin/pip install acsoo==x.y.z  # pin acsoo!
+        venv-acsoo/bin/pip install acsoo
         ln -s venv-acsoo/bin/acsoo
     }
     function install_pre_commit {
