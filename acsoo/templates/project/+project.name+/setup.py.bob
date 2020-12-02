@@ -13,6 +13,8 @@ setup(
     setup_requires=['setuptools-odoo'],
     install_requires=[
         'click-odoo-contrib>=1.4.1',
+        'xlrd',
+        {{% if odoo.enterprise }}'odoo-addons-enterprise',{{% endif -%}}
     ],
     odoo_addons=True,
 )
