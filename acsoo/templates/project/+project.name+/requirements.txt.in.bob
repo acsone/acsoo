@@ -15,6 +15,3 @@ odoo-autodiscover>=2.0
 
 # patched OCA addons
 # odoo{short_version}-addon-{addon} @ git+https://github.com/acsone/{oca-project}.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master#subdirectory=setup/{addon}
-
-# local project
--e .
