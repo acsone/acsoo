@@ -17,15 +17,12 @@ def do_tag(config, force, src, requirement, yes, dry_run=False):
         force_cmd = ["-f"]
     else:
         force_cmd = []
-    if call(["git", "diff", "--exit-code"]) != 0:
-        raise click.ClickException("Please commit first.")
-    if call(["git", "diff", "--exit-code", "--cached"]) != 0:
-        raise click.ClickException("Please commit first.")
-    out = check_output(
-        ["git", "ls-files", "--other", "--exclude-standard", "--directory"]
-    )
+    unclean_tree = call(["git", "diff", "--exit-code"]) != 0
+    unclean_tree |= call(["git", "diff", "--exit-code", "--cached"]) != 0
+    out = check_output(["git", "ls-files", "--other", "--exclude-standard"])
     if out:
         click.echo(out)
+    if unclean_tree or out:
         raise click.ClickException("Please commit first.")
     do_tag_requirements(config, src, requirement, yes=True, dry_run=dry_run)
     click.echo("placing tag {tag} on origin".format(**locals()))
