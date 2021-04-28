@@ -10,11 +10,6 @@ before_script:
         venv-acsoo/bin/pip install acsoo
         ln -s venv-acsoo/bin/acsoo
     }
-    function install_pre_commit {
-        virtualenv --python=$PYTHON venv-pre-commit
-        venv-pre-commit/bin/pip install pre-commit
-        ln -s venv-pre-commit/bin/pre-commit
-    }
     function start_ssh_agent {
         eval $(ssh-agent -s)
         ssh-add <(echo "$SSH_DEPLOY_KEY")
@@ -39,15 +34,14 @@ variables:
 
 pre-commit:
   stage: test
-  tags:
-    - python
+  image: {{{ python_version }}}
   cache:
     key: pre-commit
     paths:
     - .pre-commit
   script:
-    - install_pre_commit
-    - PRE_COMMIT_HOME=$PWD/.pre-commit ./pre-commit run --all-files
+    - pip install pre-commit
+    - PRE_COMMIT_HOME=$PWD/.pre-commit pre-commit run --all-files
   needs: []
 
 build:
