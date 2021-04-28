@@ -96,6 +96,7 @@ test:
 
 deploy-test:
   stage: deploy
+  image: quay.io/acsone/deploy-tools
   script:
     - start_ssh_agent
     - ./deploy-test
