@@ -18,7 +18,7 @@ Initialize virtualenv
 Install everything
 ------------------
 
-In an activated python 3.6 virtualenv, run::
+In an activated {{{ python_version }}} virtualenv, run::
 
    pip-df sync
 

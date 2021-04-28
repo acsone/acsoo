@@ -1,35 +1,47 @@
-#!/usr/bin/env {{{ python_version }}}
+#!/usr/bin/env python3
 import subprocess
 import textwrap
-from {{{ 'configparser' if python_version == 'python3' else 'ConfigParser' }}} import ConfigParser
+from configparser import ConfigParser
 
 config = ConfigParser()
-config.read('acsoo.cfg')
+config.read("acsoo.cfg")
 
-VERSION = config.get('acsoo', 'version')
-HOST = 'odoo-{{{ project.name }}}.acsone.eu'
-USER = 'odoo-{{{ project.name }}}-test'
+VERSION = config.get("acsoo", "version")
+HOST = "odoo-{{{ project.name }}}.acsone.eu"
+USER = "odoo-{{{ project.name }}}-test"
 
-subprocess.check_call([
-    'rsync', '--verbose', '--recursive', '--times', '--delete',
-    '--rsync-path', 'sudo -u {USER} rsync'.format(**locals()),
-    'release/',
-    '{HOST}:/home/{USER}/instance/release/'.format(**locals()),
-])
-subprocess.check_call([
-    'ssh', HOST,
-    textwrap.dedent("""\
-        sudo -u {USER} -H -s <<'EOF'
-        set -ex -o pipefail
-        cd /home/{USER}/instance
-        ./installvenv {VERSION}
-        ./maintenance_start
-        rm -f venv
-        ln -s venv-{VERSION} venv
-        for db in $(cat DATABASES) ; do
-            venv/bin/click-odoo-update -c odoo.cfg -d $db --i18n-overwrite 2>&1 | tee upgrade-logs/upgrade-{VERSION}-$db.log
-        done
-        ./maintenance_stop
-        EOF
-    """.format(**locals())),
-])
+subprocess.check_call(
+    [
+        "rsync",
+        "--verbose",
+        "--recursive",
+        "--times",
+        "--delete",
+        "--rsync-path",
+        f"sudo -u {USER} rsync",
+        "release/",
+        f"gitlab-runner@{HOST}:/home/{USER}/instance/release/",
+    ]
+)
+subprocess.check_call(
+    [
+        "ssh",
+        f"gitlab-runner@{HOST}",
+        textwrap.dedent(
+            f"""\
+                sudo -u {USER} -H -s <<'EOF'
+                set -ex -o pipefail
+                cd /home/{USER}/instance
+                ./installvenv {VERSION}
+                ./maintenance_start
+                rm -f venv
+                ln -s venv-{VERSION} venv
+                for db in $(cat DATABASES) ; do
+                    venv/bin/click-odoo-update -c odoo.cfg -d $db --i18n-overwrite 2>&1 | tee upgrade-logs/upgrade-{VERSION}-$db.log
+                done
+                ./maintenance_stop
+                EOF
+            """
+        ),
+    ]
+)

@@ -13,3 +13,4 @@ exclude =
   ./src
   ./venv*
   .eggs/
+  ./acsoo/templates/**
