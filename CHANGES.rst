@@ -5,6 +5,12 @@ Changes
 .. ----------
 .. -
 
+- Various improvements to the project template (in gitlab-ci.yml, and
+  pre-commit config, mostly) `#75 <https://github.com/acsone/acsoo/pull/75>`_,
+  `#77 <https://github.com/acsone/acsoo/pull/77>`_.
+- In acsoo tag, do not complain about empty directories `#76
+  <https://github.com/acsone/acsoo/pull/76>`_.
+
 3.0.2 (2020-10-14)
 ------------------
 
