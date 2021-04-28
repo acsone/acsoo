@@ -105,5 +105,7 @@ deploy-test:
     url: https://odoo-{{{ project.name }}}-test.acsone.eu
   only:
     - /^\d+\.\d+\.\d+$/
-  dependencies:
-    - build
+  when: manual
+  needs:
+    - job: build
+      artifacts: true
