@@ -1,4 +1,4 @@
-from {{{ 'configparser' if python_version == 'python3' else 'ConfigParser' }}} import ConfigParser
+from configparser import ConfigParser
 from setuptools import setup
 
 
@@ -14,7 +14,7 @@ setup(
     install_requires=[
         'click-odoo-contrib>=1.4.1',
         'xlrd',
-        {{% if odoo.enterprise }}'odoo-addons-enterprise',{{% endif -%}}
+        {{% if odoo.enterprise %}}'odoo-addons-enterprise',{{% endif -%}}
     ],
     odoo_addons=True,
 )
