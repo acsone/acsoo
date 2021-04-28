@@ -62,6 +62,7 @@ build:
 {{% endif %}}
 test:
   stage: test
+  image: quay.io/acsone/odoo-ci:v20210312.0
   tags:
     - odoo-{{{ odoo.series }}}
   script:
