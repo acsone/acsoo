@@ -1,0 +1,27 @@
+[paths]
+source =
+    odoo/addons
+    */{{{ project.name }}}/odoo/addons
+
+[run]
+dynamic_context = test_function
+
+[report]
+include =
+    */odoo/addons/*
+
+omit =
+    */scenario/*
+    */scenarios/*
+    */test/*
+    */tests/*
+    */lib/*
+    *_example/*
+    *__init__.py
+    *__manifest__.py
+    *hooks.py
+    *_parser.py
+
+exclude_lines =
+    pragma: no cover
+    pragma: no-cover
