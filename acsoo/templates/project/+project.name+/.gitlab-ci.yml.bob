@@ -87,8 +87,11 @@ test:
     expire_in: 1 week
     paths:
       - htmlcov/
+      - coverage.xml
     name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-coverage-html"
     expose_as: "Test coverage"
+    reports:
+      cobertura: coverage.xml
   dependencies:
     - build
   interruptible: true
