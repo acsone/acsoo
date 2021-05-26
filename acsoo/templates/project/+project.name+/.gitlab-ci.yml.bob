@@ -37,7 +37,7 @@ build:
   stage: build
   # use odoo-{{{ odoo.series }}} runner so we have the pre-cloned odoo
   # except for that optimization, we don't need odoo dependencies for this job
-  image: ghcr.io/acsone/odoo-ci-image:v20210525.1
+  image: ghcr.io/acsone/odoo-ci-image:v20210526.0
   tags:
     - odoo-{{{ odoo.series }}}
   script:
@@ -58,7 +58,7 @@ build:
 {{% endif %}}
 test:
   stage: test
-  image: ghcr.io/acsone/odoo-ci-image:v20210525.1
+  image: ghcr.io/acsone/odoo-ci-image:v20210526.0
   tags:
     - odoo-{{{ odoo.series }}}
   script:
