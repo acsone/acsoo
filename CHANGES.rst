@@ -10,6 +10,8 @@ Changes
   `#77 <https://github.com/acsone/acsoo/pull/77>`_.
 - In acsoo tag, do not complain about empty directories `#76
   <https://github.com/acsone/acsoo/pull/76>`_.
+- Deprecate ``acsoo freeze`` in favor of ``pip-deepfreeze``.
+- Deprecate ``acsoo addons`` in favor of ``manifestoo``.
 
 3.0.2 (2020-10-14)
 ------------------
