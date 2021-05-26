@@ -5,11 +5,6 @@ stages:
 
 before_script:
   - |
-    function install_acsoo {
-        virtualenv --python=$PYTHON venv-acsoo
-        venv-acsoo/bin/pip install acsoo
-        ln -s venv-acsoo/bin/acsoo
-    }
     function start_ssh_agent {
         eval $(ssh-agent -s)
         ssh-add <(echo "$SSH_DEPLOY_KEY")
@@ -67,19 +62,19 @@ test:
   tags:
     - odoo-{{{ odoo.series }}}
   script:
-    - install_acsoo
+    - pipx install acsoo
     - start_ssh_agent  # for pushing translations
     - virtualenv --python=$PYTHON venv
     - venv/bin/pip install coverage
     # use --no-index so missing dependencies that would not be in *.whl are detected
     # install the project in editable mode (-e) so coverage sees it
     - venv/bin/pip install --no-index --find-links release -e .
-    - ADDONS_INIT=$(./acsoo addons list-depends)
+    - ADDONS_INIT=$(acsoo addons list-depends)
     - echo Installing ${ADDONS_INIT}
-    - unbuffer venv/bin/click-odoo-initdb -c odoo-ci.cfg --new-database ${DB_NAME} --cache-prefix {{{ project.trigram }}} -m ${ADDONS_INIT} | ./acsoo checklog
-    - ADDONS_TEST=$(./acsoo addons list)
+    - unbuffer venv/bin/click-odoo-initdb -c odoo-ci.cfg --new-database ${DB_NAME} --cache-prefix {{{ project.trigram }}} -m ${ADDONS_INIT} | acsoo checklog
+    - ADDONS_TEST=$(acsoo addons list)
     - echo Testing ${ADDONS_TEST}
-    - unbuffer venv/bin/coverage run --branch venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_TEST} --test-enable | ./acsoo checklog
+    - unbuffer venv/bin/coverage run --branch venv/bin/{{{ odoocmd }}} -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_TEST} --test-enable | acsoo checklog
     - venv/bin/coverage html
     - venv/bin/coverage report
     - if [ "${CI_COMMIT_REF_NAME}" = "master" ] ; then makepot ; fi
