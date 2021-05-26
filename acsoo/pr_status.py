@@ -20,6 +20,9 @@ PR_RE = re.compile(
     r".*github.com.(?P<org>[a-zA-Z-_]+)/(?P<repo>[a-zA-Z-_]+)"
     r".*@refs/pull/(?P<pr>[0-9]+)/head"
 )
+PR_URL_RE = re.compile(
+    r".*https://github.com/(?P<org>[^/]+)/(?P<repo>[^/]+)/pull/(?P<pr>[0-9]+).*"
+)
 
 
 def looks_like_req_file(filename):
@@ -48,7 +51,7 @@ def search_prs():
         click.secho("Scanning " + reqfile, dim=True)
         with open(reqfile) as f:
             for line in f:
-                mo = PR_RE.match(line)
+                mo = PR_RE.match(line) or PR_URL_RE.match(line)
                 if not mo:
                     continue
                 yield PR(**mo.groupdict())
