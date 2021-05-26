@@ -71,12 +71,6 @@ Initialize a new project
     cd {project name}
     mkvirtualenv {project name} -a .
 
-acsoo freeze
-------------
-
-Just like pip freeze, except it outputs only dependencies of the provided
-distribution name.
-
 acsoo pr-status
 ---------------
 
@@ -137,6 +131,15 @@ of your project. See the bumpversion `documentation
 
 Deprecated commands
 ~~~~~~~~~~~~~~~~~~~
+
+acsoo freeze
+------------
+
+**Deprecated: use `pip-deepfreeze <https://pypi.org/project/pip-deepfreeze>`_
+instead.**
+
+Just like pip freeze, except it outputs only dependencies of the provided
+distribution name.
 
 acsoo wheel
 -----------
