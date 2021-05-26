@@ -88,16 +88,6 @@ acsoo tag-requirements
 Tag all VCS requirements found in ``requirements.txt``, so
 the referenced commits are not lost in case of VCS garbage collection.
 
-acsoo addons
-------------
-
-A set of commands to print addons lists, useful when running tests.
-
-  .. code:: shell
-
-     acsoo addons list
-     acsoo addons list-depends
-
 acsoo checklog
 --------------
 
@@ -131,6 +121,20 @@ of your project. See the bumpversion `documentation
 
 Deprecated commands
 ~~~~~~~~~~~~~~~~~~~
+
+acsoo addons
+------------
+
+**acsoo addons is deprecated: use `manifestoo
+<https://pypi.org/project/manifestoo>`_ instead: it is more robust and has
+better test coverage.**
+
+A set of commands to print addons lists, useful when running tests.
+
+  .. code:: shell
+
+     acsoo addons list
+     acsoo addons list-depends
 
 acsoo freeze
 ------------
