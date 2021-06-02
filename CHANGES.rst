@@ -12,6 +12,7 @@ Changes
   <https://github.com/acsone/acsoo/pull/76>`_.
 - Deprecate ``acsoo freeze`` in favor of ``pip-deepfreeze``.
 - Deprecate ``acsoo addons`` in favor of ``manifestoo``.
+- Add license and development status check to project template.
 
 3.0.2 (2020-10-14)
 ------------------
