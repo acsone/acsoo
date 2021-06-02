@@ -5,4 +5,5 @@ printWidth: 88
 proseWrap: always
 semi: true
 trailingComma: "es5"
+# can't use ignore because of https://github.com/prettier/plugin-xml/issues/138
 xmlWhitespaceSensitivity: "strict"
