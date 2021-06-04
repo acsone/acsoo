@@ -13,6 +13,8 @@ Changes
 - Deprecate ``acsoo freeze`` in favor of ``pip-deepfreeze``.
 - Deprecate ``acsoo addons`` in favor of ``manifestoo``.
 - Add license and development status check to project template.
+- Remove bumpversion from acsoo dependencies. This project is now replaced by
+  bump2versions, and it's better to install it separately with pipx.
 
 3.0.2 (2020-10-14)
 ------------------
