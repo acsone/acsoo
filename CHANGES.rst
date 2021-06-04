@@ -5,6 +5,8 @@ Changes
 .. ----------
 .. -
 
+- pr-status: detect PR status from github pull requests URLs found in requirement files;
+  useful to detect them in comments
 - Various improvements to the project template (in gitlab-ci.yml, and
   pre-commit config, mostly) `#75 <https://github.com/acsone/acsoo/pull/75>`_,
   `#77 <https://github.com/acsone/acsoo/pull/77>`_.
