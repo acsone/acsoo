@@ -60,6 +60,22 @@ build:
       artifacts: true
   interruptible: true
 
+license_check:
+  <<: *test_common
+  script:
+    - virtualenv --python=$PYTHON venv
+    - source venv/bin/activate
+    - pip install --no-index --find-links ./release -r requirements.txt
+    - manifestoo -d odoo/addons check-licenses
+
+dev_status_check:
+  <<: *test_common
+  script:
+    - virtualenv --python=$PYTHON venv
+    - source venv/bin/activate
+    - pip install --no-index --find-links ./release -r requirements.txt
+    - manifestoo -d odoo/addons check-dev-status --default-dev-status=Beta
+
 {{% if odoo.series in ['8.0', '9.0'] %}}
 {{% set odoocmd = 'openerp-server' %}}
 {{% else %}}
@@ -77,8 +93,6 @@ test:
     # use --no-index so missing dependencies that would not be in *.whl are detected
     # install the project in editable mode (-e) so coverage sees it
     - venv/bin/pip install --no-index --find-links release -e .
-    - unbuffer manifestoo -d odoo/addons --addons-path-python=venv/bin/python check-licenses
-    - unbuffer manifestoo -d odoo/addons --addons-path-python=venv/bin/python check-dev-status --default-dev-status=Beta
     - ADDONS_INIT=$(manifestoo -d odoo/addons list-depends --separator=,)
     - echo Installing ${ADDONS_INIT}
     - unbuffer venv/bin/click-odoo-initdb -c odoo-ci.cfg --new-database ${DB_NAME} --cache-prefix {{{ project.trigram }}} -m ${ADDONS_INIT} | acsoo checklog
