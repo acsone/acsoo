@@ -43,11 +43,7 @@ or
 
    Since ``acsoo`` has a lot of dependencies that are not required at runtime,
    for your application, it is not recommanded to install it in the same
-   virtualenv as your project. A good approach is to install it in it's own
-   virtual env and symlink the ``acsoo``, ``mrbob`` and ``bumpversion``
-   executables somewhere in your PATH. `pipx <https://pypi.org/project/pipx/>`_
-   is an interesting way to manage such python scripts without polluting your
-   system.
+   virtualenv as your project.
 
 To enable bash completion, add this line in your ``.bashrc``:
 
@@ -99,25 +95,6 @@ errors based on regular expressions.
      acsoo checklog odoo.log
      odoo -d mydb -i base --stop-after-init | acsoo checklog
      acsoo checklog --ignore "WARNING.*blah" odoo.log
-
-bumpversion
------------
-
-Bumpversion is a software automatically installed with acsoo. It allows you to
-increment or simply change the version of the project in several files at once,
-including acsoo.cfg.
-
-  .. code:: shell
-
-    bumpversion {part}
-
-Where part is 'major', 'minor' or 'patch'
-(see `semantic versioning <http://semver.org/>`_).
-
-Configure bumpversion by editing the .bumpversion.cfg config file at the root
-of your project. See the bumpversion `documentation
-<https://pypi.python.org/pypi/bumpversion>`_ to go further
-(automatic commit, tag, customisation...).
 
 Deprecated commands
 ~~~~~~~~~~~~~~~~~~~
