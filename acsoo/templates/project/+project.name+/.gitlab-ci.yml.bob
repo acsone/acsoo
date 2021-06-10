@@ -18,7 +18,6 @@ before_script:
 
 variables:
   PYTHON: {{{ python_version }}}
-  DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
 
 pre-commit:
   stage: test
@@ -61,6 +60,8 @@ test:
   image: ghcr.io/acsone/odoo-ci-image:v20210526.0
   tags:
     - odoo-{{{ odoo.series }}}
+  variables:
+    DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
   script:
     - pipx install acsoo  # for checklog
     - start_ssh_agent  # for pushing translations
