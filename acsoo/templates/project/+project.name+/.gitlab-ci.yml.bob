@@ -50,16 +50,23 @@ build:
     name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-build"
   interruptible: true
 
+.test_common: &test_common
+  stage: test
+  tags:
+    - odoo-{{{ odoo.series }}}
+  image: ghcr.io/acsone/odoo-ci-image:v20210526.0
+  needs:
+    - job: build
+      artifacts: true
+  interruptible: true
+
 {{% if odoo.series in ['8.0', '9.0'] %}}
 {{% set odoocmd = 'openerp-server' %}}
 {{% else %}}
 {{% set odoocmd = 'odoo' %}}
 {{% endif %}}
 test:
-  stage: test
-  image: ghcr.io/acsone/odoo-ci-image:v20210526.0
-  tags:
-    - odoo-{{{ odoo.series }}}
+  <<: *test_common
   variables:
     DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
   script:
@@ -87,10 +94,6 @@ test:
     paths:
       - htmlcov/
     name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-coverage-html"
-  needs:
-    - job: build
-      artifacts: true
-  interruptible: true
   after_script:
     - dropdb --if-exists ${DB_NAME}
 
