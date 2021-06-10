@@ -86,8 +86,9 @@ test:
     paths:
       - htmlcov/
     name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-coverage-html"
-  dependencies:
-    - build
+  needs:
+    - job: build
+      artifacts: true
   interruptible: true
   after_script:
     - dropdb --if-exists ${DB_NAME}
