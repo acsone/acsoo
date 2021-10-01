@@ -1,4 +1,4 @@
--r requirements-find-links.txt
+--find-links https://wheelhouse.acsone.eu/manylinux2014
 
 # odoo
 -r https://raw.githubusercontent.com/odoo/odoo/{{{ odoo.series }}}/requirements.txt
