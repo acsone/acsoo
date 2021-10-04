@@ -21,14 +21,14 @@ variables:
 
 pre-commit:
   stage: test
-  image: {{{ python_version }}}
+  image: python:3
   cache:
     key: pre-commit
     paths:
     - .pre-commit
   script:
     - pip install pre-commit
-    - PRE_COMMIT_HOME=$PWD/.pre-commit pre-commit run --all-files
+    - PRE_COMMIT_HOME=$PWD/.pre-commit pre-commit run --all-files --show-diff-on-failure
   needs: []
   interruptible: true
 
@@ -36,7 +36,7 @@ build:
   stage: build
   # use odoo-{{{ odoo.series }}} runner so we have the pre-cloned odoo
   # except for that optimization, we don't need odoo dependencies for this job
-  image: ghcr.io/acsone/odoo-ci-image:v20210526.0
+  image: ghcr.io/acsone/odoo-ci-image:v20210928.0
   tags:
     - odoo-{{{ odoo.series }}}
   script:
@@ -50,18 +50,18 @@ build:
     name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-build"
   interruptible: true
 
-.test_common: &test_common
+.test_common:
   stage: test
   tags:
     - odoo-{{{ odoo.series }}}
-  image: ghcr.io/acsone/odoo-ci-image:v20210526.0
+  image: ghcr.io/acsone/odoo-ci-image:v20210928.0
   needs:
     - job: build
       artifacts: true
   interruptible: true
 
 license_check:
-  <<: *test_common
+  extends: .test_common
   script:
     - virtualenv --python=$PYTHON venv
     - source venv/bin/activate
@@ -69,7 +69,7 @@ license_check:
     - manifestoo -d odoo/addons check-licenses
 
 dev_status_check:
-  <<: *test_common
+  extends: .test_common
   script:
     - virtualenv --python=$PYTHON venv
     - source venv/bin/activate
@@ -82,7 +82,7 @@ dev_status_check:
 {{% set odoocmd = 'odoo' %}}
 {{% endif %}}
 test:
-  <<: *test_common
+  extends: .test_common
   variables:
     DB_NAME: "${CI_PROJECT_NAME}-${CI_JOB_ID}"
   script:
@@ -102,23 +102,23 @@ test:
     - venv/bin/coverage html
     - venv/bin/coverage report
     - if [ "${CI_COMMIT_REF_NAME}" = "master" ] ; then makepot ; fi
+  after_script:
+    - dropdb --if-exists ${DB_NAME}
   coverage: '/TOTAL\s+\d+\s+\d+\s+\d+\s+\d+\s+(\d+\%)/'
   artifacts:
     expire_in: 1 week
     paths:
       - htmlcov/
     name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-coverage-html"
-  after_script:
-    - dropdb --if-exists ${DB_NAME}
 
 deploy-test:
   stage: deploy
-  image: quay.io/acsone/deploy-tools
+  image: ghcr.io/acsone/deploy-tools
   script:
     - start_ssh_agent
     - ./deploy-test
   environment:
-    name: {{{ project.name }}}-test
+    name: test
     url: https://odoo-{{{ project.name }}}-test.acsone.eu
   only:
     - /^\d+\.\d+\.\d+$/
