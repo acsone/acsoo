@@ -188,7 +188,7 @@ def do_tag_requirements(config, src, requirement, yes, dry_run=False):
 @click.option("--dry-run", is_flag=True, default=False)
 @click.pass_context
 def tag_requirements(ctx, src, requirement, yes, dry_run):
-    """ Tag all VCS requirements found in requirements.txt.
+    """Tag all VCS requirements found in requirements.txt.
 
     This is important to avoid that commits referenced in requirements.txt
     are lost in case of VCS garbage collection.

@@ -56,7 +56,7 @@ def do_tag(config, force, src, requirement, yes, dry_run=False):
 @click.option("--dry-run", is_flag=True, default=False)
 @click.pass_context
 def tag(ctx, force, src, requirement, yes, dry_run):
-    """ Tag the current project and its VCS requirements.
+    """Tag the current project and its VCS requirements.
 
     This command verifies everything has been committed, then
     performs git tag, git push and acsoo tag_requirements.

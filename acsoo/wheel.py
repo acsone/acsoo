@@ -34,7 +34,7 @@ def _prepare_wheel_dir(wheel_dir):
 
 @contextmanager
 def _get_git_reqs_from_cache(src, requirement, wheel_dir):
-    """ Parse a requirement file and fetch git references from cache.
+    """Parse a requirement file and fetch git references from cache.
 
     Yield a temporary requirement file where git references
     that could be fetched from cache are removed.
