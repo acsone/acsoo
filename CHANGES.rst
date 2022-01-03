@@ -5,6 +5,9 @@ Changes
 .. ----------
 .. -
 
+3.1.0 (2021-01-04)
+------------------
+
 - pr-status: detect PR status from github pull requests URLs found in requirement files;
   useful to detect them in comments
 - Various improvements to the project template (in gitlab-ci.yml, and
