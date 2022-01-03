@@ -27,18 +27,10 @@ repos:
     name: flake8 except __init__.py
     exclude: /__init__\.py$
     additional_dependencies: ["flake8-bugbear==20.1.4"]
-  - id: flake8
-    name: flake8 only __init__.py
-    args: [--extend-ignore=F401]  # ignore imported unused in __init__.py
-    files: __init__.py
 - repo: https://github.com/asottile/pyupgrade
   rev: v2.31.0
   hooks:
   - id: pyupgrade
-- repo: https://github.com/asottile/seed-isort-config
-  rev: v2.2.0
-  hooks:
-  - id: seed-isort-config
 - repo: https://github.com/pre-commit/mirrors-isort
   rev: v5.10.1
   hooks:
