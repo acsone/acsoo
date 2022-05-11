@@ -13,9 +13,9 @@ def tests_cache(tmp_path):
     indir = tmp_path / "in"
     indir.mkdir()
     f1 = indir / "f1"
-    f1.write_text(u"1" * int(1000000))
+    f1.write_text("1" * int(1000000))
     f2 = indir / "f2"
-    f2.write_text(u"2" * int(1000000))
+    f2.write_text("2" * int(1000000))
 
     outdir = tmp_path / "out"
     outdir.mkdir()
