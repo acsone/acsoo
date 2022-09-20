@@ -61,8 +61,6 @@ repos:
       - id: pylint
         name: pylint
         files: odoo/addons/
-        args: []
-        additional_dependencies: [pylint-odoo==3.7.1]
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.19.1
     hooks:
