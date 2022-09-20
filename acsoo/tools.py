@@ -42,8 +42,8 @@ def call(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
     log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
     try:
         return subprocess.call(cmd, cwd=cwd)
-    except subprocess.CalledProcessError:
-        raise click.ClickException(cmd_string(cmd))
+    except subprocess.CalledProcessError as e:
+        raise click.ClickException(cmd_string(cmd)) from e
 
 
 def check_call(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
@@ -51,8 +51,8 @@ def check_call(cmd, cwd=None, log_level=logging.DEBUG, echo=False):
     log_cmd(cmd, cwd=cwd, level=log_level, echo=echo)
     try:
         return subprocess.check_call(cmd, cwd=cwd)
-    except subprocess.CalledProcessError:
-        raise click.ClickException(cmd_string(cmd))
+    except subprocess.CalledProcessError as e:
+        raise click.ClickException(cmd_string(cmd)) from e
 
 
 def check_output(
@@ -64,8 +64,8 @@ def check_output(
         return subprocess.check_output(
             cmd, cwd=cwd, universal_newlines=universal_newlines
         )
-    except subprocess.CalledProcessError:
-        raise click.ClickException(cmd_string(cmd))
+    except subprocess.CalledProcessError as e:
+        raise click.ClickException(cmd_string(cmd)) from e
 
 
 @contextlib.contextmanager
