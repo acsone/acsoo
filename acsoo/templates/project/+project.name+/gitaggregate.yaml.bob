@@ -2,25 +2,27 @@
 ./src/odoo-addons-enterprise:
     remotes:
         odoo: git@github.com:odoo/enterprise.git
-        origin: ssh://git@github.com/acsone/enterprise.git
+        acsone: ssh://git@github.com/acsone/enterprise.git
     merges:
         - odoo {{{ odoo.series }}}
-        - origin {{{ odoo.series }}}-with-setup
-    target: origin {{{ odoo.series }}}-{{{ project.trigram }}}_master
+    target: acsone {{{ odoo.series }}}-{{{ project.trigram }}}_master
+    shell_command_after:
+        # Add a pyproject.toml so pip wheel works.
+        - gh --repo acsone/enterprise pr diff {% if odoo.series == "16.0" %}12{% elif %}{% odoo.series == "14.0" %}11{% else %}TODO{% endif %} --patch | git am
+
 
 {{% endif %}}
 ./src/odoo:
     remotes:
         odoo: https://github.com/odoo/odoo.git
         oca: https://github.com/OCA/OCB.git
-        origin: ssh://git@github.com/acsone/odoo.git
+        acsone: ssh://git@github.com/acsone/odoo.git
     merges:
         - oca {{{ odoo.series }}}
-        - origin {{{ odoo.series }}}-with-setup
-{{% if odoo.enterprise and odoo.series == '9.0' %}}
     shell_command_after:
-        - git rm -r addons/web
-        - git rm openerp/addons/web
-        - git commit -m "remove community web addons (for use with enterprise)" addons/web openerp/addons/web
-{{% endif %}}
-    target: origin {{{ odoo.series }}}-{{{ project.trigram }}}_master
+        - # pyproject.toml
+        - curl -sSL https://github.com/odoo/odoo/pull/44001.patch | git am
+        # Support python -m odoo, for debugging configuration comfort.
+        - curl -sL https://github.com/odoo/odoo/pull/81864.patch | git am
+
+    target: acsone {{{ odoo.series }}}-{{{ project.trigram }}}_master
