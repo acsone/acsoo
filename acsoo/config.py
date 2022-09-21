@@ -4,8 +4,10 @@
 
 import os
 from configparser import NoOptionError, NoSectionError, RawConfigParser
+from pathlib import Path
 
 import click
+import tomli
 
 DEFAULT_CONFIG_FILE = "acsoo.cfg"
 SECTION = "acsoo"
@@ -31,6 +33,10 @@ class AcsooConfig(object):
                 )
             self.__cfgfile = filename
             self.__cfg.read(filename)
+        pyproject_path = Path("pyproject.toml")
+        self.__pyproject = {}
+        if pyproject_path.is_file():
+            self.__pyproject = tomli.loads(pyproject_path.read_text())
 
     @staticmethod
     def add_default_map_reader(reader):
@@ -44,9 +50,13 @@ class AcsooConfig(object):
 
     @property
     def series(self):
-        r = self.__cfg.get(SECTION, "series")
+        r = self.__pyproject.get("tool", {}).get("hatch-odoo", {}).get(
+            "odoo_version_override", None
+        ) or self.__cfg.get(SECTION, "series")
         if not r:
-            raise click.ClickException("Missing series in {}.".format(self.__cfgfile))
+            raise click.ClickException(
+                "Odoo series not found in pyproject.toml and {}.".format(self.__cfgfile)
+            )
         if r not in ("14.0", "15.0", "16.0"):
             raise click.ClickException(
                 "Unsupported series {} in {}.".format(r, self.__cfgfile)
@@ -55,9 +65,15 @@ class AcsooConfig(object):
 
     @property
     def version(self):
-        r = self.__cfg.get(SECTION, "version")
+        r = self.__pyproject.get("project", {}).get("version", None) or self.__cfg.get(
+            SECTION, "version"
+        )
         if not r:
-            raise click.ClickException("Missing version in {}.".format(self.__cfgfile))
+            raise click.ClickException(
+                "Missing version in pyproject.toml and {}.".format(self.__cfgfile)
+            )
+        if r.startswith(self.series + ".") and len(r.split(".")) > 4:
+            r = r[len(self.series) + 1 :]
         return r
 
     @property

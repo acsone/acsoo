@@ -36,7 +36,7 @@ packages = ["odoo"]
 
 [tool.hatch-odoo]
 # If our addons have non standard version numbers, let's help hatch-odoo discover the Odoo version.
-#odoo_version_override = "16.0"
+odoo_version_override = "{{{ odoo.series }}}"
 # Add dependencies that are not declared in Odoo addons manifests.
 dependencies = [
   "click-odoo-contrib",
