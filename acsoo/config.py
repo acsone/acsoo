@@ -78,10 +78,7 @@ class AcsooConfig(object):
 
     @property
     def trigram(self):
-        r = self.__cfg.get(SECTION, "trigram")
-        if not r:
-            raise click.ClickException("Missing trigram in {}.".format(self.__cfgfile))
-        return r
+        return self.__cfg.get(SECTION, "trigram", fallback="")
 
     @property
     def pushable(self):

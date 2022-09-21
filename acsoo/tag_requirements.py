@@ -50,8 +50,8 @@ def _get_last_sha(filename):
     return check_output(["git", "log", "-n", "1", "--format=%h", filename]).strip()
 
 
-def _has_tag_local(series, trigram, sha, repo_dir):
-    tag_re = re.compile(series + "[-_]" + trigram + "[-_]")
+def _has_tag_local(series, sha, repo_dir):
+    tag_re = re.compile(series + "[-_]")
     tags = check_output(["git", "tag", "--points-at", sha], cwd=repo_dir)
     for tag in tags.split():
         tag = tag.strip()
@@ -60,9 +60,9 @@ def _has_tag_local(series, trigram, sha, repo_dir):
     return False
 
 
-def _has_tag_remote(series, trigram, sha, repo_url):
+def _has_tag_remote(series, sha, repo_url):
     prefix = "refs/tags/"
-    tag_re = re.compile(prefix + series + "[-_]" + trigram + "[-_]")
+    tag_re = re.compile(prefix + series + "[-_]")
     tag_lines = check_output(
         ["git", "ls-remote", "-t", repo_url], universal_newlines=True
     )
@@ -84,7 +84,7 @@ def _is_committed(requirement):
 
 
 def _ensure_tag(config, req, sha, repo_url, eggtag, dry_run):
-    ex_tag = _has_tag_remote(config.series, config.trigram, sha, repo_url)
+    ex_tag = _has_tag_remote(config.series, sha, repo_url)
     if ex_tag:
         click.echo("tag {ex_tag} already exists on {repo_url}@{sha}".format(**locals()))
         return
@@ -130,7 +130,7 @@ def do_tag_requirements(config, src, requirement, yes, dry_run=False):
         if not os.path.isdir(os.path.join(repo_dir, ".git")):
             os.makedirs(repo_dir)
             check_call(["git", "init"], cwd=repo_dir)
-        ex_tag = _has_tag_local(config.series, config.trigram, sha, repo_dir)
+        ex_tag = _has_tag_local(config.series, sha, repo_dir)
         if ex_tag:
             # this assumes that if we find the tag locally
             # it is also present on the remote, in rare situations
@@ -150,7 +150,7 @@ def do_tag_requirements(config, src, requirement, yes, dry_run=False):
             ],
             cwd=repo_dir,
         )
-        ex_tag = _has_tag_local(config.series, config.trigram, sha, repo_dir)
+        ex_tag = _has_tag_local(config.series, sha, repo_dir)
         if ex_tag:
             click.echo("tag {ex_tag} already exists on {url}@{sha}".format(**locals()))
             continue
