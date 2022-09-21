@@ -4,8 +4,6 @@ commit = False
 
 [bumpversion:file:.bumpversion.cfg]
 
-[bumpversion:file:acsoo.cfg]
-
 [bumpversion:file:pyproject.toml]
 
 [bumpversion:file:odoo/addons/{{{ project.trigram }}}_all/__manifest__.py]
