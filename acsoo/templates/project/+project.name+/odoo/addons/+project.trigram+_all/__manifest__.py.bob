@@ -3,7 +3,7 @@
 {
     "name": "{{{ project.name|capitalize }}}",
     "description": """
-        Odoo aplication for {{{ project.name }}}""",
+        Odoo aplication for {{{ project.name|capitalize }}}""",
     "author": "ACSONE SA/NV",
     "website": "https://acsone.eu",
     "category": "{{{ project.name }}}",
