@@ -1,25 +1,22 @@
-{{% if odoo.series == '10.0' %}}# -*- coding: utf-8 -*-{{% endif %}}
 # Copyright 2020 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    'name': "{{{ project.name|capitalize }}}",
-    'description': """
+    "name": "{{{ project.name|capitalize }}}",
+    "description": """
         Odoo aplication for {{{ project.name }}}""",
-    'author': 'ACSONE SA/NV',
-    'website': "http://acsone.eu",
-    'category': '{{{ project.name }}}',
-    'version': '{{{ odoo.series }}}.1.0.0',
-    'license': 'AGPL-3',
-    'depends': [
+    "author": "ACSONE SA/NV",
+    "website": "https://acsone.eu",
+    "category": "{{{ project.name }}}",
+    "version": "{{{ odoo.series }}}.1.0.0",
+    "license": "AGPL-3",
+    "depends": [
         # {{{ project.name }}} open source addons
         # !!! no odoo enterprise addons dependencies !!!
-        # OCA/server-tools
-        'mail_environment',
-        'server_environment_ir_config_parameter',
-        # OCA/web
-        'web_environment_ribbon',
+        # OCA
+        "mail_environment",
+        "server_environment_ir_config_parameter",
+        "web_environment_ribbon",
     ],
-    'data': [
-    ],
-    'application': True,
+    "data": [],
+    "application": True,
 }
