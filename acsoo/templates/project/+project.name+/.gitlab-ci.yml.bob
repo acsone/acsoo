@@ -17,11 +17,11 @@ before_script:
     }
 
 variables:
-  PYTHON: {{{ python_version }}}
+  PYTHON: python{{{ project.python_version }}}
 
 pre-commit:
   stage: test
-  image: python:3
+  image: python:{{{ project.python_version }}}
   cache:
     key: pre-commit
     paths:

@@ -10,7 +10,7 @@ name = "odoo-addons-{{{ project.name }}}"
 description = "{{{ project.name|capitalize }}} Odoo Addons"
 version = "{{{ odoo.series }}}.1.0.0"
 readme = "README.rst"
-requires-python = "=={{{ python_version }}}.*"
+requires-python = "=={{{ project.python_version }}}.*"
 # Dependencies are dynamic because they will be generated from Odoo addons manifests.
 dynamic = ["dependencies"]
 

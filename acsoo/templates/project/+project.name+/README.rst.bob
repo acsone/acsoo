@@ -11,7 +11,7 @@ Initialize virtualenv
 ---------------------
 
 - create and activate virtualenv, using python 3's standard `python -m venv` or possibly with virtualenvwrapper's
-  ``mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which {{{ python_version }}})``
+  ``mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which python{{{ project.python_version }}})``
 - make sure acsoo [#]_ and pip-deepfreeze [#]_ are installed and in your PATH
 - to save some time it is recommended to configure git-autoshare [#]_.
 
@@ -25,7 +25,7 @@ Use ``./sync-build.sh`` to update pinned build dependencies from
 Install everything
 ------------------
 
-In an activated {{{ python_version }}} virtualenv, run::
+In an activated python{{{ project.python_version }}} virtualenv, run::
 
    pip-df sync -x test,doc,dev
 
