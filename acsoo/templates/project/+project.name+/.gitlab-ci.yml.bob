@@ -100,10 +100,12 @@ test:
     - unbuffer click-odoo-initdb -c odoo-ci.cfg --new-database ${DB_NAME} --cache-prefix {{{ project.trigram }}} -m ${ADDONS_INIT} | acsoo checklog
     - ADDONS_TEST=$(manifestoo -d odoo/addons list --separator=,)
     - echo Testing ${ADDONS_TEST}
-    - unbuffer venv/bin/coverage run --branch venv/bin/odoo -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init --no-xmlrpc -i ${ADDONS_TEST} --test-enable | acsoo checklog
-    - venv/bin/coverage html
-    - venv/bin/coverage report
-    - if [ "${CI_COMMIT_REF_NAME}" = "master" ] ; then makepot ; fi
+    - unbuffer coverage run venv/bin/odoo -c odoo-ci.cfg -d ${DB_NAME} --stop-after-init -i ${ADDONS_TEST} --test-enable | acsoo checklog
+    - coverage combine
+    - coverage html --show-contexts
+    - coverage xml
+    - coverage report  # Show coverage report so the GitLab coverage regex below works
+    - if [ "${CI_COMMIT_REF_NAME}" = "master" ] ; then start_ssh_agent ; makepot ; fi
   after_script:
     - dropdb --if-exists ${DB_NAME}
   coverage: '/TOTAL\s+\d+\s+\d+\s+\d+\s+\d+\s+(\d+\%)/'
@@ -112,6 +114,10 @@ test:
     paths:
       - htmlcov/
     name: "${CI_PROJECT_NAME}-${CI_JOB_ID}-coverage-html"
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
 
 deploy-test:
   stage: deploy
