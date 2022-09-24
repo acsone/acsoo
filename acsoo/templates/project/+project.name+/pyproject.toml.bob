@@ -29,7 +29,7 @@ dev = [
 [project.scripts]
 
 [tool.hatch.build]
-packages = ["odoo"]
+packages = ["odoo", "odoo_{{{ project.name }}}"]
 
 # Enable the hatch-odoo metadata hook to generate dependencies from addons manifests.
 [tool.hatch.metadata.hooks.odoo-addons-dependencies]
