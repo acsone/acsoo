@@ -15,12 +15,19 @@ Initialize virtualenv
 - make sure acsoo [#]_ and pip-deepfreeze [#]_ are installed and in your PATH
 - to save some time it is recommended to configure git-autoshare [#]_.
 
+Pin build dependencies
+----------------------
+
+Use ``./sync-build.sh`` to update pinned build dependencies from
+``requirements-build.txt.in`` to ``requirements-build.txt`` (empty
+``requirements-build.txt`` first to update them all).
+
 Install everything
 ------------------
 
 In an activated {{{ python_version }}} virtualenv, run::
 
-   pip-df sync
+   pip-df sync -x test,doc,dev
 
 When dependencies change, use ``pip-df sync`` again, possibly with
 ``--update``. Add unmerged VCS dependencies in ``requirements.txt.in``. See the
@@ -57,5 +64,5 @@ To release using gitlab-ci
 .. [#] https://pypi.python.org/pypi/acsoo/#installation
 .. [#] https://pypi.python.org/pypi/pip-deepfreeze
 .. [#] https://pypi.python.org/pypi/git-autoshare
-.. [#] https://github.com/ambv/black
+.. [#] https://github.com/psf/black
 .. [#] https://github.com/pre-commit/pre-commit
