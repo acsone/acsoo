@@ -1,0 +1,54 @@
+# Use the hatchling build backend, with the hatch-odoo plugin.
+[build-system]
+requires = ["hatchling", "hatch-odoo"]
+build-backend = "hatchling.build"
+
+# The standard project metadata section
+# https://packaging.python.org/en/latest/specifications/declaring-project-metadata/
+[project]
+name = "odoo-addons-{{{ project.name }}}"
+description = "{{{ project.name|capitalize }}} Odoo Addons"
+version = "{{{ odoo.series }}}.1.0.0"
+readme = "README.rst"
+requires-python = "=={{{ project.python_version }}}.*"
+# Dependencies are dynamic because they will be generated from Odoo addons manifests.
+dynamic = ["dependencies"]
+
+[project.optional-dependencies]
+test = [
+  "coverage",
+  "pygments",
+]
+doc = []
+dev = [
+  "pytest",
+  "pytest-cov",
+  "pytest-odoo",
+  "watchdog"
+]
+
+[project.scripts]
+
+[tool.hatch.build]
+packages = ["odoo", "odoo_{{{ project.name }}}"]
+
+# Enable the hatch-odoo metadata hook to generate dependencies from addons manifests.
+[tool.hatch.metadata.hooks.odoo-addons-dependencies]
+
+[tool.hatch-odoo]
+# If our addons have non standard version numbers, let's help hatch-odoo discover the Odoo version.
+odoo_version_override = "{{{ odoo.series }}}"
+# Add dependencies that are not declared in Odoo addons manifests.
+dependencies = [
+  "click-odoo-contrib",
+  {{% if odoo.enterprise -%}}
+  # Odoo enterprise addons
+  "odoo-addons-enterprise",
+  {{% endif -%}}
+  # Optional Odoo dependencies not in Odoo's setup.py
+  "freezegun",
+  "num2words",
+  "pdfminer",
+  "xlrd",
+]
+addons_dirs = ["odoo/addons"]

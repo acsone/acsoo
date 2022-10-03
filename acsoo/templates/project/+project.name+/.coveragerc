@@ -1,4 +1,17 @@
 [run]
-omit=
-  venv*
-  src*
+source =
+  ./odoo/addons
+dynamic_context = test_function
+branch = True
+parallel = True
+
+[report]
+omit =
+    */scenarios/*
+    */lib/*
+    */__manifest__.py
+
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    pragma: no cover
+    raise NotImplementedError

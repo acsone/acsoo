@@ -11,16 +11,23 @@ Initialize virtualenv
 ---------------------
 
 - create and activate virtualenv, using python 3's standard `python -m venv` or possibly with virtualenvwrapper's
-  ``mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which {{{ python_version }}})``
+  ``mkvirtualenv odoo-{{{ project.name }}} -a . --python=$(which python{{{ project.python_version }}})``
 - make sure acsoo [#]_ and pip-deepfreeze [#]_ are installed and in your PATH
 - to save some time it is recommended to configure git-autoshare [#]_.
+
+Pin build dependencies
+----------------------
+
+Use ``./sync-build.sh`` to update pinned build dependencies from
+``requirements-build.txt.in`` to ``requirements-build.txt`` (empty
+``requirements-build.txt`` first to update them all).
 
 Install everything
 ------------------
 
-In an activated {{{ python_version }}} virtualenv, run::
+In an activated python{{{ project.python_version }}} virtualenv, run::
 
-   pip-df sync
+   pip-df sync -x test,doc,dev
 
 When dependencies change, use ``pip-df sync`` again, possibly with
 ``--update``. Add unmerged VCS dependencies in ``requirements.txt.in``. See the
@@ -31,11 +38,7 @@ Run
 
 Copy ``odoo.cfg.template`` to ``odoo.cfg`` and update it as needed, then run::
 
-{{% if odoo.series in ['8.0', '9.0'] %}}
-   odoo-autodiscover.py -c odoo.cfg
-{{% else %}}
    odoo -c odoo.cfg
-{{% endif %}}
 
 
 Develop
@@ -61,5 +64,5 @@ To release using gitlab-ci
 .. [#] https://pypi.python.org/pypi/acsoo/#installation
 .. [#] https://pypi.python.org/pypi/pip-deepfreeze
 .. [#] https://pypi.python.org/pypi/git-autoshare
-.. [#] https://github.com/ambv/black
+.. [#] https://github.com/psf/black
 .. [#] https://github.com/pre-commit/pre-commit

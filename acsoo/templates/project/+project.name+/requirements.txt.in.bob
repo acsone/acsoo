@@ -2,16 +2,13 @@
 
 # odoo
 -r https://raw.githubusercontent.com/odoo/odoo/{{{ odoo.series }}}/requirements.txt
-git+https://github.com/acsone/odoo.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master#egg=odoo
+odoo @ git+https://github.com/acsone/odoo.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master
 {{% if odoo.enterprise %}}
-git+ssh://git@github.com/acsone/enterprise.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master#egg=odoo-addons-enterprise&subdirectory=setup
-{{% endif %}}
-{{% if odoo.major <= 10 %}}
-odoo-autodiscover>=2.0
+egg=odoo-addons-enterprise @ git+ssh://git@github.com/acsone/enterprise.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master
 {{% endif %}}
 
 # patched ACSONE addons
 # ...
 
 # patched OCA addons
-# odoo{short_version}-addon-{addon} @ git+https://github.com/acsone/{oca-project}.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master#subdirectory=setup/{addon}
+# odoo-addon-{addon} @ git+https://github.com/acsone/{oca-project}.git@{{{ odoo.series }}}-{{{ project.trigram }}}_master#subdirectory=setup/{addon}

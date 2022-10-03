@@ -33,7 +33,7 @@ class TestConfig(unittest.TestCase):
     def test2(self):
         assert self.config.trigram == "xyz"
         assert self.config.version == "1.1.0"
-        assert self.config.series == "10.0"
+        assert self.config.series == "16.0"
 
     def test_default_map(self):
         default_map = self.config.get_default_map()
