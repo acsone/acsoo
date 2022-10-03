@@ -8,7 +8,6 @@ parallel = True
 [report]
 omit =
     */scenarios/*
-    */tests/*
     */lib/*
     */__manifest__.py
 
