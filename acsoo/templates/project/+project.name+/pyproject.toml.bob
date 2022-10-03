@@ -18,12 +18,12 @@ dynamic = ["dependencies"]
 test = [
   "coverage",
   "pygments",
-  "pytest",
-  "pytest-cov",
-  "pytest-odoo",
 ]
 doc = []
 dev = [
+  "pytest",
+  "pytest-cov",
+  "pytest-odoo",
   "watchdog"
 ]
 
