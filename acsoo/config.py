@@ -57,10 +57,6 @@ class AcsooConfig(object):
             raise click.ClickException(
                 "Odoo series not found in pyproject.toml and {}.".format(self.__cfgfile)
             )
-        if r not in ("14.0", "15.0", "16.0"):
-            raise click.ClickException(
-                "Unsupported series {} in {}.".format(r, self.__cfgfile)
-            )
         return r
 
     @property
