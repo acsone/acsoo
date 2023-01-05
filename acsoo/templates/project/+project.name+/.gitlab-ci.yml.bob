@@ -22,13 +22,15 @@ variables:
 pre-commit:
   stage: test
   image: python:{{{ project.python_version }}}
+  variables:
+    PRE_COMMIT_HOME: ${CI_PROJECT_DIR}/.cache/pre-commit
   cache:
     key: pre-commit
     paths:
-    - .pre-commit
+      - ${PRE_COMMIT_HOME}
   script:
     - pip install pre-commit
-    - PRE_COMMIT_HOME=$PWD/.pre-commit pre-commit run --all-files --show-diff-on-failure
+    - pre-commit run --all-files --show-diff-on-failure
   needs: []
   interruptible: true
 
