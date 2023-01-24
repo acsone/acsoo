@@ -60,8 +60,17 @@ def search_prs():
 @click.command()
 def pr_status():
     """Show status of PR found in requirement files."""
+    # get github token from env
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        httpx_client = httpx.Client(headers={"Authorization": f"token {token}"})
+    else:
+        click.echo("No GITHUB_TOKEN found in env, using anonymous access")
+        httpx_client = httpx.Client()
     for pr in search_prs():
-        r = httpx.get(f"https://api.github.com/repos/{pr.org}/{pr.repo}/pulls/{pr.pr}")
+        r = httpx_client.get(
+            f"https://api.github.com/repos/{pr.org}/{pr.repo}/pulls/{pr.pr}"
+        )
         r.raise_for_status()
         state = display_state(r.json())
         click.echo(f"https://github.com/{pr.org}/{pr.repo}/pull/{pr.pr} is {state}")
