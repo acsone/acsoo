@@ -59,7 +59,11 @@ def search_prs():
 
 @click.command()
 def pr_status():
-    """Show status of PR found in requirement files."""
+    """Show status of PR found in requirement files.
+
+    If set, the GITHUB_TOKEN environment variable is used to authenticate with the
+    GitHub API and avoid rate limiting.
+    """
     # get github token from env
     token = os.environ.get("GITHUB_TOKEN")
     if token:
