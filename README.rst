@@ -146,20 +146,6 @@ the `build` stage in the project template.**
 Perform ``acsoo tag``, ``acsoo tag_requirements`` and
 ``acsoo wheel`` in one command.
 
-acsoo flake8
-------------
-
-**This command is deprecated, use a .flake8 file in your project,
-in combination with pre-commit. See the project template for a reasonable default.**
-
-Run `flake8 <https://pypi.python.org/pypi/flake8>`_ with sensible default for Odoo code.
-
-It is possible to pass additional options to the ``flake8`` command, eg:
-
-  .. code:: shell
-
-    acsoo flake8 -- --ignore E24,W504
-
 acsoo pylint
 ------------
 
