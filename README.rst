@@ -73,17 +73,6 @@ acsoo pr-status
 Look for git references of the form ``refs/pull/NNN/head`` in requirement
 files and print the corresponding GitHub pull request status.
 
-acsoo tag
----------
-
-Tag the current project after ensuring everything has been commited to git.
-
-acsoo tag-requirements
-----------------------
-
-Tag all VCS requirements found in ``requirements.txt``, so
-the referenced commits are not lost in case of VCS garbage collection.
-
 acsoo checklog
 --------------
 
@@ -98,6 +87,25 @@ errors based on regular expressions.
 
 Deprecated commands
 ~~~~~~~~~~~~~~~~~~~
+
+acsoo tag
+---------
+
+**acsoo tag is deprecated: use `bump2version <https://pypi.org/project/bump2version/>`_
+with `tag = True`, followed ``git push --tags`` instead.**
+
+Tag the current project after ensuring everything has been commited to git.
+
+acsoo tag-requirements
+----------------------
+
+**acsoo tag-requirements is deprecated: use `pip-preserve-requirements
+<https://pypi.org/project/pip-preserve-requirements/>`_ instead. In addition to tagging,
+it automatically pushes thirdparty repositories to the corresponding ACSONE fork,
+simplifying the declaration of OCA VCS references using ``@refs/pull/NNN/head``.**
+
+Tag all VCS requirements found in ``requirements.txt``, so
+the referenced commits are not lost in case of VCS garbage collection.
 
 acsoo addons
 ------------
