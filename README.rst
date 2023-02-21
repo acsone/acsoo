@@ -58,15 +58,6 @@ Below, the list of available commands with a few examples.
 
 Use ``acsoo --help`` or ``acsoo <command> --help`` for more information.
 
-Initialize a new project
-------------------------
-
-  .. code:: shell
-
-    mrbob acsoo:templates/project
-    cd {project name}
-    mkvirtualenv {project name} -a .
-
 acsoo pr-status
 ---------------
 
