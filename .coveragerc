@@ -1,4 +1,3 @@
 [report]
 omit =
   tests/*
-  acsoo/templates/*
