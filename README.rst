@@ -146,55 +146,6 @@ the `build` stage in the project template.**
 Perform ``acsoo tag``, ``acsoo tag_requirements`` and
 ``acsoo wheel`` in one command.
 
-acsoo flake8
-------------
-
-**This command is deprecated, use a .flake8 file in your project,
-in combination with pre-commit. See the project template for a reasonable default.**
-
-Run `flake8 <https://pypi.python.org/pypi/flake8>`_ with sensible default for Odoo code.
-
-It is possible to pass additional options to the ``flake8`` command, eg:
-
-  .. code:: shell
-
-    acsoo flake8 -- --ignore E24,W504
-
-acsoo pylint
-------------
-
-**This command is deprecated, use a .pylintrc file in your project,
-in combination with pre-commit. See the project template for a reasonable default.**
-
-Run `pylint <https://pypi.python.org/pypi/pylint>`_ on detected Odoo addons in odoo/addons,
-odoo_addons or the current directory.
-It automatically uses the `pylint-odoo <https://pypi.python.org/pypi/pylint-odoo>`_ plugin and
-runs with a reasonable configuration, including an opinionated set of disabled message.
-
-It is possible to pass additional options to the ``pylint`` command, eg:
-
-  .. code:: shell
-
-    acsoo pylint -- --disable missing-final-newline
-
-This command returns an non-zero exit code if any message is reported.
-It is however possibly to display messages while reporting success, eg:
-
-  .. code:: shell
-
-    acsoo pylint --expected api-one-deprecated:2,line-too-long
-
-The above command succeeds despite having exactly 2 ``api-one-deprecated`` or
-any number of ``line-too-long`` messages being reported.
-
-It is also possible to force failure on messages that are ``expected`` in the
-default configuration, eg to fail on ``fixme`` errors, just expect 0 ``fixme``
-messages, like this:
-
-  .. code:: shell
-
-    acsoo pylint --expected fixme:0
-
 acsoo.cfg
 ~~~~~~~~~
 
