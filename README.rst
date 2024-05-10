@@ -73,8 +73,8 @@ acsoo pr-status
 Look for git references of the form ``refs/pull/NNN/head`` in requirement
 files and print the corresponding GitHub pull request status.
 
-Deprecated commands
-~~~~~~~~~~~~~~~~~~~
+⚠️ Deprecated commands
+~~~~~~~~~~~~~~~~~~~~~
 
 acsoo checklog
 --------------
