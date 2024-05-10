@@ -73,8 +73,14 @@ acsoo pr-status
 Look for git references of the form ``refs/pull/NNN/head`` in requirement
 files and print the corresponding GitHub pull request status.
 
+Deprecated commands
+~~~~~~~~~~~~~~~~~~~
+
 acsoo checklog
 --------------
+
+**acsoo checklog is deprecated: use `checklog-odoo
+<https://pypi.org/project/checklog-odoo>`_**
 
 Check if an odoo log file contains error, with the possibility to ignore some
 errors based on regular expressions.
@@ -84,9 +90,6 @@ errors based on regular expressions.
      acsoo checklog odoo.log
      odoo -d mydb -i base --stop-after-init | acsoo checklog
      acsoo checklog --ignore "WARNING.*blah" odoo.log
-
-Deprecated commands
-~~~~~~~~~~~~~~~~~~~
 
 acsoo tag
 ---------
