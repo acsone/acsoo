@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 
 PR = namedtuple("PR", ["org", "repo", "pr"])
 PR_RE = re.compile(
-    r".*github.com.(?P<org>[^/]+)/(?P<repo>[^/]+)" r".*@refs/pull/(?P<pr>[0-9]+)/head"
+    r".*github.com.(?P<org>[^/]+)/(?P<repo>[^/.]+).*@refs/pull/(?P<pr>[0-9]+)/head"
 )
 PR_URL_RE = re.compile(
     r".*https://github.com/(?P<org>[^/]+)/(?P<repo>[^/]+)/pull/(?P<pr>[0-9]+).*"
